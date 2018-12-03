@@ -44,7 +44,9 @@
         "object-property-newline": [2, {
             "allowAllPropertiesOnSameLine": true
         }],
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/jsx-first-prop-new-line": [2, "multiline"],
+        "react/jsx-one-expression-per-line": 0,
         "react/jsx-indent": [2, 4],
         "react/jsx-indent-props": [2, 4],
         "prettier/prettier": [2, {
