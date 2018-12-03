@@ -6,7 +6,7 @@ module.exports = {
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "lib"),
-        libraryTarget: "commonjs-module",
+        libraryTarget: "umd",
     },
     module: {
         rules: [
@@ -16,8 +16,8 @@ module.exports = {
                 use: {
                     loader: "babel-loader",
                     options: {
-                        presets: ["babel-preset-env"],
-                        plugins: ["babel-plugin-transform-class-properties"],
+                        presets: ["@babel/preset-env"],
+                        plugins: ["transform-class-properties"],
                     },
                 },
             },
