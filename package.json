@@ -1,5 +1,5 @@
 {
-    "main": "index.js",
+    "main": "lib/main.js",
     "scripts": {
         "build": "webpack",
         "test": "jest",
