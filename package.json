@@ -2,6 +2,7 @@
     "main": "lib/main.js",
     "scripts": {
         "build": "webpack",
+        "build-watch": "webpack --watch",
         "test": "jest",
         "precommit": "lint-staged"
     },
@@ -23,16 +24,6 @@
             "**/lib/*"
         ]
     },
-    "keywords": [
-        "node",
-        "nodejs",
-        "boilerplate",
-        "testing",
-        "linting",
-        "ci",
-        "package",
-        "npm"
-    ],
     "author": "iamogbz",
     "license": "GPL-3.0",
     "engines": {
