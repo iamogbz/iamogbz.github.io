@@ -5,7 +5,7 @@ const imageAssetPath = "assets/images";
 
 const Image = ({ name, size, type }) => (
     <img
-        src={`${imageAssetPath}/${name}.${type || Image.defaultProps.type}`}
+        src={`/${imageAssetPath}/${name}.${type || Image.defaultProps.type}`}
         alt={name}
         width={size}
     />

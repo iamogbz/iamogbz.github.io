@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
-    filename: "../index.html",
+    filename: "index.html",
 });
 
 module.exports = {
@@ -14,8 +14,7 @@ module.exports = {
     },
     output: {
         filename: "main.js",
-        path: path.resolve(__dirname, "lib"),
-        libraryTarget: "umd",
+        path: path.resolve(__dirname, "./"),
     },
     module: {
         rules: [

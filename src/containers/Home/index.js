@@ -19,7 +19,7 @@ export default function() {
                 <Link to={routed.labs.$}>Labs</Link>
             </CenteredCell>
             <CenteredCell>
-                <Link to={routed.profile.emmanuel.$}>Profile</Link>
+                <Link to={routed.profiles.emmanuel.$}>Profile</Link>
             </CenteredCell>
         </FullPageGrid>
     );
