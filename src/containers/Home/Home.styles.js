@@ -1,9 +1,15 @@
 import styled from "styled-components";
+import { Grid, Cell } from "styled-css-grid";
 
-export const CenterInPage = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
+export const FullPageGrid = styled(Grid)`
     height: 100vh;
     width: 100vw;
+`;
+
+export const CenteredCell = styled(Cell)`
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    justify-self: stretch;
 `;

@@ -37,7 +37,8 @@
         "react-router": "^4.3.1",
         "react-router-chart": "0.0.9",
         "react-router-dom": "^4.3.1",
-        "styled-components": "^4.1.2"
+        "styled-components": "^4.1.2",
+        "styled-css-grid": "^1.1.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.1.5",
