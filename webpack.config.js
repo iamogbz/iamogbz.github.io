@@ -9,6 +9,9 @@ const htmlPlugin = new HtmlWebPackPlugin({
 module.exports = {
     mode: "production",
     entry: "./src",
+    resolve: {
+        modules: [path.resolve("./src"), path.resolve("./node_modules")],
+    },
     output: {
         filename: "main.js",
         path: path.resolve(__dirname, "lib"),
