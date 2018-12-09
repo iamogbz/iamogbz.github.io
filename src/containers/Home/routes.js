@@ -1,6 +1,6 @@
 import Chart from "react-router-chart";
 
-import Home from ".";
+import Home from "./Loadable";
 
 export default Chart.route({ name: "home" })
     .rPath("/")

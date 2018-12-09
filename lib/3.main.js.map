@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/containers/Labs/index.js"],"names":["__webpack_exports__","react__WEBPACK_IMPORTED_MODULE_0___default","a","createElement"],"mappings":"oHAEAA,EAAA,mBACI,OAAOC,EAAAC,EAAAC,cAAA","file":"3.main.js","sourcesContent":["import React from \"react\";\n\nexport default function() {\n    return <div>My labs</div>;\n}\n"],"sourceRoot":""}
