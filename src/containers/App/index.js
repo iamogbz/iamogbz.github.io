@@ -3,11 +3,13 @@ import { HashRouter } from "react-router-dom";
 import { Switch } from "react-router";
 
 import routes from "./routes";
+import { GlobalStyle } from "./App.style";
 
 export default function App() {
-    return (
+    return [
         <HashRouter>
             <Switch>{routes.render()}</Switch>
-        </HashRouter>
-    );
+        </HashRouter>,
+        <GlobalStyle dark />,
+    ];
 }

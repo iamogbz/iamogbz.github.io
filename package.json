@@ -31,11 +31,13 @@
         "npm": ">=6.1.0"
     },
     "dependencies": {
+        "prop-types": "^15.6.2",
         "react": "^16.6.3",
         "react-dom": "^16.6.3",
         "react-router": "^4.3.1",
         "react-router-chart": "0.0.9",
-        "react-router-dom": "^4.3.1"
+        "react-router-dom": "^4.3.1",
+        "styled-components": "^4.1.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.1.5",
