@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Routes matches render snapshot 1`] = `
+Array [
+  <t
+    component={[Function]}
+    exact={true}
+    path="/"
+  />,
+  <t
+    component={[Function]}
+    exact={true}
+    path="/labs"
+  />,
+  <t
+    component={[Function]}
+    exact={true}
+    path="/profile.emmanuel"
+  />,
+]
+`;
