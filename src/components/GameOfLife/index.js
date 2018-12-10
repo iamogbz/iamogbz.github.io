@@ -111,10 +111,7 @@ class GameOfLife extends React.Component {
             delete this.timeoutHandler;
             return;
         }
-        const {
-            size,
-            props: { interval },
-        } = this;
+        const { size } = this;
         if (size) {
             const board = [];
             range(0, size.rows).forEach(y => {
@@ -135,7 +132,7 @@ class GameOfLife extends React.Component {
         }
         this.timeoutHandler = setTimeout(() => {
             this.runIteration();
-        }, interval);
+        }, size ? (size.rows * size.cols) / 20 : 100);
     }
 
     render() {
