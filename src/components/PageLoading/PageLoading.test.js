@@ -1,6 +1,6 @@
 import React from "react";
 import { shallowRender } from "../../utils/testRenderers";
-import PageLoading from ".";
+import PageLoading from "./index";
 
 describe("<PageLoading />", () => {
     it("should match snapshot", () => {

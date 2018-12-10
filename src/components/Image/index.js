@@ -14,12 +14,13 @@ const Image = ({ name, size, type, className }) => (
 
 Image.propTypes = {
     name: PropTypes.string.isRequired,
-    className: PropTypes.string.isRequired,
+    className: PropTypes.string,
     size: PropTypes.string,
     type: PropTypes.string,
 };
 
 Image.defaultProps = {
+    className: null,
     size: "initial",
     type: "png",
 };

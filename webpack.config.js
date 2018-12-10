@@ -7,7 +7,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 });
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     entry: "./src",
     resolve: {
         modules: [path.resolve("./src"), path.resolve("./node_modules")],
