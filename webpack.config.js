@@ -3,7 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 const htmlPlugin = new HtmlWebPackPlugin({
     template: "./src/index.html",
-    filename: "index.html",
+    filename: "../index.html",
 });
 
 module.exports = {
@@ -14,7 +14,7 @@ module.exports = {
     },
     output: {
         filename: "main.js",
-        path: path.resolve(__dirname, "./"),
+        path: path.resolve(__dirname, "./lib"),
     },
     module: {
         rules: [
@@ -25,7 +25,10 @@ module.exports = {
                     loader: "babel-loader",
                     options: {
                         presets: ["@babel/preset-env"],
-                        plugins: ["transform-class-properties"],
+                        plugins: [
+                            "transform-class-properties",
+                            "dynamic-import-node",
+                        ],
                     },
                 },
             },
