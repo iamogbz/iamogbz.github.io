@@ -5,6 +5,7 @@ import {
     Instagram,
     StackExchange,
 } from "styled-icons/fa-brands";
+import { Call, Email, LocationCity } from "styled-icons/material";
 
 import Link from "components/Link";
 import {
@@ -23,6 +24,9 @@ const urls = {
     github: "https://github.com/iamogbz",
     instagram: "https://instagram.com/iamogbz/",
     stackexchange: "https://stackexchange.com/users/3690139/iamogbz",
+    location: "https://goo.gl/maps/3PpbgtsWnSQ2",
+    telephone: "tel:+1(289)700-5815",
+    email: "mailto:eogbizi@gmail.com",
 };
 
 const linkProps = {
@@ -41,12 +45,6 @@ const socialLinkProps = {
     ...linkProps,
     buttonHeight: 32,
     buttonWidth: 32,
-    borderWidth: 2,
-    borderColor: "white",
-    fontColors: {
-        initial: "white",
-        active: "#2386F1",
-    },
     style: { margin: "8px" },
 };
 
@@ -56,12 +54,33 @@ const socialIconLink = ([IconComponent, href]) => (
     </Link>
 );
 
+const contactLinkProps = {
+    ...linkProps,
+    borderColor: "transparent",
+    buttonHeight: 40,
+    buttonWidth: 200,
+    fontSize: 8,
+};
+
+const contactIconLink = ([IconComponent, href, text]) => (
+    <CenteredCell height={1} width={4} key={text}>
+        <Link {...contactLinkProps} href={href}>
+            <IconComponent size={16} style={{ marginRight: "16px" }} />
+            {text}
+        </Link>
+    </CenteredCell>
+);
+
 export default function() {
     return [
         <PageGrid key="profile-content" columns={12}>
-            <CenteredCell height={5} width={12} />
             <CenteredCell height={10} width={12}>
-                <RoundedImage name="avatar" size="240" type="jpg" />
+                <RoundedImage
+                    name="avatar"
+                    size="240"
+                    type="jpg"
+                    style={{ marginTop: "100px" }}
+                />
             </CenteredCell>
             <CenteredCell
                 height={2}
@@ -75,18 +94,15 @@ export default function() {
             </CenteredCell>
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={3} />
-            <CenteredCell height={1} width={3}>
-                <Link {...linkProps} href={urls.experience}>
-                    experience
-                </Link>
-            </CenteredCell>
-            <CenteredCell height={1} width={3}>
-                <Link {...linkProps} href={urls.education}>
-                    education
-                </Link>
-            </CenteredCell>
+            {["experience", "education"].map(a => (
+                <CenteredCell height={1} width={3} key={a}>
+                    <Link {...linkProps} href={urls[a]}>
+                        {a}
+                    </Link>
+                </CenteredCell>
+            ))}
             <CenteredCell height={1} width={3} />
-            <CenteredCell height={3} width={12} />
+            <CenteredCell height={2} width={12} />
             <CenteredCell height={1} width={12}>
                 {[
                     [Facebook, urls.facebook],
@@ -95,6 +111,11 @@ export default function() {
                     [Instagram, urls.instagram],
                 ].map(socialIconLink)}
             </CenteredCell>
+            {[
+                [LocationCity, urls.location, "Toronto, Ontario"],
+                [Email, urls.email, "Send a message"],
+                [Call, urls.telephone, "Call me"],
+            ].map(contactIconLink)}
             <CenteredCell height={1} width={12} />
         </PageGrid>,
         <ProfileStyle key="profile-style" />,

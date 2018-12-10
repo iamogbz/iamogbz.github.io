@@ -16,7 +16,10 @@ export const ProfileStyle = createGlobalStyle`
     }
 `;
 
-export const PageGrid = styled(Grid)``;
+export const PageGrid = styled(Grid)`
+    height: 100%;
+    width: 100%;
+`;
 
 export const CenteredCell = styled(Cell)`
     display: flex;
