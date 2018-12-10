@@ -70,7 +70,7 @@ class GameOfLife extends React.Component {
         range(0, size.rows).forEach(y => {
             range(0, size.cols).forEach(x => {
                 if (get(this.board, [y, x], false)) {
-                    cells.push({ x, y });
+                    cells.push({ x, y, n: this.calculateNeighbours(x, y) });
                 }
             });
         });

@@ -1,25 +1,33 @@
 import styled from "styled-components";
 
-import { CELL_SIZE, CELL_BORDER } from "./GameOfLife.constants";
+import {
+    BOARD_COLOR,
+    GRID_COLOR,
+    CELL_COLOR,
+    CELL_SIZE,
+    CELL_BORDER,
+} from "./GameOfLife.constants";
 
 export const Board = styled.div`
     width: 100%;
     height: 100%;
     position: relative;
     margin: 0 auto;
-    background-color: #000;
+    background-color: ${BOARD_COLOR};
     background-image: linear-gradient(
-            #333 ${CELL_BORDER}px,
+            ${GRID_COLOR} ${CELL_BORDER}px,
             transparent ${CELL_BORDER}px
         ),
         linear-gradient(
             90deg,
-            #333 ${CELL_BORDER}px,
+            ${GRID_COLOR} ${CELL_BORDER}px,
             transparent ${CELL_BORDER}px
         );
     background-size: ${CELL_SIZE}px ${CELL_SIZE}px;
     overflow: hidden;
 `;
+
+const getHealth = ({ n }) => (n + 1) / 4;
 
 export const Cell = styled.div`
     position: absolute;
@@ -27,6 +35,7 @@ export const Cell = styled.div`
     top: ${({ y }) => CELL_SIZE * y + CELL_BORDER}px;
     width: ${CELL_SIZE - CELL_BORDER * 2}px;
     height: ${CELL_SIZE - CELL_BORDER * 2}px;
-    background-color: #fff;
+    background-color: ${CELL_COLOR};
     border-radius: 100%;
+    opacity: ${getHealth};
 `;
