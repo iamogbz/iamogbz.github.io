@@ -9,7 +9,11 @@ export default function() {
     const routed = appRoutes.describe();
     return (
         <FullPageGrid columns={3} rows={3}>
-            <CenteredCell width={3} height={2}>
+            <CenteredCell
+                width={3}
+                height={2}
+                style={{ backgroundColor: "black" }}
+            >
                 <Image size="256" name="favicon" />
             </CenteredCell>
             <CenteredCell>
