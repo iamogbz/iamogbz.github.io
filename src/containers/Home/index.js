@@ -16,6 +16,7 @@ export default function() {
         fontSize: 32,
         fontColors: {
             initial: "white",
+            active: "#2386F1",
         },
         style: { zIndex: 999 },
     };
