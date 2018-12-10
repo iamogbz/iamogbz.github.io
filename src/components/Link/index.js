@@ -14,6 +14,7 @@ function Link(props) {
         "buttonWidth",
         "buttonHeight",
         "fontColors",
+        "fontSize",
     ]);
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>
@@ -43,6 +44,8 @@ Link.propTypes = {
         hover: PropTypes.string,
         initial: PropTypes.string,
     }),
+    /** Link font size in pt */
+    fontSize: PropTypes.number,
 };
 
 Link.defaultProps = {
@@ -57,6 +60,7 @@ Link.defaultProps = {
         hover: "#2386F1",
         initial: "black",
     },
+    fontSize: 18,
 };
 
 export default Link;

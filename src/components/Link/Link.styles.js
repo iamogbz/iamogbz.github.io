@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const animTime = "0.1s";
+const getFontSize = ({ fontSize }) => `${fontSize}pt`;
 const getBorderColor = ({ borderColor }) => `${borderColor}`;
 const getBorderWidth = ({ borderWidth }) => `${borderWidth}px`;
 const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}px`;
@@ -20,6 +21,7 @@ export const AnimatedBorderedLinkWrapper = styled.span`
 a {
     text-transform: uppercase;
     text-decoration: none;
+    font-size: ${getFontSize};
 
     justify-content: center;
     align-items: center;

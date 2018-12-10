@@ -7,6 +7,11 @@ import { FullPageGrid, CenteredCell } from "./Home.styles";
 
 export default function() {
     const routed = appRoutes.describe();
+    const linkProps = {
+        buttonWidth: 256,
+        buttonHeight: 80,
+        fontSize: 32,
+    };
     return (
         <FullPageGrid columns={3} rows={3}>
             <CenteredCell
@@ -17,15 +22,22 @@ export default function() {
                 <Image size="256" name="favicon" />
             </CenteredCell>
             <CenteredCell>
-                <Link href="https://github.com/iamogbz/iamogbz.github.io">
+                <Link
+                    {...linkProps}
+                    href="https://github.com/iamogbz/iamogbz.github.io"
+                >
                     Source
                 </Link>
             </CenteredCell>
             <CenteredCell>
-                <Link to={routed.labs.$}>Labs</Link>
+                <Link {...linkProps} to={routed.labs.$}>
+                    Labs
+                </Link>
             </CenteredCell>
             <CenteredCell>
-                <Link href="http://emmanuel.ogbizi.com">Profile</Link>
+                <Link {...linkProps} href="http://emmanuel.ogbizi.com">
+                    Profile
+                </Link>
             </CenteredCell>
         </FullPageGrid>
     );
