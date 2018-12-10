@@ -10,5 +10,6 @@ export const GlobalStyle = createGlobalStyle`
     body {
         background: ${({ dark }) => (dark ? "black" : "white")};
         color: ${({ dark }) => (dark ? "white" : "black")};
+        min-width: 768px;
     }
 `;

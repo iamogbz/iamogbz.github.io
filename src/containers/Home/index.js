@@ -1,6 +1,6 @@
 import React from "react";
 
-import Image from "components/Image";
+import GameOfLife from "components/GameOfLife";
 import Link from "components/Link";
 import appRoutes from "containers/App/routes";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
@@ -19,7 +19,7 @@ export default function() {
                 height={2}
                 style={{ backgroundColor: "black" }}
             >
-                <Image size="256" name="favicon" />
+                <GameOfLife />
             </CenteredCell>
             <CenteredCell>
                 <Link

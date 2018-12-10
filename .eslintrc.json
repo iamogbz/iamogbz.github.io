@@ -36,6 +36,7 @@
         "no-use-before-define": [2, {
             "functions": false
         }],
+        "no-underscore-dangle": [2, { "allowAfterThis": true }],
         "import/prefer-default-export": 0,
         "object-curly-newline": [2, {
             "multiline": true,

@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { Grid, Cell } from "styled-css-grid";
 
 export const FullPageGrid = styled(Grid)`
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
 `;
 
 export const CenteredCell = styled(Cell)`
