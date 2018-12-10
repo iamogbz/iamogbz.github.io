@@ -27,15 +27,16 @@ export const Board = styled.div`
     overflow: hidden;
 `;
 
-const getHealth = ({ n }) => (n + 1) / 4;
-
-export const Cell = styled.div`
+export const Cell = styled.div.attrs(({ x, y, n }) => ({
+    style: {
+        left: `${CELL_SIZE * x + CELL_BORDER}px`,
+        top: `${CELL_SIZE * y + CELL_BORDER}px`,
+        opacity: (n + 1) / 4,
+    },
+}))`
     position: absolute;
-    left: ${({ x }) => CELL_SIZE * x + CELL_BORDER}px;
-    top: ${({ y }) => CELL_SIZE * y + CELL_BORDER}px;
     width: ${CELL_SIZE - CELL_BORDER * 2}px;
     height: ${CELL_SIZE - CELL_BORDER * 2}px;
     background-color: ${CELL_COLOR};
     border-radius: 100%;
-    opacity: ${getHealth};
 `;

@@ -55,7 +55,7 @@ const socialIconProps = {
 
 export default function() {
     return [
-        <PageGrid columns={12}>
+        <PageGrid key="profile-content" columns={12}>
             <CenteredCell height={5} width={12} />
             <CenteredCell height={10} width={12}>
                 <RoundedImage name="avatar" size="240" type="jpg" />
@@ -98,6 +98,6 @@ export default function() {
             </CenteredCell>
             <CenteredCell height={1} width={12} />
         </PageGrid>,
-        <ProfileStyle />,
+        <ProfileStyle key="profile-style" />,
     ];
 }

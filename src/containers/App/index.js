@@ -7,9 +7,9 @@ import { GlobalStyle } from "./App.style";
 
 export default function App() {
     return [
-        <HashRouter>
+        <HashRouter key="app-router">
             <Switch>{routes.render()}</Switch>
         </HashRouter>,
-        <GlobalStyle />,
+        <GlobalStyle key="app-style" />,
     ];
 }
