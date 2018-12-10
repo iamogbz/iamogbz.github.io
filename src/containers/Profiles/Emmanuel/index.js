@@ -22,7 +22,7 @@ const urls = {
     facebook: "https://www.facebook.com/Emmanuel.Ogbizi.Ugbe",
     github: "https://github.com/iamogbz",
     instagram: "https://instagram.com/iamogbz/",
-    stackexchange: "http://stackexchange.com/users/3690139/iamogbz",
+    stackexchange: "https://stackexchange.com/users/3690139/iamogbz",
 };
 
 const linkProps = {
@@ -47,11 +47,14 @@ const socialLinkProps = {
         initial: "white",
         active: "#2386F1",
     },
+    style: { margin: "8px" },
 };
 
-const socialIconProps = {
-    size: 16,
-};
+const socialIconLink = ([IconComponent, href]) => (
+    <Link {...socialLinkProps} href={href} key={href}>
+        <IconComponent size={16} />
+    </Link>
+);
 
 export default function() {
     return [
@@ -60,41 +63,37 @@ export default function() {
             <CenteredCell height={10} width={12}>
                 <RoundedImage name="avatar" size="240" type="jpg" />
             </CenteredCell>
-            <CenteredCell height={2} width={12}>
+            <CenteredCell
+                height={2}
+                width={12}
+                style={{
+                    flexDirection: "column",
+                }}
+            >
                 <Title>Emmanuel Ogbizi-Ugbe</Title>
                 <Subtitle>Consultant / Developer / Designer</Subtitle>
             </CenteredCell>
             <CenteredCell height={1} width={12} />
-            <CenteredCell height={1} width={6}>
+            <CenteredCell height={1} width={3} />
+            <CenteredCell height={1} width={3}>
                 <Link {...linkProps} href={urls.experience}>
                     experience
                 </Link>
             </CenteredCell>
-            <CenteredCell height={1} width={6}>
+            <CenteredCell height={1} width={3}>
                 <Link {...linkProps} href={urls.education}>
                     education
                 </Link>
             </CenteredCell>
+            <CenteredCell height={1} width={3} />
             <CenteredCell height={3} width={12} />
-            <CenteredCell height={1} width={3}>
-                <Link {...socialLinkProps} href={urls.facebook}>
-                    <Facebook {...socialIconProps} />
-                </Link>
-            </CenteredCell>
-            <CenteredCell height={1} width={3}>
-                <Link {...socialLinkProps} href={urls.github}>
-                    <Github {...socialIconProps} />
-                </Link>
-            </CenteredCell>
-            <CenteredCell height={1} width={3}>
-                <Link {...socialLinkProps} href={urls.stackexchange}>
-                    <StackExchange {...socialIconProps} />
-                </Link>
-            </CenteredCell>
-            <CenteredCell height={1} width={3}>
-                <Link {...socialLinkProps} href={urls.instagram}>
-                    <Instagram {...socialIconProps} />
-                </Link>
+            <CenteredCell height={1} width={12}>
+                {[
+                    [Facebook, urls.facebook],
+                    [Github, urls.github],
+                    [StackExchange, urls.stackexchange],
+                    [Instagram, urls.instagram],
+                ].map(socialIconLink)}
             </CenteredCell>
             <CenteredCell height={1} width={12} />
         </PageGrid>,

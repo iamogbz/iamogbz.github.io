@@ -9,12 +9,14 @@ function Link(props) {
     const { href, children } = props;
     const linkProps = pick(props, ["children", "href", "to"]);
     const borderStyleProps = pick(props, [
+        "className",
         "borderColor",
         "borderWidth",
         "buttonWidth",
         "buttonHeight",
         "fontColors",
         "fontSize",
+        "style",
     ]);
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>

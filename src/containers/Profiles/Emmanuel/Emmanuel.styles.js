@@ -24,7 +24,6 @@ export const CenteredCell = styled(Cell)`
     align-items: center;
     justify-content: center;
     justify-self: stretch;
-    flex-direction: column;
 `;
 
 export const RoundedImage = styled(Image)`
