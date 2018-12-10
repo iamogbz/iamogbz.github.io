@@ -13,13 +13,15 @@ export default function() {
                 <Image size="256" name="favicon" />
             </CenteredCell>
             <CenteredCell>
-                <Link href="https://github.com/iamogbz.github.io">Source</Link>
+                <Link href="https://github.com/iamogbz/iamogbz.github.io">
+                    Source
+                </Link>
             </CenteredCell>
             <CenteredCell>
                 <Link to={routed.labs.$}>Labs</Link>
             </CenteredCell>
             <CenteredCell>
-                <Link to={routed.profiles.emmanuel.$}>Profile</Link>
+                <Link href="http://emmanuel.ogbizi.com">Profile</Link>
             </CenteredCell>
         </FullPageGrid>
     );

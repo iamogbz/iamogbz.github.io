@@ -1,25 +1,26 @@
 import styled from "styled-components";
 
-const animTime = "0.16";
-const borderColor = "black";
-const borderWidth = "8";
-const buttonWidth = "120";
-const buttonHeight = "80";
-
-const getAnimTime = () => `${animTime}s`;
-const getBorderColor = () => `${borderColor}`;
-const getBorderWidth = () => `${borderWidth}px`;
-const getButtonWidth = () => `${buttonWidth}px`;
-const getButtonHeight = () => `${buttonHeight}px`;
+const animTime = "0.1s";
+const getBorderColor = ({ borderColor }) => `${borderColor}`;
+const getBorderWidth = ({ borderWidth }) => `${borderWidth}px`;
+const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}px`;
+const getButtonHeight = ({ buttonHeight }) => `${buttonHeight}px`;
+const getActiveColor = ({ fontColors: { active } }) => active;
+const getHoverColor = ({ fontColors: { hover } }) => hover;
+const getInitialColor = ({ fontColors: { initial } }) => initial;
 
 const lineBorderPsuedoElem = props => `
     content: "";
     position: absolute;
-    transition: ease ${getAnimTime(props)} all;
+    transition: ease ${animTime} all;
     width: ${getButtonWidth(props)};
 `;
 
 export const AnimatedBorderedLinkWrapper = styled.span`
+a {
+    text-transform: uppercase;
+    text-decoration: none;
+
     justify-content: center;
     align-items: center;
     display: inline-flex;
@@ -27,7 +28,7 @@ export const AnimatedBorderedLinkWrapper = styled.span`
     width: ${getButtonWidth};
     height: ${getButtonHeight};
     font-weight: bold;
-    color: ${getBorderColor};
+    color: ${getInitialColor};
     margin: 0;
     padding: 0;
     position: relative;
@@ -40,21 +41,16 @@ export const AnimatedBorderedLinkWrapper = styled.span`
         ${getBorderColor} 0%,
         ${getBorderColor} 100%
     );
-    transition: ${getAnimTime} all ease;
-    transition-delay: calc(${getAnimTime} * 2);
-
-    a {
-        text-transform: uppercase;
-        text-decoration: none;
-    }
+    transition: ${animTime} all ease;
+    transition-delay: calc(${animTime} * 2);
     
     &:active {
-        color: white;
-        background-color: black;
+        color: ${getActiveColor};
+        background-color: ${getBorderColor};
     }
 
     &:hover {
-        color: black;
+        color: ${getHoverColor};
         background-size: 100% ${getBorderWidth};
         transition-delay: 0s;
     }
@@ -62,7 +58,7 @@ export const AnimatedBorderedLinkWrapper = styled.span`
     /* side borders */
     &::before {
         ${lineBorderPsuedoElem}
-        transition-delay: ${getAnimTime};
+        transition-delay: ${animTime};
         width: calc(${getButtonWidth} - ${getBorderWidth} * 2);
         border-left: solid ${getBorderWidth} ${getBorderColor};
         border-right: solid ${getBorderWidth} ${getBorderColor};
@@ -71,7 +67,7 @@ export const AnimatedBorderedLinkWrapper = styled.span`
     }
 
     &:hover::before {
-        transition-delay: ${getAnimTime};
+        transition-delay: ${animTime};
         height: ${getButtonHeight};
     }
 
@@ -87,8 +83,9 @@ export const AnimatedBorderedLinkWrapper = styled.span`
     }
 
     &:hover::after {
-        transition-delay: calc(${getAnimTime} * 2);
+        transition-delay: calc(${animTime} * 2);
         width: 0;
         border-width: calc(${getButtonWidth} / 2);
     }
+}
 `;
