@@ -5,6 +5,7 @@ export const GlobalStyle = createGlobalStyle`
         border: none;
         margin: 0;
         padding: 0;
+        font-family: Roboto, Helvetica, Arial;
     }
     body {
         background: ${({ dark }) => (dark ? "black" : "white")};

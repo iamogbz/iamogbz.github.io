@@ -1,7 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import Image from "components/Image";
+import Link from "components/Link";
 import appRoutes from "containers/App/routes";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
 
@@ -13,7 +13,7 @@ export default function() {
                 <Image size="256" name="favicon" />
             </CenteredCell>
             <CenteredCell>
-                <Link to="https://github.com/iamogbz.github.io">Source</Link>
+                <Link href="https://github.com/iamogbz.github.io">Source</Link>
             </CenteredCell>
             <CenteredCell>
                 <Link to={routed.labs.$}>Labs</Link>
