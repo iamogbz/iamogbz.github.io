@@ -9,11 +9,13 @@ import { Board, Cell } from "./GameOfLife.styles";
 
 class GameOfLife extends React.Component {
     static propTypes = {
+        fixed: PropTypes.bool,
         interval: PropTypes.number,
         isRunning: PropTypes.bool,
     };
 
     static defaultProps = {
+        fixed: false,
         interval: 100,
         isRunning: true,
     };
@@ -138,8 +140,9 @@ class GameOfLife extends React.Component {
 
     render() {
         const { cells } = this.state;
+        const { fixed } = this.props;
         return (
-            <Board id={BOARD_ID}>
+            <Board id={BOARD_ID} fixed={fixed}>
                 {cells.map(c => <Cell key={`${c.x},${c.y}`} {...c} />)}
             </Board>
         );

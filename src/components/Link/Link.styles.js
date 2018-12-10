@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 const animTime = "0.1s";
 const getFontSize = ({ fontSize }) => `${fontSize}pt`;
+const getBgColor = ({ backgroundColor }) => `${backgroundColor}`;
 const getBorderColor = ({ borderColor }) => `${borderColor}`;
 const getBorderWidth = ({ borderWidth }) => `${borderWidth}px`;
 const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}px`;
@@ -18,6 +19,7 @@ const lineBorderPsuedoElem = props => `
 `;
 
 export const AnimatedBorderedLinkWrapper = styled.span`
+    background-color: ${getBgColor};
 a {
     text-transform: uppercase;
     text-decoration: none;

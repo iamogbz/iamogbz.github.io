@@ -9,11 +9,12 @@ function Link(props) {
     const { href, children } = props;
     const linkProps = pick(props, ["children", "href", "to"]);
     const borderStyleProps = pick(props, [
-        "className",
+        "backgroundColor",
         "borderColor",
         "borderWidth",
         "buttonWidth",
         "buttonHeight",
+        "className",
         "fontColors",
         "fontSize",
         "style",
@@ -32,6 +33,8 @@ Link.propTypes = {
     href: PropTypes.string,
     /** HTML element content */
     children: PropTypes.node.isRequired,
+    /** CSS initial background color */
+    backgroundColor: PropTypes.string,
     /** CSS border color */
     borderColor: PropTypes.string,
     /** CSS border thickness */
@@ -53,6 +56,7 @@ Link.propTypes = {
 Link.defaultProps = {
     to: null,
     href: null,
+    backgroundColor: "transparent",
     borderColor: "black",
     borderWidth: 8,
     buttonWidth: 128,

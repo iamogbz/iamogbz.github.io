@@ -11,7 +11,7 @@ import {
 export const Board = styled.div`
     width: 100%;
     height: 100%;
-    position: relative;
+    position: ${({ fixed }) => (fixed ? "fixed" : "relative")};
     margin: 0 auto;
     background-color: ${BOARD_COLOR};
     background-image: linear-gradient(

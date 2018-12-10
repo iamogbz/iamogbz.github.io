@@ -8,37 +8,37 @@ import { FullPageGrid, CenteredCell } from "./Home.styles";
 export default function() {
     const routed = appRoutes.describe();
     const linkProps = {
+        backgroundColor: "rgba(0,0,0,0.5)",
+        borderColor: "white",
+        borderWidth: 4,
         buttonWidth: 256,
-        buttonHeight: 80,
+        buttonHeight: 96,
         fontSize: 32,
+        fontColors: {
+            initial: "white",
+        },
+        style: { zIndex: 999 },
     };
-    return (
-        <FullPageGrid columns={3} rows={3}>
-            <CenteredCell
-                width={3}
-                height={2}
-                style={{ backgroundColor: "black" }}
-            >
-                <GameOfLife />
-            </CenteredCell>
-            <CenteredCell>
-                <Link
-                    {...linkProps}
-                    href="https://github.com/iamogbz/iamogbz.github.io"
-                >
-                    Source
-                </Link>
-            </CenteredCell>
-            <CenteredCell>
-                <Link {...linkProps} to={routed.labs.$}>
-                    Labs
-                </Link>
-            </CenteredCell>
-            <CenteredCell>
-                <Link {...linkProps} href="http://emmanuel.ogbizi.com">
-                    Profile
-                </Link>
-            </CenteredCell>
-        </FullPageGrid>
-    );
+    return [
+        <GameOfLife key="game-of-life" fixed />,
+        <FullPageGrid columns={3} rows={3} key="page-grid">
+            <CenteredCell width={3} height={2} />
+            {[
+                ["Source", "https://github.com/iamogbz/iamogbz.github.io"],
+                ["Labs", routed.labs.$],
+                ["Profile", routed.profiles.emmanuel.$],
+            ].map(([name, link]) => (
+                <CenteredCell key={name}>
+                    <Link
+                        {...linkProps}
+                        {...(link.startsWith("http")
+                            ? { href: link }
+                            : { to: link })}
+                    >
+                        {name}
+                    </Link>
+                </CenteredCell>
+            ))}
+        </FullPageGrid>,
+    ];
 }
