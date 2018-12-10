@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import isEqual from "lodash/isEqual";
 import range from "lodash/range";
 import get from "lodash/get";
 
@@ -124,7 +125,11 @@ class GameOfLife extends React.Component {
                 });
             });
             this.board = board;
-            this.setState({ cells: this.livingCells() });
+            const nextCells = this.livingCells();
+            const keepRunning = !isEqual(nextCells, this.prevCells);
+            const { cells } = this.state;
+            this.prevCells = cells;
+            this.setState({ cells: nextCells, isRunning: keepRunning });
         }
         this.timeoutHandler = setTimeout(() => {
             this.runIteration();
