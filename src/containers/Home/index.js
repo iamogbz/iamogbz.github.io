@@ -9,7 +9,6 @@ import { FullPageGrid, CenteredCell } from "./Home.styles";
 export default function() {
     const routed = appRoutes.describe();
     const linkProps = {
-        backgroundColor: "rgba(0,0,0,0.5)",
         borderColor: "white",
         borderWidth: "4px",
         buttonWidth: "256px",
@@ -19,11 +18,11 @@ export default function() {
             initial: "white",
             active: "#2386F1",
         },
-        style: { zIndex: 999, borderRadius: "96px" },
+        style: { zIndex: 999 },
     };
     return [
         <GameOfLife key="game-of-life" fixed />,
-        <FullPageGrid columns={3} rows={3} key="page-grid">
+        <FullPageGrid columns={3} rows={3} gap={0} key="page-grid">
             <CenteredCell width={3} height={2}>
                 {/* <Image name="favicon" size="256" style={{ zIndex: 999 }} /> */}
             </CenteredCell>
@@ -32,7 +31,13 @@ export default function() {
                 ["Labs", routed.labs.$],
                 ["Profile", routed.profiles.emmanuel.$],
             ].map(([name, link]) => (
-                <CenteredCell key={name}>
+                <CenteredCell
+                    key={name}
+                    style={{
+                        zIndex: 999,
+                        backgroundColor: "rgba(0,0,0,0.8)",
+                    }}
+                >
                     <Link
                         {...linkProps}
                         {...(link.startsWith("http")
