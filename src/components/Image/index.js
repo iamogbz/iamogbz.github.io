@@ -7,9 +7,8 @@ const Image = ({ name, size, type, className, style }) => (
     <img
         src={`/${imageAssetPath}/${name}.${type || Image.defaultProps.type}`}
         alt={name}
-        width={size}
         className={className}
-        style={style}
+        style={{ ...style, width: size }}
     />
 );
 

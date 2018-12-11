@@ -36,13 +36,13 @@ export const RoundedImage = styled(Image)`
 export const Title = styled.div`
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 20pt;
+    font-size: 2vmax;
     margin: 16px;
     letter-spacing: 2px;
 `;
 
 export const Subtitle = styled.div`
     text-transform: uppercase;
-    font-size: 12pt;
+    font-size: 1.2vmax;
     color: #c8c8c8;
 `;

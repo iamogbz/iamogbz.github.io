@@ -11,10 +11,10 @@ export default function() {
     const linkProps = {
         backgroundColor: "rgba(0,0,0,0.5)",
         borderColor: "white",
-        borderWidth: 4,
-        buttonWidth: 256,
-        buttonHeight: 96,
-        fontSize: 32,
+        borderWidth: "4px",
+        buttonWidth: "256px",
+        buttonHeight: "10vmax",
+        fontSize: "2.4vmax",
         fontColors: {
             initial: "white",
             active: "#2386F1",
@@ -36,7 +36,7 @@ export default function() {
                     <Link
                         {...linkProps}
                         {...(link.startsWith("http")
-                            ? { href: link }
+                            ? { href: link, target: "_blank" }
                             : { to: link })}
                     >
                         {name}

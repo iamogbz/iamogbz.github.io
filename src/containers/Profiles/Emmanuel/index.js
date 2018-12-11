@@ -30,42 +30,43 @@ const urls = {
 };
 
 const linkProps = {
-    buttonHeight: 56,
-    buttonWidth: 200,
-    borderWidth: 2,
+    buttonHeight: "56px",
+    buttonWidth: "200px",
+    borderWidth: "2px",
     borderColor: "white",
     fontColors: {
         initial: "white",
         active: "#2386F1",
     },
-    fontSize: 12,
+    fontSize: "1.2vmax",
+    target: "_blank",
 };
 
 const socialLinkProps = {
     ...linkProps,
-    buttonHeight: 32,
-    buttonWidth: 32,
+    buttonHeight: "4vmax",
+    buttonWidth: "4vmax",
     style: { margin: "8px" },
 };
 
 const socialIconLink = ([IconComponent, href]) => (
     <Link {...socialLinkProps} href={href} key={href}>
-        <IconComponent size={16} />
+        <IconComponent size="2vmax" />
     </Link>
 );
 
 const contactLinkProps = {
     ...linkProps,
     borderColor: "transparent",
-    buttonHeight: 40,
-    buttonWidth: 200,
-    fontSize: 8,
+    buttonHeight: "40px",
+    buttonWidth: "200px",
+    fontSize: "1vmax",
 };
 
 const contactIconLink = ([IconComponent, href, text]) => (
     <CenteredCell height={1} width={4} key={text}>
         <Link {...contactLinkProps} href={href}>
-            <IconComponent size={16} style={{ marginRight: "16px" }} />
+            <IconComponent size="2vmax" style={{ marginRight: "16px" }} />
             {text}
         </Link>
     </CenteredCell>
@@ -74,16 +75,16 @@ const contactIconLink = ([IconComponent, href, text]) => (
 export default function() {
     return [
         <PageGrid key="profile-content" columns={12}>
-            <CenteredCell height={10} width={12}>
+            <CenteredCell height={1} width={12}>
                 <RoundedImage
                     name="avatar"
-                    size="240"
+                    size="30vmax"
                     type="jpg"
-                    style={{ marginTop: "100px" }}
+                    style={{ marginTop: "20vmax" }}
                 />
             </CenteredCell>
             <CenteredCell
-                height={2}
+                height={1}
                 width={12}
                 style={{
                     flexDirection: "column",
@@ -102,7 +103,7 @@ export default function() {
                 </CenteredCell>
             ))}
             <CenteredCell height={1} width={3} />
-            <CenteredCell height={2} width={12} />
+            <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={12}>
                 {[
                     [Facebook, urls.facebook],
@@ -112,7 +113,7 @@ export default function() {
                 ].map(socialIconLink)}
             </CenteredCell>
             {[
-                [LocationCity, urls.location, "Toronto, Ontario"],
+                [LocationCity, urls.location, "Toronto Ontario"],
                 [Email, urls.email, "Send a message"],
                 [Call, urls.telephone, "Call me"],
             ].map(contactIconLink)}

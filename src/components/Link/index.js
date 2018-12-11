@@ -38,19 +38,19 @@ Link.propTypes = {
     /** CSS border color */
     borderColor: PropTypes.string,
     /** CSS border thickness */
-    borderWidth: PropTypes.number,
-    /** Link button width in px */
-    buttonWidth: PropTypes.number,
-    /** Link button height in px */
-    buttonHeight: PropTypes.number,
+    borderWidth: PropTypes.string,
+    /** Link button css width */
+    buttonWidth: PropTypes.string,
+    /** Link button height */
+    buttonHeight: PropTypes.string,
     /** Link colors in various contexts */
     fontColors: PropTypes.shape({
         active: PropTypes.string,
         hover: PropTypes.string,
         initial: PropTypes.string,
     }),
-    /** Link font size in pt */
-    fontSize: PropTypes.number,
+    /** Link css font size */
+    fontSize: PropTypes.string,
     /** If specified native html a link is used */
     href: PropTypes.string,
     /** HTML link target attribute */
@@ -62,17 +62,17 @@ Link.propTypes = {
 Link.defaultProps = {
     backgroundColor: "transparent",
     borderColor: "black",
-    borderWidth: 8,
-    buttonWidth: 128,
-    buttonHeight: 64,
+    borderWidth: "8px",
+    buttonWidth: "128px",
+    buttonHeight: "64px",
     fontColors: {
         active: "white",
         hover: "#2386F1",
         initial: "black",
     },
-    fontSize: 18,
+    fontSize: "1.8vmax",
     href: null,
-    target: "_blank",
+    target: "self",
     to: null,
 };
 

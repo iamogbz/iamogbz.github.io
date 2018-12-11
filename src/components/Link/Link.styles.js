@@ -1,12 +1,12 @@
 import styled from "styled-components";
 
 const animTime = "0.1s";
-const getFontSize = ({ fontSize }) => `${fontSize}pt`;
+const getFontSize = ({ fontSize }) => `${fontSize}`;
 const getBgColor = ({ backgroundColor }) => `${backgroundColor}`;
 const getBorderColor = ({ borderColor }) => `${borderColor}`;
-const getBorderWidth = ({ borderWidth }) => `${borderWidth}px`;
-const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}px`;
-const getButtonHeight = ({ buttonHeight }) => `${buttonHeight}px`;
+const getBorderWidth = ({ borderWidth }) => `${borderWidth}`;
+const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}`;
+const getButtonHeight = ({ buttonHeight }) => `${buttonHeight}`;
 const getActiveColor = ({ fontColors: { active } }) => active;
 const getHoverColor = ({ fontColors: { hover } }) => hover;
 const getInitialColor = ({ fontColors: { initial } }) => initial;
