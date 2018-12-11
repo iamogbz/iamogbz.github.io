@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Helmet } from "react-helmet";
 import { Beaker } from "styled-icons/octicons";
 import { TestTube } from "styled-icons/boxicons-regular";
 
@@ -22,6 +23,9 @@ const iconProps = {
 export default function() {
     return (
         <Page>
+            <Helmet>
+                <title>Laboratory</title>
+            </Helmet>
             <GameOfLife key="game-of-life" fixed />
             <Beaker {...iconProps} />
             <TestTube {...iconProps} />

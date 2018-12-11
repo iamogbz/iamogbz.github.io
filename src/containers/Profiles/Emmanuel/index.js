@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 import {
     Facebook,
     Github,
@@ -74,6 +75,9 @@ const contactIconLink = ([IconComponent, href, text]) => (
 
 export default function() {
     return [
+        <Helmet>
+            <title>Emmanuel Ogbizi-Ugbe</title>
+        </Helmet>,
         <PageGrid key="profile-content" columns={12}>
             <CenteredCell height={1} width={12}>
                 <RoundedImage
