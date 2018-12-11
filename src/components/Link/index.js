@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link as L } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 import pick from "lodash/pick";
 
 import { AnimatedBorderedLinkWrapper } from "./Link.styles";
 
 function Link(props) {
     const { href, children } = props;
-    const linkProps = pick(props, ["children", "href", "to"]);
+    const linkProps = pick(props, ["children", "href", "target", "to"]);
     const borderStyleProps = pick(props, [
         "backgroundColor",
         "borderColor",
@@ -21,16 +21,16 @@ function Link(props) {
     ]);
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>
-            {href ? <a {...linkProps}>{children}</a> : <L {...linkProps} />}
+            {href ? (
+                <a {...linkProps}>{children}</a>
+            ) : (
+                <ReactRouterLink {...linkProps} />
+            )}
         </AnimatedBorderedLinkWrapper>
     );
 }
 
 Link.propTypes = {
-    /** If specified react router Link is user */
-    to: PropTypes.string,
-    /** If specified native html a link is used */
-    href: PropTypes.string,
     /** HTML element content */
     children: PropTypes.node.isRequired,
     /** CSS initial background color */
@@ -51,11 +51,15 @@ Link.propTypes = {
     }),
     /** Link font size in pt */
     fontSize: PropTypes.number,
+    /** If specified native html a link is used */
+    href: PropTypes.string,
+    /** HTML link target attribute */
+    target: PropTypes.string,
+    /** If specified react router Link is user */
+    to: PropTypes.string,
 };
 
 Link.defaultProps = {
-    to: null,
-    href: null,
     backgroundColor: "transparent",
     borderColor: "black",
     borderWidth: 8,
@@ -67,6 +71,9 @@ Link.defaultProps = {
         initial: "black",
     },
     fontSize: 18,
+    href: null,
+    target: "_blank",
+    to: null,
 };
 
 export default Link;
