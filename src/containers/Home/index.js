@@ -1,7 +1,6 @@
 import React from "react";
 
-import GameOfLife from "components/GameOfLife";
-// import Image from "components/Image";
+import Image from "components/Image";
 import Link from "components/Link";
 import appRoutes from "containers/App/routes";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
@@ -12,19 +11,17 @@ export default function() {
         borderColor: "white",
         borderWidth: "4px",
         buttonWidth: "256px",
-        buttonHeight: "10vmax",
+        buttonHeight: "6vmax",
         fontSize: "2.4vmax",
         fontColors: {
             initial: "white",
             active: "#2386F1",
         },
-        style: { zIndex: 999 },
     };
-    return [
-        <GameOfLife key="game-of-life" fixed />,
+    return (
         <FullPageGrid columns={3} rows={3} gap={0} key="page-grid">
             <CenteredCell width={3} height={2}>
-                {/* <Image name="favicon" size="256" style={{ zIndex: 999 }} /> */}
+                <Image name="favicon" size="40vh" />
             </CenteredCell>
             {[
                 ["Source", "https://github.com/iamogbz/iamogbz.github.io"],
@@ -48,6 +45,6 @@ export default function() {
                     </Link>
                 </CenteredCell>
             ))}
-        </FullPageGrid>,
-    ];
+        </FullPageGrid>
+    );
 }
