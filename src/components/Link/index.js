@@ -72,7 +72,7 @@ Link.defaultProps = {
     },
     fontSize: "1.8vmax",
     href: null,
-    target: "self",
+    target: "_self",
     to: null,
 };
 
