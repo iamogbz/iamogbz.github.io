@@ -3,7 +3,7 @@ import React from "react";
 import { Colors } from "utils/constants";
 import { SVGWrapper } from "./Logo.styles";
 
-const random = (min = 0, max = 1) => min + Math.random() * max - min;
+const random = (min = 0, max = 1) => min + Math.random() * (max - min);
 
 export default function Logo(props) {
     const pathProps = {
