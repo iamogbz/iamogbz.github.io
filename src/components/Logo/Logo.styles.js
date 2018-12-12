@@ -13,10 +13,8 @@ export const SVGWrapper = styled.div`
         height: 100%;
     }
     path {
-        transform-origin: center;
         stroke-dasharray: 50;
         stroke-dashoffset: 50;
-        rotate(0deg);
         animation: ${pathAnim};
     }
     @keyframes dash {
@@ -25,6 +23,8 @@ export const SVGWrapper = styled.div`
         }
     }
     #circle {
+        transform-origin: center;
+        transform: rotate(0deg);
         animation: ${pathAnim}, spin ${1 + 3 * Math.random()}s linear infinite;
     }
     @keyframes spin {
