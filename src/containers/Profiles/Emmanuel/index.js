@@ -8,6 +8,7 @@ import {
 } from "styled-icons/fa-brands";
 import { Call, Email, LocationCity } from "styled-icons/material";
 
+import { Colors } from "utils/constants";
 import Link from "components/Link";
 import {
     PageGrid,
@@ -34,10 +35,10 @@ const linkProps = {
     buttonHeight: "56px",
     buttonWidth: "200px",
     borderWidth: "2px",
-    borderColor: "white",
+    borderColor: Colors.WHITE,
     fontColors: {
-        initial: "white",
-        active: "#2386F1",
+        initial: Colors.WHITE,
+        active: Colors.ACTIVE,
     },
     fontSize: "1.2vmax",
     target: "_blank",
@@ -58,7 +59,7 @@ const socialIconLink = ([IconComponent, href]) => (
 
 const contactLinkProps = {
     ...linkProps,
-    borderColor: "transparent",
+    borderColor: Colors.NONE,
     buttonHeight: "40px",
     buttonWidth: "200px",
     fontSize: "1vmax",

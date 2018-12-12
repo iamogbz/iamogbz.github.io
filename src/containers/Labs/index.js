@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Helmet } from "react-helmet";
 import { Beaker } from "styled-icons/octicons";
 import { TestTube } from "styled-icons/boxicons-regular";
-
+import { Colors, Zindex } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
 
 const Page = styled.div`
@@ -15,9 +15,9 @@ const Page = styled.div`
 `;
 
 const iconProps = {
-    color: "white",
+    color: Colors.LIGHT,
     size: "10vmax",
-    style: { zIndex: 999 },
+    style: { zIndex: Zindex.TOP },
 };
 
 export default function() {

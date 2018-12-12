@@ -1,27 +1,28 @@
 import React from "react";
 
-import Image from "components/Image";
+import Logo from "components/Logo";
 import Link from "components/Link";
 import appRoutes from "containers/App/routes";
+import { Colors, Zindex } from "utils/constants";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
 
 export default function() {
     const routed = appRoutes.describe();
     const linkProps = {
-        borderColor: "white",
+        borderColor: Colors.LIGHT,
         borderWidth: "4px",
         buttonWidth: "256px",
         buttonHeight: "6vmax",
         fontSize: "2.4vmax",
         fontColors: {
-            initial: "white",
-            active: "#2386F1",
+            initial: Colors.LIGHT,
+            active: Colors.ACTIVE,
         },
     };
     return (
         <FullPageGrid columns={3} rows={3} gap={0} key="page-grid">
             <CenteredCell width={3} height={2}>
-                <Image name="favicon" size="40vh" />
+                <Logo size="40vh" />
             </CenteredCell>
             {[
                 ["Source", "https://github.com/iamogbz/iamogbz.github.io"],
@@ -31,7 +32,7 @@ export default function() {
                 <CenteredCell
                     key={name}
                     style={{
-                        zIndex: 999,
+                        zIndex: Zindex.TOP,
                         backgroundColor: "rgba(0,0,0,0.8)",
                     }}
                 >

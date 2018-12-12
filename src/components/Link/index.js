@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link as ReactRouterLink } from "react-router-dom";
 import pick from "lodash/pick";
 
+import { Colors } from "utils/constants";
 import { AnimatedBorderedLinkWrapper } from "./Link.styles";
 
 function Link(props) {
@@ -61,14 +62,14 @@ Link.propTypes = {
 
 Link.defaultProps = {
     backgroundColor: "transparent",
-    borderColor: "black",
+    borderColor: Colors.DARK,
     borderWidth: "8px",
     buttonWidth: "128px",
     buttonHeight: "64px",
     fontColors: {
-        active: "white",
-        hover: "#2386F1",
-        initial: "black",
+        active: Colors.LIGHT,
+        hover: Colors.ACTIVE,
+        initial: Colors.DARK,
     },
     fontSize: "1.8vmax",
     href: null,

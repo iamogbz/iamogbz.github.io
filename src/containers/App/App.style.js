@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { Colors } from "utils/constants";
 
 export const GlobalStyle = createGlobalStyle`
     html, body {
@@ -8,8 +9,8 @@ export const GlobalStyle = createGlobalStyle`
         font-family: Roboto, Helvetica, Arial;
     }
     body {
-        background: ${({ dark }) => (dark ? "black" : "white")};
-        color: ${({ dark }) => (dark ? "white" : "black")};
+        background: ${({ dark }) => (dark ? Colors.DARK : Colors.LIGHT)};
+        color: ${({ dark }) => (dark ? Colors.LIGHT : Colors.DARK)};
         min-width: 768px;
     }
 `;
