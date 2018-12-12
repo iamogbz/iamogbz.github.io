@@ -3,6 +3,8 @@ import React from "react";
 import { Colors } from "utils/constants";
 import { SVGWrapper } from "./Logo.styles";
 
+const random = (min = 0, max = 1) => min + Math.random() * max - min;
+
 export default function Logo(props) {
     const pathProps = {
         strokeLinecap: "round",
@@ -11,16 +13,16 @@ export default function Logo(props) {
         fill: "none",
     };
     const randomAnimProps = () => ({
-        animationDelay: `${2 * Math.random()}s`,
-        animationDuration: `${2 + 2 * Math.random()}s, ${2 +
-            2 * Math.random()}s`,
+        animationDelay: `${random(0, 2)}s`,
+        animationDuration: `${random(2, 4)}s, ${random(1, 4)}s`,
     });
     return (
         <SVGWrapper {...props}>
             <svg width="24" height="24" viewBox="0 0 24 24">
                 <path
-                    d="M14,2 L14,22"
-                    id="line1"
+                    d="M12,4 L12,24"
+                    transform="translate(12.000000, 14.000000) rotate(90.000000) translate(-12.000000, -14.000000) "
+                    id="line2"
                     className="animline"
                     stroke={Colors.LIGHT}
                     {...pathProps}
@@ -35,9 +37,8 @@ export default function Logo(props) {
                     style={randomAnimProps()}
                 />
                 <path
-                    d="M12,4 L12,24"
-                    transform="translate(12.000000, 14.000000) rotate(90.000000) translate(-12.000000, -14.000000) "
-                    id="line2"
+                    d="M14,2 L14,22"
+                    id="line1"
                     className="animline"
                     stroke={Colors.LIGHT}
                     {...pathProps}
