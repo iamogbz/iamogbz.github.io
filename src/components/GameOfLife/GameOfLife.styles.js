@@ -1,3 +1,5 @@
+import React from "react";
+import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import {
@@ -8,7 +10,7 @@ import {
     CELL_BORDER,
 } from "./GameOfLife.constants";
 
-export const Board = styled.div`
+export const Board = styled.svg`
     width: 100%;
     height: 100%;
     position: ${({ fixed }) => (fixed ? "fixed" : "relative")};
@@ -27,16 +29,25 @@ export const Board = styled.div`
     overflow: hidden;
 `;
 
-export const Cell = styled.div.attrs(({ x, y, n }) => ({
-    style: {
-        left: `${CELL_SIZE * x + CELL_BORDER}px`,
-        top: `${CELL_SIZE * y + CELL_BORDER}px`,
-        opacity: (n + 1) / 4,
-    },
-}))`
-    position: absolute;
-    width: ${CELL_SIZE - CELL_BORDER * 2}px;
-    height: ${CELL_SIZE - CELL_BORDER * 2}px;
-    background-color: ${CELL_COLOR};
-    border-radius: 100%;
-`;
+export const Cell = ({ x, y, n }) => (
+    <rect
+        {...{
+            x: CELL_SIZE * x + CELL_BORDER,
+            y: CELL_SIZE * y + CELL_BORDER,
+            rx: CELL_SIZE,
+            ry: CELL_SIZE,
+            fill: CELL_COLOR,
+            width: CELL_SIZE - CELL_BORDER * 2,
+            height: CELL_SIZE - CELL_BORDER * 2,
+            style: {
+                opacity: (n + 1) / 4,
+            },
+        }}
+    />
+);
+
+Cell.propTypes = {
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+    n: PropTypes.number.isRequired,
+};
