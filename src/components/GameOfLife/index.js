@@ -132,7 +132,7 @@ class GameOfLife extends React.Component {
         }
         this.timeoutHandler = setTimeout(() => {
             this.runIteration();
-        }, size ? (size.rows * size.cols) / 20 : 100);
+        }, size ? (size.rows * size.cols) / 32 : GameOfLife.defaultProps.interval);
     }
 
     render() {
