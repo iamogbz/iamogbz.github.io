@@ -61,7 +61,7 @@ Link.propTypes = {
 };
 
 Link.defaultProps = {
-    backgroundColor: "transparent",
+    backgroundColor: Colors.NONE,
     borderColor: Colors.DARK,
     borderWidth: "8px",
     buttonWidth: "128px",

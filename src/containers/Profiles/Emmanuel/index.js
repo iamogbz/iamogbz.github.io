@@ -35,9 +35,9 @@ const linkProps = {
     buttonHeight: "56px",
     buttonWidth: "200px",
     borderWidth: "2px",
-    borderColor: Colors.WHITE,
+    borderColor: Colors.LIGHT,
     fontColors: {
-        initial: Colors.WHITE,
+        initial: Colors.LIGHT,
         active: Colors.ACTIVE,
     },
     fontSize: "1.2vmax",
