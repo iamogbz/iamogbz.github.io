@@ -10,6 +10,8 @@ import { Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
 import Link from "components/Link";
+import GithubLanguages from "components/GithubLanguages";
+import { GITHUB_KEY_RO } from "./Emmanuel.constants";
 import {
     PageGrid,
     CenteredCell,
@@ -97,6 +99,9 @@ export default function() {
             >
                 <Title>Emmanuel Ogbizi-Ugbe</Title>
                 <Subtitle>Consultant / Developer / Designer</Subtitle>
+            </CenteredCell>
+            <CenteredCell height={1} width={12}>
+                <GithubLanguages authKey={GITHUB_KEY_RO} />
             </CenteredCell>
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={3} />
