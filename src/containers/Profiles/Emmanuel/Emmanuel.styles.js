@@ -8,7 +8,7 @@ export const ProfileStyle = createGlobalStyle`
         color: #f8f8f8;
     }
     html {
-        background: url('assets/images/background.jpg') no-repeat;
+        background: url("assets/images/background.jpg") no-repeat;
         background-size: cover;
     }
     body {

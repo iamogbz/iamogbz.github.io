@@ -6,6 +6,12 @@ import appRoutes from "containers/App/routes";
 import { Colors, Zindex } from "utils/constants";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
 
+const headerCellStyle = { backgroundColor: "rgba(0,0,0,0.6)" };
+const linkCellStyle = {
+    zIndex: Zindex.TOP,
+    backgroundColor: "rgba(0,0,0,0.8)",
+};
+
 export default function() {
     const routed = appRoutes.describe();
     const linkProps = {
@@ -21,7 +27,7 @@ export default function() {
     };
     return (
         <FullPageGrid columns={3} rows={3} gap={0} key="page-grid">
-            <CenteredCell width={3} height={2}>
+            <CenteredCell width={3} height={2} style={headerCellStyle}>
                 <Logo size="40vh" />
             </CenteredCell>
             {[
@@ -29,13 +35,7 @@ export default function() {
                 ["Labs", routed.labs.$],
                 ["Profile", routed.profiles.emmanuel.$],
             ].map(([name, link]) => (
-                <CenteredCell
-                    key={name}
-                    style={{
-                        zIndex: Zindex.TOP,
-                        backgroundColor: "rgba(0,0,0,0.8)",
-                    }}
-                >
+                <CenteredCell key={name} style={linkCellStyle}>
                     <Link
                         {...linkProps}
                         {...(link.startsWith("http")
