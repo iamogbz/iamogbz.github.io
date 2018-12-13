@@ -1,6 +1,7 @@
 export const GRAPH_QUERY = `query getLangs($repoCount:Int!, $langCount:Int!) {
     viewer {
         name
+        login
         repositories(last: $repoCount) {
             nodes {
                 name

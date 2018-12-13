@@ -4,6 +4,8 @@ import get from "lodash/get";
 import GithubGraphQLClient from "services/Github/GraphQLClient";
 import { GRAPH_QUERY } from "./GithubLanguages.constants";
 
+const getUserUrl = user => `https://github.com/${user.toLowerCase()}`;
+
 export default class GithubLanguages extends React.PureComponent {
     propTypes = {
         authKey: PropTypes.string.isRequired,
@@ -26,6 +28,15 @@ export default class GithubLanguages extends React.PureComponent {
             .then(data => this.setState({ data }));
     }
 
+    get getLanguageReposUrl() {
+        const { data } = this.state;
+        const userUrl = getUserUrl(get(data, "viewer.login", "404"));
+        return lang =>
+            `${userUrl}?tab=repositories&language=${lang
+                .replace(" ", "+")
+                .toLowerCase()}`;
+    }
+
     get languageDistribution() {
         const { data } = this.state;
         const langs = { total: 0, types: {} };
@@ -36,9 +47,12 @@ export default class GithubLanguages extends React.PureComponent {
                     node: { name },
                 } = lang;
                 if (!langs.types[name]) {
-                    langs.types[name] = 0;
+                    langs.types[name] = {
+                        size: 0,
+                        url: this.getLanguageReposUrl(name),
+                    };
                 }
-                langs.types[name] += size;
+                langs.types[name].size += size;
                 langs.total += size;
             });
         });
