@@ -1,33 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
-import { GraphQLClient } from "graphql-request";
-
-const endpoint = "https://api.github.com/graphql";
-const query = `query getLangs($repoCount:Int!, $langCount:Int!) {
-    viewer {
-        name
-        repositories(last: $repoCount) {
-            nodes {
-                name
-                languages(last: $langCount) {
-                    totalCount
-                    totalSize
-                    edges {
-                        size
-                        node {
-                            name
-                        }
-                    }
-                }
-            }
-        }
-    }
-}`;
-const variables = {
-    repoCount: 100,
-    langCount: 10,
-};
+import GithubGraphQLClient from "services/Github/GraphQLClient";
+import { GRAPH_QUERY } from "./GithubLanguages.constants";
 
 export default class GithubLanguages extends React.PureComponent {
     propTypes = {
@@ -38,13 +13,16 @@ export default class GithubLanguages extends React.PureComponent {
         super(props);
         const { authKey } = this.props;
         this.state = {};
-        this.client = new GraphQLClient(endpoint, {
+        this.client = GithubGraphQLClient({
             headers: {
                 Authorization: `Bearer ${authKey}`,
             },
         });
         this.client
-            .request(query, variables)
+            .request(GRAPH_QUERY, {
+                repoCount: 100,
+                langCount: 10,
+            })
             .then(data => this.setState({ data }));
     }
 
