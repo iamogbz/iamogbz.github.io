@@ -10,6 +10,8 @@ import { Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
 import Link from "components/Link";
+import GithubLanguages from "components/GithubLanguages";
+import { GITHUB_KEY_B } from "./Emmanuel.constants";
 import {
     PageGrid,
     CenteredCell,
@@ -76,7 +78,7 @@ const contactIconLink = ([IconComponent, href, text]) => (
 
 export default function() {
     return [
-        <Helmet>
+        <Helmet key="profile-helmet">
             <title>Emmanuel Ogbizi-Ugbe</title>
         </Helmet>,
         <PageGrid key="profile-content" columns={12}>
@@ -97,6 +99,9 @@ export default function() {
             >
                 <Title>Emmanuel Ogbizi-Ugbe</Title>
                 <Subtitle>Consultant / Developer / Designer</Subtitle>
+            </CenteredCell>
+            <CenteredCell height={1} width={12}>
+                <GithubLanguages authKey={btoa(GITHUB_KEY_B)} />
             </CenteredCell>
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={3} />
