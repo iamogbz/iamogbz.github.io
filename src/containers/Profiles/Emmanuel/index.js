@@ -78,7 +78,7 @@ const contactIconLink = ([IconComponent, href, text]) => (
 
 export default function() {
     return [
-        <Helmet>
+        <Helmet key="profile-helmet">
             <title>Emmanuel Ogbizi-Ugbe</title>
         </Helmet>,
         <PageGrid key="profile-content" columns={12}>

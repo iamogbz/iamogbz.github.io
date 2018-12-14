@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import get from "lodash/get";
+import { Colors } from "utils/constants";
 import GithubGraphQLClient from "services/Github/GraphQLClient";
-import { GRAPH_QUERY } from "./GithubLanguages.constants";
+import LanguageBadge from "components/LanguageBadge";
+import { LANG_BLACKLIST, GRAPH_QUERY } from "./GithubLanguages.constants";
 
 const getUserUrl = user => `https://github.com/${user.toLowerCase()}`;
 
 export default class GithubLanguages extends React.PureComponent {
-    propTypes = {
+    static propTypes = {
         authKey: PropTypes.string.isRequired,
     };
 
@@ -60,7 +62,31 @@ export default class GithubLanguages extends React.PureComponent {
     }
 
     render() {
-        console.log(this.languageDistribution);
-        return null;
+        const { total, types } = this.languageDistribution;
+        const colors = {
+            $: {
+                foreground: Colors.DARK,
+                background: "rgba(255, 255, 255, 0.7)",
+            },
+            hover: {
+                background: "rgba(255, 255, 255, 0.9)",
+            },
+        };
+        const sortedDists = Object.entries(types).sort(
+            ([, a], [, b]) => b.size - a.size,
+        );
+        return sortedDists.map(([name, { size, url }]) => {
+            const showUrlLink = !LANG_BLACKLIST.includes(name.toLowerCase());
+            return (
+                <LanguageBadge
+                    name={name}
+                    key={name}
+                    numerator={size}
+                    denominator={total}
+                    url={showUrlLink ? url : null}
+                    colors={colors}
+                />
+            );
+        });
     }
 }

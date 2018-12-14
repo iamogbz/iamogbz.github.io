@@ -23,6 +23,7 @@ export const PageGrid = styled(Grid)`
 
 export const CenteredCell = styled(Cell)`
     display: flex;
+    flex-wrap: wrap;
     text-align: center;
     align-items: center;
     justify-content: center;

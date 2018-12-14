@@ -26,7 +26,7 @@ export default function() {
         },
     };
     return (
-        <FullPageGrid columns={3} rows={3} gap={0} key="page-grid">
+        <FullPageGrid columns={3} rows={3} gap="0" key="page-grid">
             <CenteredCell width={3} height={2} style={headerCellStyle}>
                 <Logo size="40vh" />
             </CenteredCell>
