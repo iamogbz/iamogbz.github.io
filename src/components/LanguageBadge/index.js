@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { OpenInNew } from "styled-icons/material";
 import { Colors } from "utils/constants";
-import { Globe } from "styled-icons/boxicons-regular";
 import { BadgeWrapper, Spacer } from "./LanguageBadge.styles";
 
-const badgeValue = (n, m) => Math.round((n * 100) / m);
+const badgeValue = (n, m) => Math.ceil((n * 100) / m);
 
 function LanguageBadge({ name, numerator, denominator, colors, url }) {
     const value = badgeValue(numerator, denominator);
@@ -16,7 +16,7 @@ function LanguageBadge({ name, numerator, denominator, colors, url }) {
             {name}
             {hasValUrl ? spacer : null}
             {hasValUrl ? (
-                <Globe color={colors.$.foreground} size="1.2vmax" />
+                <OpenInNew color={colors.$.foreground} size="1.2vmax" />
             ) : null}
         </BadgeWrapper>
     );

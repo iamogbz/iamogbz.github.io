@@ -20,4 +20,10 @@ export const GRAPH_QUERY = `query getLangs($repoCount:Int!, $langCount:Int!) {
     }
 }`;
 
-export const LANG_BLACKLIST = ["css", "html"];
+export const LANG_BLACKLIST = [
+    "css",
+    "dockerfile",
+    "html",
+    "makefile",
+    "shell",
+];

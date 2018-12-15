@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
-export const BadgeWrapper = styled.a`
+export const BadgeWrapper = styled.a.attrs({
+    target: "_blank",
+})`
     display: inline-flex;
     align-items: center;
     justify-content: center;
