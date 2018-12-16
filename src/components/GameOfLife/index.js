@@ -27,7 +27,14 @@ class GameOfLife extends React.Component {
             cells: [],
             isRunning,
         };
+    }
+
+    componentDidMount() {
         this.runIteration();
+    }
+
+    componentWillUnmount() {
+        this.stopRunning();
     }
 
     get size() {
@@ -103,12 +110,12 @@ class GameOfLife extends React.Component {
 
     stopRunning() {
         this.setState({ isRunning: false });
+        clearTimeout(this.timeoutHandler);
     }
 
     runIteration() {
         const { isRunning } = this.state;
         if (!isRunning) {
-            delete this.timeoutHandler;
             return;
         }
         const { size } = this;
