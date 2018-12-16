@@ -1,1 +1,1 @@
-export const GITHUB_KEY_B = "Ñ®tïÖ»qÍ4ã7oÞwïÖ»Û~¸Ó[õ§xsö";
+export const GITHUB_KEY_B = "i÷÷w×w¿zá·úu·{}ç·kMµñ¿÷W7i÷½";
