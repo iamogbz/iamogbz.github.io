@@ -66,12 +66,16 @@ export default function({
     );
     return [
         <Helmet key="lab-helmet">
-            <title>Laboratory</title>
+            <title>{experiment ? `${xName(experiment)}` : "Laboratory"}</title>
         </Helmet>,
         <GameOfLife key="game-of-life" fixed background />,
         <FullGrid key="lab-grid">
-            <CenteredCell width={3}>
-                <FullGrid columns={1} gap="0">
+            <CenteredCell width={4} fitContent>
+                <FullGrid
+                    columns={1}
+                    gap="0"
+                    style={{ maxWidth: "300px", minWidth: "240px" }}
+                >
                     {Object.keys(EXPERIMENTS).map(x => {
                         const active = x === experiment;
                         const linkProps = {
@@ -103,7 +107,7 @@ export default function({
                     })}
                 </FullGrid>
             </CenteredCell>
-            <CenteredCell width={9}>
+            <CenteredCell width={8}>
                 {experiment ? (
                     <Experiment experiment={experiment} />
                 ) : (
