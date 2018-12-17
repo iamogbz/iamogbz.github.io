@@ -1,0 +1,15 @@
+export const EXPERIMENTS = {
+    // "android-editable-textview": false,
+    "android-swappable-imageview": false,
+    "bot-slacker": true,
+    // "challenge-haskell": false,
+    // "challenge-python": false,
+    // "challenge-java": false,
+    "chrome-alt-tabs": true,
+    "demo-texada": true,
+    // "demo-toptal": false,
+    // "pycon-2018-dog-classification-pytorch": false,
+    "react-router-chart": false,
+    spotripy: false,
+    "unit-converter": false,
+};

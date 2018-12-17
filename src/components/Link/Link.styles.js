@@ -1,12 +1,14 @@
 import styled from "styled-components";
 
 const animTime = "0.1s";
-const getFontSize = ({ fontSize }) => `${fontSize}`;
-const getBgColor = ({ backgroundColor }) => `${backgroundColor}`;
-const getBorderColor = ({ borderColor }) => `${borderColor}`;
-const getBorderWidth = ({ borderWidth }) => `${borderWidth}`;
-const getButtonWidth = ({ buttonWidth }) => `${buttonWidth}`;
-const getButtonHeight = ({ buttonHeight }) => `${buttonHeight}`;
+const getWidth = ({ width }) => width;
+const getHeight = ({ height }) => height;
+const getFontSize = ({ fontSize }) => fontSize;
+const getBgColor = ({ backgroundColor }) => backgroundColor;
+const getBorderColor = ({ borderColor }) => borderColor;
+const getBorderWidth = ({ borderWidth }) => borderWidth;
+const getButtonWidth = ({ buttonWidth }) => buttonWidth;
+const getButtonHeight = ({ buttonHeight }) => buttonHeight;
 const getActiveColor = ({ fontColors: { active } }) => active;
 const getHoverColor = ({ fontColors: { hover } }) => hover;
 const getInitialColor = ({ fontColors: { initial } }) => initial;
@@ -20,6 +22,12 @@ const lineBorderPsuedoElem = props => `
 
 export const AnimatedBorderedLinkWrapper = styled.span`
     background-color: ${getBgColor};
+    height: ${getHeight};
+    width: ${getWidth};
+
+    justify-content: center;
+    align-items: center;
+    display: inline-flex;
 a {
     text-transform: uppercase;
     text-decoration: none;
@@ -32,7 +40,10 @@ a {
     width: ${getButtonWidth};
     height: ${getButtonHeight};
     font-weight: bold;
-    color: ${getInitialColor};
+    color: ${props => {
+        const { active } = props;
+        return active ? getActiveColor(props) : getInitialColor(props);
+    }};
     margin: 0;
     padding: 0;
     position: relative;

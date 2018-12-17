@@ -9,12 +9,14 @@ import { Board, Cell } from "./GameOfLife.styles";
 
 class GameOfLife extends React.Component {
     static propTypes = {
+        background: PropTypes.bool,
         fixed: PropTypes.bool,
         interval: PropTypes.number,
         isRunning: PropTypes.bool,
     };
 
     static defaultProps = {
+        background: false,
         fixed: false,
         interval: 100,
         isRunning: true,
@@ -139,14 +141,14 @@ class GameOfLife extends React.Component {
         }
         this.timeoutHandler = setTimeout(() => {
             this.runIteration();
-        }, size ? (size.rows * size.cols) / 32 : GameOfLife.defaultProps.interval);
+        }, Math.max(size ? (size.rows * size.cols) / 32 : GameOfLife.defaultProps.interval, 100));
     }
 
     render() {
         const { cells } = this.state;
-        const { fixed } = this.props;
+        const { background, fixed } = this.props;
         return (
-            <Board id={BOARD_ID} fixed={fixed}>
+            <Board id={BOARD_ID} fixed={fixed} background={background}>
                 {cells.map(c => <Cell key={`${c.x},${c.y}`} {...c} />)}
             </Board>
         );

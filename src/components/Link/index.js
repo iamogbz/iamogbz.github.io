@@ -10,6 +10,7 @@ function Link(props) {
     const { href, children } = props;
     const linkProps = pick(props, ["children", "href", "target", "to"]);
     const borderStyleProps = pick(props, [
+        "active",
         "backgroundColor",
         "borderColor",
         "borderWidth",
@@ -19,6 +20,8 @@ function Link(props) {
         "fontColors",
         "fontSize",
         "style",
+        "width",
+        "height",
     ]);
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>
@@ -32,6 +35,8 @@ function Link(props) {
 }
 
 Link.propTypes = {
+    /** Controls if link is rendered as active */
+    active: PropTypes.bool,
     /** HTML element content */
     children: PropTypes.node.isRequired,
     /** CSS initial background color */
@@ -58,9 +63,14 @@ Link.propTypes = {
     target: PropTypes.string,
     /** If specified react router Link is user */
     to: PropTypes.string,
+    /** Wrapper width */
+    width: PropTypes.string,
+    /** Wrapper height */
+    height: PropTypes.string,
 };
 
 Link.defaultProps = {
+    active: false,
     backgroundColor: Colors.NONE,
     borderColor: Colors.DARK,
     borderWidth: "8px",
@@ -75,6 +85,8 @@ Link.defaultProps = {
     href: null,
     target: "_self",
     to: null,
+    width: "auto",
+    height: "auto",
 };
 
 export default Link;

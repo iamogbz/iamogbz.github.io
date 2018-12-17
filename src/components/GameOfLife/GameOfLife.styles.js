@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
+import { Zindex } from "utils/constants";
+
 import {
     BOARD_COLOR,
     GRID_COLOR,
@@ -27,6 +29,7 @@ export const Board = styled.svg`
         );
     background-size: ${CELL_SIZE}px ${CELL_SIZE}px;
     overflow: hidden;
+    z-index: ${({ background }) => (background ? Zindex.BOTTOM : "initial")};
 `;
 
 export const Cell = ({ x, y, n }) => (

@@ -1,5 +1,4 @@
 import styled, { createGlobalStyle } from "styled-components";
-
 import { Grid, Cell } from "styled-css-grid";
 import Image from "components/Image";
 
