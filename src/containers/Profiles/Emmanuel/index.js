@@ -87,7 +87,7 @@ export default function() {
                     name="avatar"
                     size="30vmax"
                     type="jpg"
-                    style={{ marginTop: "20vmax" }}
+                    style={{ marginTop: "2vmax" }}
                 />
             </CenteredCell>
             <CenteredCell
