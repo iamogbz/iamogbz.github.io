@@ -1,5 +1,6 @@
 {
     "main": "lib/main.js",
+    "repository": "git@github.com:iamogbz/iamogbz.github.io.git",
     "scripts": {
         "build": "webpack --mode=production",
         "watch": "webpack --mode=development  --watch",
@@ -72,7 +73,7 @@
         "lint-staged": "^8.1.5",
         "prettier": "^1.13.7",
         "rxjs": "^6.2.2",
-        "stylelint": "^9.3.0",
+        "stylelint": "^9.10.1",
         "stylelint-config-standard": "^18.2.0",
         "stylelint-config-styled-components": "^0.1.1",
         "stylelint-processor-styled-components": "^1.0.0",

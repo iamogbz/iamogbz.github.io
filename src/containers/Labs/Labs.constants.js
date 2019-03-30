@@ -9,7 +9,7 @@ export const EXPERIMENTS = {
     "demo-texada": true,
     // "demo-toptal": false,
     // "pycon-2018-dog-classification-pytorch": false,
-    "pyex": false,
+    pyex: false,
     "react-router-chart": false,
     spotripy: false,
     "unit-converter": false,
