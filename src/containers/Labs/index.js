@@ -5,6 +5,7 @@ import { Beaker } from "styled-icons/octicons";
 import { TestTube } from "styled-icons/boxicons-regular";
 import { Colors, Zindex } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
+import Frame from "components/Frame";
 import { FullGrid, CenteredCell, Option, Select } from "./Labs.styles";
 import EXPERIMENTS from "./experiments.json";
 
@@ -34,16 +35,7 @@ const BrewingIcon = () => (
 
 const Experiment = ({ experiment }) => {
     if (!experiment) return <BrewingIcon />;
-    return (
-        <iframe
-            title={experiment}
-            width="100%"
-            height="100%"
-            src={xUrl(experiment)}
-            frame-ancestors="ogbizi.com github.com"
-            style={{ border: "none", backgroundColor: "white" }}
-        />
-    );
+    return <Frame url={xUrl(experiment)} />;
 };
 
 Experiment.propTypes = {
