@@ -1,0 +1,12 @@
+{
+  "android-swappable-imageview": false,
+  "bot-slacker": true,
+  "chrome-alt-tabs": true,
+  "demo-texada": true,
+  "jest-mock-props": false,
+  "profit": true,
+  "pyex": false,
+  "react-router-chart": false,
+  "spotripy": false,
+  "unit-converter": false
+}

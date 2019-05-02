@@ -7,7 +7,7 @@ import { Colors, Zindex } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
 import Link from "components/Link";
 import { FullGrid, CenteredCell } from "./Labs.styles";
-import { EXPERIMENTS } from "./Labs.constants";
+import EXPERIMENTS from "./experiments.json";
 
 const xTo = (path, xSlug) => `${path.replace("/:experiment", "")}/${xSlug}`;
 
