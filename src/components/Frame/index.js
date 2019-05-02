@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FrameContainer } from "./Frame.styles";
 
@@ -14,11 +14,29 @@ const replaceLinksInHTML = (htmlText, url) => {
 
 const Frame = ({ url }) => {
     const [__html, setHTML] = useState();
-    fetch(url)
-        .then(r => r.text())
-        .then(text => setHTML(replaceLinksInHTML(text, url)));
+    const [visible, setVisible] = useState();
+    useEffect(
+        () => {
+            setVisible(false);
+            fetch(url)
+                .then(r => r.text())
+                .then(text => {
+                    const html = replaceLinksInHTML(text, url);
+                    setTimeout(() => setHTML(html), 400);
+                    setTimeout(() => setVisible(true), 800);
+                })
+                // eslint-disable-next-line no-console
+                .catch(console.error);
+        },
+        [url],
+    );
     // eslint-disable-next-line react/no-danger
-    return <FrameContainer dangerouslySetInnerHTML={{ __html }} />;
+    return (
+        <FrameContainer
+            dangerouslySetInnerHTML={{ __html }}
+            visible={visible}
+        />
+    );
 };
 
 Frame.propTypes = {

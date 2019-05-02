@@ -8,7 +8,10 @@ export const FrameContainer = styled.div`
     height: 100%;
     width: 100%;
     overflow: scroll;
-    // reset
+    transition: opacity 0.2s ease-in-out;
+    opacity: ${p => (p.visible ? 1 : 0)};
+
+    color: initial;
     display: initial;
     position: initial;
     text-align: initial;
