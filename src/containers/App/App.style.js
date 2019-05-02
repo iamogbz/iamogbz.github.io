@@ -7,10 +7,10 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         font-family: Roboto, Helvetica, Arial;
+        min-width: 768px;
     }
     body {
         background: ${({ dark }) => (dark ? Colors.DARK : Colors.LIGHT)};
         color: ${({ dark }) => (dark ? Colors.LIGHT : Colors.DARK)};
-        min-width: 768px;
     }
 `;
