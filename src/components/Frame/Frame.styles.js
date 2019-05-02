@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const FrameContainer = styled.div`
+export const FrameContainer = styled.iframe`
     border: none;
     padding: 0;
     margin: 0;
@@ -9,7 +9,6 @@ export const FrameContainer = styled.div`
     width: 100%;
     overflow: scroll;
     transition: opacity 0.2s ease-in-out;
-    opacity: ${p => (p.visible ? 1 : 0)};
 
     color: initial;
     display: initial;
