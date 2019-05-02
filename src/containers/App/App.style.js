@@ -8,9 +8,7 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         font-family: Roboto, Helvetica, Arial;
         min-width: 768px;
-    }
-    body {
-        background: ${({ dark }) => (dark ? Colors.DARK : Colors.LIGHT)};
+        background-color: ${({ dark }) => (dark ? Colors.DARK : Colors.LIGHT)};
         color: ${({ dark }) => (dark ? Colors.LIGHT : Colors.DARK)};
     }
 `;

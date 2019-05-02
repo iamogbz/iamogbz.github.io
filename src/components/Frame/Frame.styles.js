@@ -8,4 +8,11 @@ export const FrameContainer = styled.div`
     height: 100%;
     width: 100%;
     overflow: scroll;
+    // reset
+    display: initial;
+    position: initial;
+    text-align: initial;
+    align-items: initial;
+    justify-content: initial;
+    justify-self: initial;
 `;

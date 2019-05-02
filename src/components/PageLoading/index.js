@@ -5,6 +5,7 @@ import messages from "./PageLoading.messages";
 
 const PageLoading = ({ error, pastDelay }) => {
     if (error) {
+        console.error(error); // eslint-disable-line
         return <p>{messages.errorMessage}</p>;
     }
     if (pastDelay) {
@@ -14,7 +15,7 @@ const PageLoading = ({ error, pastDelay }) => {
 };
 
 PageLoading.propTypes = {
-    error: PropTypes.bool,
+    error: PropTypes.oneOf([PropTypes.bool, PropTypes.error]),
     pastDelay: PropTypes.bool,
 };
 
