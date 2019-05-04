@@ -10,6 +10,6 @@ export default function App() {
         <HashRouter key="app-router">
             <Switch>{routes.render()}</Switch>
         </HashRouter>,
-        <GlobalStyle key="app-style" />,
+        <GlobalStyle key="app-style" dark />,
     ];
 }

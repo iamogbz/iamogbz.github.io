@@ -2,34 +2,39 @@ import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
 
-import { Zindex } from "utils/constants";
-
 import {
-    BOARD_COLOR,
-    GRID_COLOR,
+    BOARD_COLOR_DARK,
+    BOARD_COLOR_LIGHT,
     CELL_COLOR,
     CELL_SIZE,
     CELL_BORDER,
+    GRID_COLOR_DARK,
+    GRID_COLOR_LIGHT,
 } from "./GameOfLife.constants";
+
+const getBoardColor = ({ darkMode }) =>
+    darkMode ? BOARD_COLOR_DARK : BOARD_COLOR_LIGHT;
+
+const getGridColor = ({ darkMode }) =>
+    darkMode ? GRID_COLOR_DARK : GRID_COLOR_LIGHT;
 
 export const Board = styled.svg`
     width: 100%;
     height: 100%;
     position: ${({ fixed }) => (fixed ? "fixed" : "relative")};
     margin: 0 auto;
-    background-color: ${BOARD_COLOR};
+    background-color: ${getBoardColor};
     background-image: linear-gradient(
-            ${GRID_COLOR} ${CELL_BORDER}px,
+            ${getGridColor} ${CELL_BORDER}px,
             transparent ${CELL_BORDER}px
         ),
         linear-gradient(
             90deg,
-            ${GRID_COLOR} ${CELL_BORDER}px,
+            ${getGridColor} ${CELL_BORDER}px,
             transparent ${CELL_BORDER}px
         );
     background-size: ${CELL_SIZE}px ${CELL_SIZE}px;
     overflow: hidden;
-    z-index: ${({ background }) => (background ? Zindex.BOTTOM : "initial")};
 `;
 
 export const Cell = ({ x, y, n }) => (

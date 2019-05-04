@@ -8,16 +8,18 @@ export const ProfileStyle = createGlobalStyle`
     }
     html {
         background: url("assets/images/background.jpg") no-repeat;
+        background-color: black;
         background-size: cover;
     }
     body {
-        background: rgba(0,0,0,0.8);
+        background-color: rgba(0,0,0,0.8);
     }
 `;
 
 export const PageGrid = styled(Grid)`
     height: 100%;
     width: 100%;
+    min-height: 34vmax;
 `;
 
 export const CenteredCell = styled(Cell)`

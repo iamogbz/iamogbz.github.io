@@ -10,6 +10,7 @@ import { Board, Cell } from "./GameOfLife.styles";
 class GameOfLife extends React.Component {
     static propTypes = {
         background: PropTypes.bool,
+        darkMode: PropTypes.bool,
         fixed: PropTypes.bool,
         interval: PropTypes.number,
         isRunning: PropTypes.bool,
@@ -17,6 +18,7 @@ class GameOfLife extends React.Component {
 
     static defaultProps = {
         background: false,
+        darkMode: false,
         fixed: false,
         interval: 100,
         isRunning: true,
@@ -146,10 +148,17 @@ class GameOfLife extends React.Component {
 
     render() {
         const { cells } = this.state;
-        const { background, fixed } = this.props;
+        const { background, darkMode, fixed } = this.props;
         return (
-            <Board id={BOARD_ID} fixed={fixed} background={background}>
-                {cells.map(c => <Cell key={`${c.x},${c.y}`} {...c} />)}
+            <Board
+                id={BOARD_ID}
+                fixed={fixed}
+                background={background}
+                darkMode={darkMode}
+            >
+                {cells.map(c => (
+                    <Cell key={`${c.x},${c.y}`} {...c} darkMode={darkMode} />
+                ))}
             </Board>
         );
     }
