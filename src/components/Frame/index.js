@@ -2,8 +2,15 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { FrameContainer } from "./Frame.styles";
 
-const replaceLinksInHTML = htmlText =>
-    htmlText.replace(/<a/g, `<a target="_blank" `);
+const replaceLinksInHTML = (htmlText, url) => {
+    const host = new URL(url).origin;
+    return htmlText
+        .replace(/href="\//g, `href="${host}/`)
+        .replace(/src="\//g, `href="${host}/`)
+        .replace(/href="(?!([/]|(http)))/g, `href="${url}/`)
+        .replace(/src="(?!([/]|(http)))/g, `src="${url}/`)
+        .replace(/<a/g, `<a target="_blank" `);
+};
 
 const Frame = ({ url }) => {
     const [visible, setVisible] = useState();
@@ -13,7 +20,7 @@ const Frame = ({ url }) => {
             setVisible(false);
             fetch(url)
                 .then(r => r.text())
-                .then(text => setHTML(replaceLinksInHTML(text)))
+                .then(text => setHTML(replaceLinksInHTML(text, url)))
                 .catch(() => setTimeout(() => setHTML(undefined), 400))
                 .finally(() => setTimeout(() => setVisible(true), 800));
         },
