@@ -1,4 +1,4 @@
-import { Chart } from "react-router-chart";
+import Chart from "react-router-chart";
 
 import Home from "./Loadable";
 
