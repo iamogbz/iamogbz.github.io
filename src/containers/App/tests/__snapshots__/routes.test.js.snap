@@ -15,6 +15,11 @@ Array [
   <t
     component={[Function]}
     exact={true}
+    path="/labs/:experiment"
+  />,
+  <t
+    component={[Function]}
+    exact={true}
     path="/profile.emmanuel"
   />,
 ]

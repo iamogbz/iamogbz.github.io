@@ -3,7 +3,7 @@
     "repository": "git@github.com:iamogbz/iamogbz.github.io.git",
     "scripts": {
         "build": "webpack --mode=production",
-        "watch": "webpack --mode=development  --watch",
+        "watch": "webpack --mode=development --watch",
         "test": "jest",
         "precommit": "lint-staged"
     },
@@ -12,7 +12,9 @@
             "./artifacts/",
             "./node_modules/"
         ],
-        "setupTestFrameworkScriptFile": "./config/setupTests.js",
+        "setupFilesAfterEnv": [
+            "./config/setupTests.js"
+        ],
         "coverageDirectory": "./artifacts/coverage"
     },
     "lint-staged": {
@@ -33,8 +35,6 @@
         "npm": ">=6.1.0"
     },
     "dependencies": {
-        "enzyme": "^3.7.0",
-        "enzyme-adapter-react-16": "^1.7.0",
         "graphql-request": "^1.8.2",
         "lodash": "^4.17.13",
         "prop-types": "^15.6.2",
@@ -56,12 +56,16 @@
         "@babel/preset-env": "^7.1.6",
         "@babel/preset-react": "^7.0.0",
         "acorn": "^7.0.0",
-        "babel-core": "^7.0.0-bridge.0",
         "babel-eslint": "^10.0.1",
         "babel-loader": "^8.0.4",
         "babel-plugin-dynamic-import-node": "^2.2.0",
         "babel-plugin-module-resolver": "^3.1.1",
         "babel-plugin-transform-class-properties": "^6.24.1",
+        "browserslist": "^4.7.1",
+        "caniuse-lite": "^1.0.30000999",
+        "core-js": "^3.3.2",
+        "enzyme": "^3.7.0",
+        "enzyme-adapter-react-16": "^1.7.0",
         "eslint": "^6.0.0",
         "eslint-config-airbnb": "^18.0.0",
         "eslint-config-prettier": "^6.0.0",
@@ -73,6 +77,8 @@
         "jest": "^24.5.0",
         "lint-staged": "^9.0.0",
         "prettier": "^1.13.7",
+        "puppeteer": "^1.20.0",
+        "regenerator-runtime": "^0.13.3",
         "rxjs": "^6.2.2",
         "stylelint": "^11.0.0",
         "stylelint-config-standard": "^19.0.0",
