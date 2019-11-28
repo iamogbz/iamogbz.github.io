@@ -65,7 +65,7 @@
         "caniuse-lite": "^1.0.30001012",
         "core-js": "^3.4.4",
         "enzyme": "^3.10.0",
-        "enzyme-adapter-react-16": "^1.7.0",
+        "enzyme-adapter-react-16": "^1.15.1",
         "eslint": "^6.7.1",
         "eslint-config-airbnb": "^18.0.0",
         "eslint-config-prettier": "^6.7.0",
