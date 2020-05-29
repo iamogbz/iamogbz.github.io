@@ -35,7 +35,7 @@
         "npm": ">=6.1.0"
     },
     "dependencies": {
-        "graphql-request": "^1.8.2",
+        "graphql-request": "^2.0.0",
         "lodash": "^4.17.15",
         "prop-types": "^15.7.2",
         "react": "^16.13.1",
