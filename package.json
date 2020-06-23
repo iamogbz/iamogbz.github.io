@@ -74,7 +74,7 @@
         "eslint-plugin-prettier": "^3.1.4",
         "eslint-plugin-react": "^7.20.0",
         "html-webpack-plugin": "^4.3.0",
-        "jest": "^26.0.1",
+        "jest": "^26.1.0",
         "lint-staged": "^10.2.11",
         "prettier": "^2.0.5",
         "puppeteer": "^4.0.0",
