@@ -51,7 +51,7 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.10.4",
-        "@babel/core": "^7.10.5",
+        "@babel/core": "^7.10.4",
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@babel/preset-env": "^7.10.4",
         "@babel/preset-react": "^7.10.4",
@@ -62,7 +62,7 @@
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "browserslist": "^4.13.0",
-        "caniuse-lite": "^1.0.30001102",
+        "caniuse-lite": "^1.0.30001097",
         "core-js": "^3.6.5",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.2",
