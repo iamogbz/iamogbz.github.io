@@ -61,7 +61,7 @@
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-resolver": "^4.0.0",
         "babel-plugin-transform-class-properties": "^6.24.1",
-        "browserslist": "^4.14.3",
+        "browserslist": "^4.14.4",
         "caniuse-lite": "^1.0.30001135",
         "core-js": "^3.6.5",
         "enzyme": "^3.11.0",
