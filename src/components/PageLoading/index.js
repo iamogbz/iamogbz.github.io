@@ -15,7 +15,7 @@ const PageLoading = ({ error, pastDelay }) => {
 };
 
 PageLoading.propTypes = {
-    error: PropTypes.oneOfType([Boolean, Error]),
+    error: PropTypes.oneOfType([PropTypes.bool, PropTypes.instanceOf(Error)]),
     pastDelay: PropTypes.bool,
 };
 

@@ -8,7 +8,7 @@ test("React starts successfully", async () => {
     // test
     const url = `file:${path.join(__dirname, "../../index.html")}`;
     await page.goto(url);
-    await page.waitFor("#app>div");
+    await page.waitForSelector("#app>div", { timeout: 3000 });
     await page.screenshot({ path: path.join(__dirname, "home.png") });
     // cleanup
     await page.close();
