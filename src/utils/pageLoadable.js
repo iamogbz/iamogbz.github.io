@@ -1,10 +1,11 @@
-import Loadable from "react-loadable";
-
+import React from "react";
 import PageLoading from "components/PageLoading";
 
 export default function pageLoadable(loader) {
-    return Loadable({
-        loader,
-        loading: PageLoading,
-    });
+    const Loadable = React.lazy(loader);
+    return () => (
+        <React.Suspense fallback={<PageLoading />}>
+            <Loadable />
+        </React.Suspense>
+    );
 }
