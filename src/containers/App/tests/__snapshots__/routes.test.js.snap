@@ -2,22 +2,22 @@
 
 exports[`Routes matches render snapshot 1`] = `
 Array [
-  <t
+  <Route
     component={[Function]}
     exact={true}
     path="/"
   />,
-  <t
+  <Route
     component={[Function]}
     exact={true}
     path="/labs"
   />,
-  <t
+  <Route
     component={[Function]}
     exact={true}
     path="/labs/:experiment"
   />,
-  <t
+  <Route
     component={[Function]}
     exact={true}
     path="/profile.emmanuel"
