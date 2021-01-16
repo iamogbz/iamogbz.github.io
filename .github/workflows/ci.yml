@@ -22,6 +22,20 @@ jobs:
       run: npm run test
     - name: Deploy
       if: github.ref == 'refs/heads/master'
-      uses: mikeal/publish-to-github-action@1.0.0
       env:
+        BRANCH_NAME: master
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        PUBLISH_GLOB: lib
+        PUBLISH_USER: CI Bot
+        PUBLISH_EMAIL: actions@users.noreply.github.com
+      run: |
+        git config http.sslVerify false
+        git config user.name ${PUBLISH_USER}
+        git config user.email ${PUBLISH_EMAIL}
+        git remote add publisher "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        git show-ref # useful for debugging
+        git branch --verbose
+        git add ${PUBLISH_GLOB}
+        git commit -m "chore: deploy website [skip ci]" || exit 0
+        git pull --rebase publisher ${BRANCH_NAME}
+        git push publisher ${BRANCH_NAME}
