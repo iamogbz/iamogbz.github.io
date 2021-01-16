@@ -3,7 +3,8 @@
     "repository": "git@github.com:iamogbz/iamogbz.github.io.git",
     "scripts": {
         "build": "webpack --mode=production",
-        "watch": "webpack --mode=development --watch",
+        "build-dev": "webpack --mode=development",
+        "build-watch": "npm run build-dev -- --watch",
         "test": "jest",
         "precommit": "lint-staged"
     },
