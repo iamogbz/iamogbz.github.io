@@ -6,10 +6,13 @@ import routes from "./routes";
 import { GlobalStyle } from "./App.style";
 
 export default function App() {
-    return [
-        <HashRouter key="app-router">
-            <Switch>{routes.render()}</Switch>
-        </HashRouter>,
-        <GlobalStyle key="app-style" dark />,
-    ];
+    return (
+        <>
+            <HashRouter>
+                <Switch>{routes.render()}</Switch>
+            </HashRouter>
+            ,
+            <GlobalStyle dark />,
+        </>
+    );
 }
