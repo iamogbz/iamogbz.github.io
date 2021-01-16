@@ -1,6 +1,7 @@
 import path from "path";
 import puppeteer from "puppeteer";
 
+jest.setTimeout(15000);
 test("React starts successfully", async () => {
     // setup
     const browser = await puppeteer.launch();
