@@ -29,17 +29,12 @@ jobs:
         PUBLISH_USER: CI Bot
         PUBLISH_EMAIL: actions@users.noreply.github.com
       run: |
-        git config http.sslVerify false
         git config user.name ${PUBLISH_USER}
         git config user.email ${PUBLISH_EMAIL}
-        git remote add publisher "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-        git remote -v # useful for debugging
-        git show-ref # useful for debugging
-        git branch --verbose # useful for debugging
-        git lfs install
+        git remote set-url origin "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
         git checkout ${BRANCH_NAME}
+        git branch --verbose # useful for debugging
         git add ${PUBLISH_GLOB}
+        git status # useful for debugging
         git commit -m "chore: deploy website [skip ci]" || exit 0
-        git checkout .
-        git pull --rebase publisher ${BRANCH_NAME}
-        git push publisher ${BRANCH_NAME}
+        git push
