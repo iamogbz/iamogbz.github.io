@@ -35,7 +35,7 @@
         "npm": ">=6.1.0"
     },
     "dependencies": {
-        "graphql-request": "^2.0.0",
+        "graphql-request": "^3.4.0",
         "lodash": "^4.17.20",
         "prop-types": "^15.7.2",
         "react": "^16.14.0",
@@ -72,6 +72,7 @@
         "eslint-plugin-jsx-a11y": "^6.4.1",
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-react": "^7.22.0",
+        "graphql": "^15.4.0",
         "html-webpack-plugin": "^4.5.1",
         "jest": "^26.6.3",
         "lint-staged": "^10.5.3",

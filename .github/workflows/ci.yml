@@ -26,7 +26,7 @@ jobs:
         BRANCH_NAME: master
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         PUBLISH_GLOB: lib
-        PUBLISH_USER: CI Bot
+        PUBLISH_USER: github-actions[bot]
         PUBLISH_EMAIL: actions@users.noreply.github.com
       run: |
         git config user.name ${PUBLISH_USER}
