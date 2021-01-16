@@ -42,7 +42,7 @@
         "react-dom": "^16.14.0",
         "react-helmet": "^6.1.0",
         "react-router": "^4.3.1",
-        "react-router-chart": "^0.2.2",
+        "react-router-chart": "^0.2.3",
         "react-router-dom": "^4.3.1",
         "styled-components": "^4.4.1",
         "styled-css-grid": "^1.2.1",
