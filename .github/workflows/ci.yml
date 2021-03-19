@@ -1,6 +1,6 @@
 name: Continuous Integration
 on:
-  pull_request:
+  pull_request_target:
   push:
     branches:
       - master
@@ -21,7 +21,7 @@ jobs:
     - name: Test
       run: npm run test
     - name: Deploy
-      if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
       env:
         BRANCH_NAME: master
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
