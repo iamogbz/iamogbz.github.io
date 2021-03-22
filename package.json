@@ -85,7 +85,7 @@
         "stylelint-config-standard": "^21.0.0",
         "stylelint-config-styled-components": "^0.1.1",
         "stylelint-processor-styled-components": "^1.10.0",
-        "webpack": "^5.26.3",
+        "webpack": "^5.27.1",
         "webpack-cli": "^4.5.0"
     }
 }
