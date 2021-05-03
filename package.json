@@ -81,7 +81,7 @@
         "puppeteer": "^9.0.0",
         "regenerator-runtime": "^0.13.7",
         "rxjs": "^7.0.0",
-        "stylelint": "^13.13.0",
+        "stylelint": "^13.13.1",
         "stylelint-config-standard": "^22.0.0",
         "stylelint-config-styled-components": "^0.1.1",
         "stylelint-processor-styled-components": "^1.10.0",
