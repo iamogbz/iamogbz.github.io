@@ -62,7 +62,7 @@
         "babel-plugin-module-resolver": "^4.1.0",
         "babel-plugin-transform-class-properties": "^6.24.1",
         "browserslist": "^4.16.6",
-        "caniuse-lite": "^1.0.30001245",
+        "caniuse-lite": "^1.0.30001246",
         "core-js": "^3.15.2",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
