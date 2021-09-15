@@ -47,7 +47,7 @@
         "react-router-dom": "^5.2.0",
         "styled-components": "^5.3.1",
         "styled-css-grid": "^1.2.1",
-        "styled-icons": "^10.39.0"
+        "styled-icons": "^10.40.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.15.4",
