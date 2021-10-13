@@ -75,7 +75,7 @@
         "eslint-plugin-react": "^7.26.1",
         "graphql": "^15.6.1",
         "html-webpack-plugin": "^5.3.2",
-        "isarray": "0.0.1",
+        "isarray": "2.0.5",
         "jest": "^27.2.5",
         "lint-staged": "^11.2.3",
         "prettier": "^2.4.1",
