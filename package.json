@@ -81,7 +81,7 @@
         "prettier": "^2.5.1",
         "puppeteer": "^13.2.0",
         "regenerator-runtime": "^0.13.9",
-        "rxjs": "^7.5.2",
+        "rxjs": "^7.5.3",
         "stylelint": "^13.13.1",
         "stylelint-config-standard": "^22.0.0",
         "stylelint-config-styled-components": "^0.1.1",
