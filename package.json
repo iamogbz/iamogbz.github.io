@@ -45,7 +45,7 @@
         "react-router": "^5.2.0",
         "react-router-chart": "^0.2.5",
         "react-router-dom": "^5.2.0",
-        "styled-components": "^5.3.3",
+        "styled-components": "^5.3.5",
         "styled-css-grid": "^1.2.1",
         "styled-icons": "^10.45.0"
     },
