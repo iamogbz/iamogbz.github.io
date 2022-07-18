@@ -63,7 +63,7 @@
         "babel-plugin-transform-class-properties": "^6.24.1",
         "browserslist": "^4.21.2",
         "caniuse-lite": "^1.0.30001367",
-        "core-js": "^3.23.4",
+        "core-js": "^3.23.5",
         "enzyme": "^3.11.0",
         "enzyme-adapter-react-16": "^1.15.6",
         "eslint": "^8.19.0",
