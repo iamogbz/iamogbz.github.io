@@ -2,6 +2,6 @@ import routes from "../routes";
 
 describe("Routes", () => {
     it("matches render snapshot", () => {
-        expect(routes.render()).toMatchSnapshot();
+        expect(routes).toMatchSnapshot();
     });
 });
