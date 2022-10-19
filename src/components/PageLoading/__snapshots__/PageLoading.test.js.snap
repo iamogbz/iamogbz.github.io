@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<PageLoading /> should match snapshot 1`] = `""`;
+exports[`<PageLoading /> should match snapshot 1`] = `null`;
 
 exports[`<PageLoading /> should match snapshot when past delay 1`] = `
-"<p>
+<p>
   Steeping Tea...
-</p>"
+</p>
 `;
 
 exports[`<PageLoading /> should match snapshot when there is an error 1`] = `
-"<p>
+<p>
   Error Loading Component
-</p>"
+</p>
 `;
