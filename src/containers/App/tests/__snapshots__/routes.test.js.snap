@@ -1,26 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Routes matches render snapshot 1`] = `
-Array [
-  <Route
-    component={[Function]}
-    exact={true}
-    path="/"
-  />,
-  <Route
-    component={[Function]}
-    exact={true}
-    path="/labs"
-  />,
-  <Route
-    component={[Function]}
-    exact={true}
-    path="/labs/:experiment"
-  />,
-  <Route
-    component={[Function]}
-    exact={true}
-    path="/profile.emmanuel"
-  />,
+[
+  {
+    "element": <Loadable />,
+    "exact": true,
+    "path": "/",
+  },
+  {
+    "children": [
+      {
+        "exact": true,
+        "path": ":experiment",
+      },
+    ],
+    "element": <Loadable />,
+    "exact": true,
+    "path": "labs",
+  },
+  {
+    "children": [
+      {
+        "element": <Loadable />,
+        "exact": true,
+        "path": "emmanuel",
+      },
+    ],
+    "path": "profile",
+  },
+  {
+    "element": <Loadable />,
+    "exact": true,
+    "path": "profile.emmanuel",
+  },
 ]
 `;

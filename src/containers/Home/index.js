@@ -2,7 +2,6 @@ import React from "react";
 
 import Logo from "components/Logo";
 import Link from "components/Link";
-import appRoutes from "containers/App/routes";
 import { Colors, Zindex } from "utils/constants";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
 
@@ -12,8 +11,7 @@ const linkCellStyle = {
     backgroundColor: "rgba(0,0,0,0.8)",
 };
 
-export default function() {
-    const routed = appRoutes.describe();
+export default function Home() {
     const linkProps = {
         borderColor: Colors.LIGHT,
         borderWidth: "4px",
@@ -32,8 +30,8 @@ export default function() {
             </CenteredCell>
             {[
                 ["Source", "https://github.com/iamogbz/iamogbz.github.io"],
-                ["Labs", routed.labs.$],
-                ["Profile", routed.profiles.emmanuel.$],
+                ["Labs", "labs"],
+                ["Profile", "profile/emmanuel"],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
                     <Link

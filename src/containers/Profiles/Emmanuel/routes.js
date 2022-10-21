@@ -1,8 +1,11 @@
-import { Chart } from "react-router-chart";
+import React from "react";
 
 import Profile from "./Loadable";
 
-export default Chart.route({ name: "emmanuel" })
-    .rPath(".emmanuel")
-    .rComponent(Profile)
-    .rExact(true);
+export default [
+    {
+        path: "emmanuel",
+        element: <Profile />,
+        exact: true,
+    },
+];

@@ -76,7 +76,7 @@ const contactIconLink = ([IconComponent, href, text]) => (
     </CenteredCell>
 );
 
-export default function() {
+export default function Emmanuel() {
     return [
         <Helmet key="profile-helmet">
             <title>Emmanuel Ogbizi-Ugbe</title>

@@ -1,14 +1,17 @@
-import { Chart } from "react-router-chart";
+import React from "react";
 
 import Labs from "./Loadable";
 
-export default Chart.route({ name: "labs" })
-    .rPath("labs")
-    .rComponent(Labs)
-    .rExact(true)
-    .addNestedRoutes(
-        Chart.route({ name: "experiment" })
-            .rPath("/:experiment")
-            .rComponent(Labs)
-            .rExact(true),
-    );
+export default [
+    {
+        path: "labs",
+        element: <Labs />,
+        exact: true,
+        children: [
+            {
+                path: ":experiment",
+                exact: true,
+            },
+        ],
+    },
+];

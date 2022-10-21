@@ -26,7 +26,7 @@ module.exports = {
                     options: {
                         presets: ["@babel/preset-env"],
                         plugins: [
-                            "transform-class-properties",
+                            "@babel/proposal-class-properties",
                             "dynamic-import-node",
                         ],
                     },
