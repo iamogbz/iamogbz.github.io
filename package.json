@@ -60,7 +60,7 @@
         "@emotion/is-prop-valid": "^1.2.0",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
-        "acorn": "^8.8.0",
+        "acorn": "^8.8.1",
         "babel-loader": "^8.2.5",
         "babel-plugin-dynamic-import-node": "^2.3.3",
         "babel-plugin-module-resolver": "^4.1.0",
