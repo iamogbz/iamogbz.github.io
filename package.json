@@ -66,7 +66,7 @@
         "babel-plugin-module-resolver": "^4.1.0",
         "browserslist": "^4.21.4",
         "caniuse-lite": "^1.0.30001431",
-        "core-js": "^3.26.0",
+        "core-js": "^3.26.1",
         "eslint": "^8.27.0",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-prettier": "^8.5.0",
