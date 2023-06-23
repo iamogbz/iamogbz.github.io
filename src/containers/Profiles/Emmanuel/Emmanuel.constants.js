@@ -1,2 +1,0 @@
-export const GITHUB_KEY_B =
-  "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";
