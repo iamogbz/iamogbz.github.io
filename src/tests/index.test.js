@@ -1,10 +1,14 @@
+/**
+ * @jest-environment node
+ */
+
 import path from "path";
 import puppeteer from "puppeteer";
 
 jest.setTimeout(15000);
 test("React starts successfully", async () => {
     // setup
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ headless: "new" });
     const page = await browser.newPage();
     // test
     const url = `file:${path.join(__dirname, "../../index.html")}`;
