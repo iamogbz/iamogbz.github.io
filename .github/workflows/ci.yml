@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
     - name: Setup
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 16
     - name: Install
@@ -20,21 +22,21 @@ jobs:
       run: npm run build
     - name: Test
       run: npm run test
-    - name: Deploy
-      if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    - name: Commit
       env:
-        BRANCH_NAME: master
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         PUBLISH_GLOB: lib
         PUBLISH_USER: github-actions
         PUBLISH_EMAIL: actions@users.noreply.github.com
       run: |
         git config user.name ${PUBLISH_USER}
         git config user.email ${PUBLISH_EMAIL}
-        git remote set-url origin "https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-        git checkout ${BRANCH_NAME}
-        git branch --verbose # useful for debugging
         git add ${PUBLISH_GLOB}
         git status # useful for debugging
         git commit -m "chore: deploy website [skip ci]" || exit 0
-        git push
+    - name: Deploy
+      if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+      uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
+        branch: ${{ github.ref }}
+        force: true
