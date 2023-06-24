@@ -1,9 +1,80 @@
 <style>
-  @import url("./styles/colors.css");
+  #button-link {
+    --border-color: var(--color-fg);
+    --border-width: 4px;
+    --anim-duration: 0.12s;
+    --anim-timing-fn: ease-in-out;
+  }
 
   #button-link {
-    color: var(--color-fg);
+    align-items: center;
+    background-color: transparent;
+    background-image: linear-gradient(
+      0deg,
+      var(--border-color),
+      var(--border-color)
+    );
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: 50% var(--border-width);
+    color: var(--border-color);
+    display: flex;
+    justify-content: center;
+    padding: 12px 18px;
+    position: relative;
     text-decoration: none;
+    transition: calc(var(--anim-duration) * 2) 0s background-color
+        var(--anim-timing-fn),
+      var(--anim-duration) calc(var(--anim-duration) * 2) background-size
+        var(--anim-timing-fn);
+
+    &::after,
+    &::before {
+      border-color: transparent;
+      border-top-style: solid;
+      border-width: var(--border-width);
+      bottom: 0;
+      content: "";
+      height: 0%;
+      position: absolute;
+      transition: 0s calc(var(--anim-duration) * 2) border-color
+          var(--anim-timing-fn),
+        var(--anim-duration) var(--anim-duration) height var(--anim-timing-fn),
+        var(--anim-duration) 0s width var(--anim-timing-fn);
+      width: 0%;
+    }
+
+    &::after {
+      border-left-style: solid;
+      left: 0;
+    }
+
+    &::before {
+      border-right-style: solid;
+      right: 0;
+    }
+
+    &:active {
+      background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
+    }
+
+    &:active,
+    &:hover {
+      background-size: 100% var(--border-width);
+      transition: calc(var(--anim-duration) * 2) 0s background-color
+          var(--anim-timing-fn),
+        var(--anim-duration) 0s background-size var(--anim-timing-fn);
+
+      &::after,
+      &::before {
+        border-color: var(--border-color);
+        height: calc(100% - var(--border-width));
+        transition: 0s var(--anim-duration) border-color,
+          var(--anim-duration) var(--anim-duration) height,
+          var(--anim-duration) calc(var(--anim-duration) * 2) width;
+        width: 50%;
+      }
+    }
   }
 </style>
 
