@@ -8,15 +8,12 @@ export class CustomElement extends HTMLElement {
     super();
     this._root = this.attachShadow({ mode: "open", ...shadowInit });
     this.templateSrc = templateSrc;
-  }
 
-  connectedCallback() {
-    if (!this._root) return;
-    if (!this.templateSrc) return;
-
-    includeTemplate({
-      srcPath: this.templateSrc,
-      parentElement: this._root,
-    });
+    if (this.templateSrc) {
+      includeTemplate({
+        srcPath: this.templateSrc,
+        parentElement: this._root,
+      });
+    }
   }
 }

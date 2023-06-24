@@ -4,10 +4,14 @@
     "checkJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "DOM",
+      "ES2015"
+    ],
     "outDir": "lib",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
   }
 }
