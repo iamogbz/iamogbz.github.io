@@ -6,6 +6,7 @@ export function includeTemplate({ srcPath, parentElement }) {
   fetch(srcPath)
     .then(response => response.text())
     .then(templateContent => {
-      parentElement.innerHTML += templateContent;
+      const doc = new DOMParser().parseFromString(templateContent, "text/html");
+      parentElement.appendChild(doc.documentElement.cloneNode(true));
     });
 }

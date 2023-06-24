@@ -1,21 +1,22 @@
 <style>
   #logo {
-    display: flex;
     align-items: center;
-    justify-content: center;
-    width: 160px;
-    height: 160px;
-    padding: 20px;
-    border-radius: 160px;
     background-color: #121212EE;
+    border-radius: 160px;
+    display: flex;
+    height: 160px;
+    justify-content: center;
+    padding: 20px;
+    width: 160px;
   }
+
   #logo .ring {
+    animation: progress 3s linear normal infinite;
     fill: none;
     stroke-dasharray: 720 180;
     stroke-linecap: round;
-    stroke: #ffd78e;
     stroke-width: 30px;
-    animation: progress 3s linear normal infinite;
+    stroke: #ffd78e;
   }
 
   #logo .left {
@@ -23,9 +24,9 @@
   }
 
   #logo .right {
-    transform: translate(100px, 200px) rotate(-90deg);
     animation-delay: 1.5s;
     animation-direction: reverse;
+    transform: translate(100px, 200px) rotate(-90deg);
   }
 
   @keyframes progress {
