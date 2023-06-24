@@ -1,3 +1,8 @@
-<script src="src/components/logo-bz.js"></script>
+<script type="module">
+  import { includeTemplate } from "./src/utils/include-template.js";
 
-<logo-bz />
+  includeTemplate({ srcPath: "src/templates/head.html" });
+</script>
+
+<script src="src/components/logo/animated-logo.js" type="module"></script>
+<animated-logo></animated-logo>

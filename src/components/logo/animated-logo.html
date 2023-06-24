@@ -1,0 +1,56 @@
+<style>
+  #logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 160px;
+    height: 160px;
+    padding: 20px;
+    border-radius: 160px;
+    background-color: #121212EE;
+  }
+  #logo .ring {
+    fill: none;
+    stroke-dasharray: 720 180;
+    stroke-linecap: round;
+    stroke: #ffd78e;
+    stroke-width: 30px;
+    animation: progress 3s linear normal infinite;
+  }
+
+  #logo .left {
+    transform: translate(100px, 0) rotate(90deg);
+  }
+
+  #logo .right {
+    transform: translate(100px, 200px) rotate(-90deg);
+    animation-delay: 1.5s;
+    animation-direction: reverse;
+  }
+
+  @keyframes progress {
+    0%,
+    10% {
+      stroke-dashoffset: 100;
+    }
+
+    90%,
+    100% {
+      stroke-dashoffset: -900;
+    }
+  }
+</style>
+
+<div id="logo">
+  <svg height="80" width="160" viewBox="-20 -20 240 240">
+    <path
+      class="ring left"
+      d="M100,0 a100,100 0 0 1 0,200 a100,100 0 0 1 0,-200,0"
+      fill="none"
+    />
+    <path
+      class="ring right"
+      d="M100,0 a100,100 0 0 1 0,200 a100,100 0 0 1 0,-200,0"
+    />
+  </svg>
+</div>
