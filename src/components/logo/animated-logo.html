@@ -1,7 +1,9 @@
 <style>
+  @import url("styles/colors.css");
+
   #logo {
     align-items: center;
-    background-color: #121212EE;
+    background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);
     border-radius: 160px;
     display: flex;
     height: 160px;
@@ -16,7 +18,7 @@
     stroke-dasharray: 720 180;
     stroke-linecap: round;
     stroke-width: 30px;
-    stroke: #ffd78e;
+    stroke: var(--color-fg);
   }
 
   #logo .left {

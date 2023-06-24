@@ -3,11 +3,15 @@
  * @param {{ srcPath: string; parentElement: HTMLElement | ShadowRoot }} params
  */
 export async function includeTemplate({ srcPath, parentElement }) {
-  const response = await fetch(srcPath);
-  const templateContent = await response.text();
-  const doc = new DOMParser().parseFromString(templateContent, "text/html");
+  const fetchTemplateResponse = await fetch(srcPath);
+  // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/html
+  const templateDoc = new DOMParser().parseFromString(
+    await fetchTemplateResponse.text(),
+    "text/html",
+  );
+  // Permitted content. One <head> element, followed by one <body> element.
   parentElement.append(
-    ...Array.from(doc.head.childNodes),
-    ...Array.from(doc.body.childNodes),
+    ...Array.from(templateDoc.head.childNodes),
+    ...Array.from(templateDoc.body.childNodes),
   );
 }

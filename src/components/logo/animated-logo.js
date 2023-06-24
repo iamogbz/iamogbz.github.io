@@ -4,7 +4,7 @@ class AnimatedLogo extends CustomElement {
   constructor() {
     super({
       shadowInit: { mode: "closed" },
-      templateSrc: "src/components/logo/animated-logo.html",
+      templateSrc: "components/logo/animated-logo.html",
     });
   }
 }
