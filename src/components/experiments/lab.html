@@ -1,3 +1,42 @@
-<ul id="lab-experiments">
+<style>
+  #lab {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #lab experiment-tile {
+    display: flex;
+    position: relative;
+    height: 89px;
+    width: 144px;
+    overflow: hidden;
+    padding: 3px;
+
+    &:hover span[slot="name"] {
+      margin-top: -89px;
+    }
+  }
+
+  #lab experiment-tile span {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 100%;
+    transition: margin-top 0.3s ease-in-out 0s;
+
+    &[slot="description"] {
+      /* white-space: wrap; */
+      font-size: .8em;
+    }
+  }
+</style>
+
+<div id="lab">
   <slot></slot>
-</ul>
+</div>
