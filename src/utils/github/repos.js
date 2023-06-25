@@ -14,7 +14,7 @@ export async function fetchRepos({
   let hasNext = true;
   let pageNum = 1;
   try {
-    while (hasNext || results.length < count) {
+    while (hasNext && results.length < count) {
       const apiUrl = `https://api.github.com/users/${username}/repos?per_page=${perPage}&page=${pageNum}`;
       const response = await fetch(apiUrl);
       if (!response.ok) throw response;
