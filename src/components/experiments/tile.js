@@ -1,6 +1,8 @@
 import { CustomElement } from "../custom-element.js";
 
-class ExperimentTile extends CustomElement {
+export class ExperimentTile extends CustomElement {
+  static tagName = "experiment-tile";
+
   constructor() {
     super({
       templateSrc: "components/experiments/tile.html",
@@ -8,4 +10,4 @@ class ExperimentTile extends CustomElement {
   }
 }
 
-customElements.define("experiment-tile", ExperimentTile);
+customElements.define(ExperimentTile.tagName, ExperimentTile);

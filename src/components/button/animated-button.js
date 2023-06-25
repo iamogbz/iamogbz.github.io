@@ -1,6 +1,6 @@
 import { CustomElement } from "../custom-element.js";
 
-class AnimatedButton extends CustomElement {
+export class AnimatedButton extends CustomElement {
   constructor() {
     super({
       templateSrc: "components/button/animated-button.html",
@@ -9,4 +9,6 @@ class AnimatedButton extends CustomElement {
   }
 }
 
-customElements.define("animated-button", AnimatedButton);
+AnimatedButton.tagName = "animated-button";
+
+customElements.define(AnimatedButton.tagName, AnimatedButton);

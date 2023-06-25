@@ -1,6 +1,8 @@
 import { CustomElement } from "../custom-element.js";
 
-class AnimatedLogo extends CustomElement {
+export class AnimatedLogo extends CustomElement {
+  static tagName = "animated-logo";
+
   constructor() {
     super({
       shadowInit: { mode: "closed" },
@@ -9,4 +11,4 @@ class AnimatedLogo extends CustomElement {
   }
 }
 
-customElements.define("animated-logo", AnimatedLogo);
+customElements.define(AnimatedLogo.tagName, AnimatedLogo);
