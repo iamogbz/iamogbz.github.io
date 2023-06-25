@@ -13,11 +13,11 @@ export class CustomElement extends HTMLElement {
     if (this.templateSrc) {
       /** Copy attributes from base element to shadow element */
       const shadowAttributes = () => {
-        Object.keys(attributeMap).forEach(elementId => {
-          const attributes = attributeMap[elementId];
-          const target = this._root.getElementById(elementId);
-          if (!target) return;
-          copyAttributes({ attributes, source: this, target });
+        Object.keys(attributeMap).forEach(selector => {
+          const attributes = attributeMap[selector];
+          this._root.querySelectorAll(selector).forEach(target => {
+            copyAttributes({ attributes, source: this, target });
+          });
         });
       };
 
