@@ -16,9 +16,10 @@ export class CustomElement extends HTMLElement {
   constructor({ attributeMap = {}, shadowInit, templateSrc } = {}) {
     super();
     this._root = this.attachShadow({ mode: "open", ...shadowInit });
-    this.templateSrc = templateSrc;
+    this._templateLoader = Promise.resolve();
+    this._templateSrc = templateSrc;
 
-    if (this.templateSrc) {
+    if (this._templateSrc) {
       /** Copy attributes from base element to shadow element */
       const shadowAttributes = () => {
         Object.keys(attributeMap).forEach(selector => {
@@ -29,8 +30,8 @@ export class CustomElement extends HTMLElement {
         });
       };
 
-      includeTemplate({
-        srcPath: this.templateSrc,
+      this._templateLoader = includeTemplate({
+        srcPath: this._templateSrc,
         parentElement: this._root,
       }).then(shadowAttributes);
     }
