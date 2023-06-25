@@ -50,27 +50,32 @@ export class LabExperiments extends CustomElement {
    * @param {string?} newValue
    */
   renderDataExperiments(_, newValue) {
-    newValue?.split(DELIMITER_REPOS).forEach((flattenedRepo, i) => {
-      const [name, description] = flattenedRepo.split(DELIMITER_PROPS);
-      const experimentTileElem =
-        this._root?.querySelectorAll(`${ExperimentTile.tagName}`).item(i) ??
-        document.createElement(ExperimentTile.tagName);
+    newValue
+      ?.split(DELIMITER_REPOS)
+      .map((flattenedRepo, i) => {
+        const [slugName, description] = flattenedRepo.split(DELIMITER_PROPS);
+        const name = slugName.replace(/-/g, " ").toUpperCase();
 
-      const tileNameElem =
-        experimentTileElem.firstChild ??
-        createSlotElement({ tag: "span", slot: "name" });
-      tileNameElem.textContent = name;
+        const experimentTileElem =
+          this._root?.querySelectorAll(`${ExperimentTile.tagName}`).item(i) ??
+          document.createElement(ExperimentTile.tagName);
 
-      const tileDescriptionElem =
-        experimentTileElem.lastChild ??
-        createSlotElement({ tag: "span", slot: "description" });
-      tileDescriptionElem.textContent = description;
+        const tileNameElem =
+          experimentTileElem.querySelector(`span[slot="name"]`) ??
+          createSlotElement({ tag: "span", slot: "name" });
+        tileNameElem.textContent = name;
 
-      // experimentTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
-      experimentTileElem.appendChild(tileNameElem);
-      experimentTileElem.appendChild(tileDescriptionElem);
-      this._root.firstChild?.appendChild(experimentTileElem);
-    });
+        const tileDescriptionElem =
+          experimentTileElem.querySelector(`span[slot="description"]`) ??
+          createSlotElement({ tag: "span", slot: "description" });
+        tileDescriptionElem.textContent = description;
+
+        // experimentTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
+        experimentTileElem.appendChild(tileNameElem);
+        experimentTileElem.appendChild(tileDescriptionElem);
+        return experimentTileElem;
+      })
+      .forEach(tile => this._root.getElementById("lab")?.appendChild(tile));
   }
 }
 
@@ -81,6 +86,7 @@ customElements.define(LabExperiments.tagName, LabExperiments);
 export async function loadData() {
   const repos = await fetchRepos({ username: "iamogbz", count: 100 });
   return repos
+    .filter(r => !r.archived)
     .filter(r => r.stargazers_count)
     .sort((a, b) => compareRepos({ a, b }))
     .reverse()
