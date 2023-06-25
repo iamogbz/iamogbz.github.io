@@ -1,4 +1,5 @@
 import { compareRepos, fetchRepos } from "../../utils/github/repos.js";
+import { createSlotElement } from "../../utils/include-template.js";
 import { CustomElement } from "../custom-element.js";
 import { ExperimentTile } from "./tile.js";
 
@@ -54,7 +55,20 @@ export class LabExperiments extends CustomElement {
       const experimentTileElem =
         this._root?.querySelectorAll(`${ExperimentTile.tagName}`).item(i) ??
         document.createElement(ExperimentTile.tagName);
-      experimentTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
+
+      const tileNameElem =
+        experimentTileElem.firstChild ??
+        createSlotElement({ tag: "span", slot: "name" });
+      tileNameElem.textContent = name;
+
+      const tileDescriptionElem =
+        experimentTileElem.lastChild ??
+        createSlotElement({ tag: "span", slot: "description" });
+      tileDescriptionElem.textContent = description;
+
+      // experimentTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
+      experimentTileElem.appendChild(tileNameElem);
+      experimentTileElem.appendChild(tileDescriptionElem);
       this._root.firstChild?.appendChild(experimentTileElem);
     });
   }

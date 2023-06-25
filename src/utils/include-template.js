@@ -15,3 +15,13 @@ export async function includeTemplate({ srcPath, parentElement }) {
     ...Array.from(templateDoc.body.childNodes),
   );
 }
+
+/**
+ * Create element that slots into template
+ * @param {{ tag: string, slot: string }} params
+ */
+export function createSlotElement({ tag, slot }) {
+  const elem = document.createElement(tag);
+  elem.setAttribute("slot", slot);
+  return elem;
+}
