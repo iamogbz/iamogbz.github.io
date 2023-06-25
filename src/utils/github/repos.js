@@ -46,5 +46,9 @@ export function compareRepos({ a, b }) {
  * @returns {string}
  */
 function repoKey(r) {
-  return `${r.stargazers_count}_${r.updated_at}}`;
+  // yeah like any repo is gonna get that many star digits
+  const zeros = Array.from(new Array(10 - `${r.stargazers_count}`.length))
+    .fill(0)
+    .join("");
+  return `${r.updated_at}_${zeros}${r.stargazers_count}`;
 }

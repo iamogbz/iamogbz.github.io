@@ -5,34 +5,42 @@
     gap: 8px;
     align-items: center;
     justify-content: center;
+
+    --size-h: 377px;
+    --size-w: 610px;
   }
 
   #lab experiment-tile {
     display: flex;
-    position: relative;
-    height: 89px;
-    width: 144px;
-    overflow: hidden;
-    padding: 3px;
-
-    &:hover span[slot="name"] {
-      margin-top: -89px;
-    }
-  }
-
-  #lab experiment-tile span {
-    display: flex;
-    text-align: center;
-    align-items: center;
     justify-content: center;
+    position: relative;
+    height: var(--size-h);
+    width: var(--size-w);
     overflow: hidden;
-    text-overflow: ellipsis;
-    height: 100%;
-    transition: margin-top 0.3s ease-in-out 0s;
+    cursor: pointer;
 
-    &[slot="description"] {
-      /* white-space: wrap; */
-      font-size: .8em;
+    &:hover,
+    &:active {
+      & span[slot="name"] {
+        transition-delay: 0s;
+        margin-top: calc(var(--size-h) - var(--size-h) * 2);
+      }
+    }
+
+    & span {
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      height: 100%;
+      transition: margin-top 0.3s ease-in-out 0.3s;
+
+      &[slot="description"] {
+        /* white-space: wrap; */
+        font-size: 34px;
+      }
     }
   }
 </style>
