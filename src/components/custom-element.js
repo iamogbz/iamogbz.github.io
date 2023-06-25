@@ -1,4 +1,4 @@
-import { copyAttributes } from "../utils/copy-attributes.js";
+import { mapAttributes } from "../utils/element-attributes.js";
 import { includeTemplate } from "../utils/include-template.js";
 
 /**
@@ -16,24 +16,21 @@ export class CustomElement extends HTMLElement {
   constructor({ attributeMap = {}, shadowInit, templateSrc } = {}) {
     super();
     this._root = this.attachShadow({ mode: "open", ...shadowInit });
-    this._templateLoader = Promise.resolve();
+    this._attributeMap = attributeMap;
     this._templateSrc = templateSrc;
+    this._templateLoader = this.loadTemplate();
+  }
 
-    if (this._templateSrc) {
-      /** Copy attributes from base element to shadow element */
-      const shadowAttributes = () => {
-        Object.keys(attributeMap).forEach(selector => {
-          const attributes = attributeMap[selector];
-          this._root.querySelectorAll(selector).forEach(target => {
-            copyAttributes({ attributes, source: this, target });
-          });
-        });
-      };
-
-      this._templateLoader = includeTemplate({
-        srcPath: this._templateSrc,
-        parentElement: this._root,
-      }).then(shadowAttributes);
-    }
+  async loadTemplate() {
+    if (!this._templateSrc) return;
+    await includeTemplate({
+      srcPath: this._templateSrc,
+      parentElement: this._root,
+    });
+    mapAttributes({
+      attributeMap: this._attributeMap,
+      source: this,
+      targetRoot: this._root,
+    });
   }
 }
