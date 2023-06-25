@@ -1,11 +1,19 @@
 import { copyAttributes } from "../utils/copy-attributes.js";
 import { includeTemplate } from "../utils/include-template.js";
 
+/**
+ * Custom element base class
+ * TODO: register as element and allow passing constructor params as attributes
+ */
 export class CustomElement extends HTMLElement {
   /**
-   * @param {{ shadowInit?: ShadowRootInit, templateSrc?: string, attributeMap?: Record<string, string[]> }} params
+   * @param {{
+      attributeMap?: Record<string, string[]>,
+      shadowInit?: ShadowRootInit,
+      templateSrc?: string,
+    }} params
    */
-  constructor({ shadowInit, templateSrc, attributeMap = {} } = {}) {
+  constructor({ attributeMap = {}, shadowInit, templateSrc } = {}) {
     super();
     this._root = this.attachShadow({ mode: "open", ...shadowInit });
     this.templateSrc = templateSrc;
