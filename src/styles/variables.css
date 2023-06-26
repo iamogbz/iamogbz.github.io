@@ -1,4 +1,9 @@
 :root {
+  --color-fg: #ffd78e;
+  --color-bg: #121212;
+}
+
+:root {
   --size-xxxs: 1px;
   --size-xxs: 2px;
   --size-xs: 3px;
@@ -14,4 +19,9 @@
   --size-xl: 377px;
   --size-xxl: 610px;
   --size-xxxl: 987px;
+}
+
+:root {
+  --level-zero: unset;
+  --level-one: 1;
 }
