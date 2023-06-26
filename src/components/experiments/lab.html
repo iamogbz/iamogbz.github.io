@@ -1,46 +1,21 @@
 <style>
   #lab {
+    align-items: center;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    align-items: center;
+    gap: var(--size-sssm);
     justify-content: center;
 
-    --size-h: 377px;
-    --size-w: 610px;
-  }
-
-  #lab experiment-tile {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    height: var(--size-h);
-    width: var(--size-w);
-    overflow: hidden;
-    cursor: pointer;
-
-    &:hover,
-    &:active {
-      & span[slot="name"] {
-        transition-delay: 0s;
-        margin-top: calc(var(--size-h) - var(--size-h) * 2);
-      }
-    }
-
-    & span {
-      display: flex;
-      text-align: center;
+    & experiment-tile {
       align-items: center;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      height: var(--size-xl);
       justify-content: center;
       overflow: hidden;
-      text-overflow: ellipsis;
-      height: 100%;
-      transition: margin-top 0.3s ease-in-out 0.3s;
-
-      &[slot="description"] {
-        /* white-space: wrap; */
-        font-size: 34px;
-      }
+      position: relative;
+      width: var(--size-xxl);
     }
   }
 </style>
