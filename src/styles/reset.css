@@ -1,0 +1,7 @@
+html, body {
+  background: black;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  transition: all 0.2s 0.3s;
+}
