@@ -1,22 +1,22 @@
 import { compareRepos, fetchRepos } from "../../utils/github/repos.js";
 import { createSlotElement } from "../../utils/include-template.js";
 import { CustomElement } from "../custom-element.js";
-import { ExperimentTile } from "./tile.js";
+import { ProjectTile } from "./tile.js";
 
 const DELIMITER_PROPS = "|";
 const DELIMITER_REPOS = "/";
-const ATTRIBUTE_REPOS = "data-experiments";
+const ATTRIBUTE_REPOS = "data-projects";
 
 /**
- * Render collection of lab experiments
- * [data-experiments]: repo-a|Repo A Description/repo-b|repo B description
+ * Render collection of lab projects
+ * [data-projects]: repo-a|Repo A Description/repo-b|repo B description
  */
-export class LabExperiments extends CustomElement {
-  static tagName = "lab-experiments";
+export class LabProjects extends CustomElement {
+  static tagName = "lab-projects";
 
   constructor() {
     super({
-      templateSrc: "components/experiments/lab.html",
+      templateSrc: "components/projects/lab.html",
     });
 
     this.loadData();
@@ -40,16 +40,15 @@ export class LabExperiments extends CustomElement {
    * @param {string} newValue
    */
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === ATTRIBUTE_REPOS)
-      this.renderDataExperiments(oldValue, newValue);
+    if (name === ATTRIBUTE_REPOS) this.renderProjects(oldValue, newValue);
   }
 
   /**
-   * Handle changes to `data-experiments` attribute
+   * Handle changes to `data-projects` attribute
    * @param {string?} _ oldValue
    * @param {string?} newValue
    */
-  renderDataExperiments(_, newValue) {
+  renderProjects(_, newValue) {
     newValue
       ?.split(DELIMITER_REPOS)
       .filter(Boolean)
@@ -57,30 +56,30 @@ export class LabExperiments extends CustomElement {
         const [slugName, description] = flattenedRepo.split(DELIMITER_PROPS);
         const name = slugName.replace(/-/g, " ").toUpperCase();
 
-        const experimentTileElem =
-          this._root?.querySelectorAll(`${ExperimentTile.tagName}`).item(i) ??
-          document.createElement(ExperimentTile.tagName);
+        const projectTileElem =
+          this._root?.querySelectorAll(`${ProjectTile.tagName}`).item(i) ??
+          document.createElement(ProjectTile.tagName);
 
         const tileNameElem =
-          experimentTileElem.querySelector(`span[slot="name"]`) ??
+          projectTileElem.querySelector(`span[slot="name"]`) ??
           createSlotElement({ tag: "span", slot: "name" });
         tileNameElem.textContent = name;
 
         const tileDescriptionElem =
-          experimentTileElem.querySelector(`span[slot="description"]`) ??
+          projectTileElem.querySelector(`span[slot="description"]`) ??
           createSlotElement({ tag: "span", slot: "description" });
         tileDescriptionElem.textContent = description;
 
-        // experimentTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
-        experimentTileElem.appendChild(tileNameElem);
-        experimentTileElem.appendChild(tileDescriptionElem);
-        return experimentTileElem;
+        // projectTileElem.innerHTML = `<span slot="name">${name}</span><span slot="description">${description}</span>`;
+        projectTileElem.appendChild(tileNameElem);
+        projectTileElem.appendChild(tileDescriptionElem);
+        return projectTileElem;
       })
       .forEach(tile => this._root.getElementById("lab")?.appendChild(tile));
   }
 }
 
-customElements.define(LabExperiments.tagName, LabExperiments);
+customElements.define(LabProjects.tagName, LabProjects);
 
 // Component helpers
 

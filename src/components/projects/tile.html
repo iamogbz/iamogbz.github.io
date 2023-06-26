@@ -1,0 +1,24 @@
+<style>
+  animated-button {
+    display: flex;
+    height: 100%;
+  }
+
+  .project {
+    height: 100%;
+
+    & slot {
+      align-items: center;
+      display: flex;
+      height: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+
+<animated-button>
+  <div class="project">
+    <slot name="name">Repo Name</slot>
+    <slot name="description">Repo Description</slot>
+  </div>
+</animated-button>

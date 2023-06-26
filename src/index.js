@@ -2,9 +2,9 @@
 console.log("Hello Curious 👋🏾😸 https://github.com/iamogbz/iamogbz.github.io");
 // index.html components
 import "./components/button/animated-button.js";
-import "./components/experiments/lab.js";
-import "./components/experiments/tile.js";
 import "./components/logo/animated-logo.js";
+import "./components/projects/lab.js";
+import "./components/projects/tile.js";
 // index.html script
 import { includeTemplate } from "./utils/include-template.js";
 
