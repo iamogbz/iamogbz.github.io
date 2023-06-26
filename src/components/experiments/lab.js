@@ -52,6 +52,7 @@ export class LabExperiments extends CustomElement {
   renderDataExperiments(_, newValue) {
     newValue
       ?.split(DELIMITER_REPOS)
+      .filter(Boolean)
       .map((flattenedRepo, i) => {
         const [slugName, description] = flattenedRepo.split(DELIMITER_PROPS);
         const name = slugName.replace(/-/g, " ").toUpperCase();
@@ -84,7 +85,7 @@ customElements.define(LabExperiments.tagName, LabExperiments);
 // Component helpers
 
 export async function loadData() {
-  const repos = await fetchRepos({ username: "iamogbz", count: 100 });
+  const repos = await fetchRepos({ username: "iamogbz", count: 0 });
   return repos
     .filter(r => !r.archived)
     .filter(r => r.stargazers_count)
