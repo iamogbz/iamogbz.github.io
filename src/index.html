@@ -1,7 +1,18 @@
 <link rel="stylesheet" href="./styles/reset.css" />
 <script src="./index.js" type="module"></script>
 
-<animated-logo></animated-logo>
-<animated-button href="emmanuel.profile">PROFILE</animated-button>
-<object data="./assets/images/flask.svg" id="lab-logo" width="48px"></object>
-<lab-projects id="lab"></lab-projects>
+<div class="page-section">
+  <div class="section-header"><animated-logo></animated-logo></div>
+  <animated-button href="emmanuel.profile">PROFILE</animated-button>
+</div>
+<div class="page-section">
+  <div class="section-header">
+    <object
+      class="section-header"
+      data="./assets/images/flask.svg"
+      id="lab-logo"
+      width="48px"
+    ></object>
+  </div>
+  <lab-projects id="lab"></lab-projects>
+</div>
