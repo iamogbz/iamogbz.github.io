@@ -1,9 +1,33 @@
 <link rel="stylesheet" href="./styles/reset.css" />
+<style>
+  animated-logo {
+    scale: 0.5;
+  }
+
+  animated-button span {
+    padding: var(--size-sm) var(--size-m);
+  }
+
+  #lab-logo {
+    height: var(--size-mml);
+    background: var(--color-fg);
+    border-radius: 100%;
+    box-sizing: border-box;
+    padding: var(--size-ssm);
+    width: var(--size-mml);
+  }
+
+  #lab {
+    margin-bottom: var(--size-m);
+  }
+</style>
 <script src="./index.js" type="module"></script>
 
 <div class="page-section">
   <div class="section-header"><animated-logo></animated-logo></div>
-  <animated-button href="emmanuel.profile">PROFILE</animated-button>
+  <animated-button href="emmanuel.profile"
+    ><span>PROFILE</span></animated-button
+  >
 </div>
 <div class="page-section">
   <div class="section-header">
