@@ -2,17 +2,27 @@
   animated-button {
     display: flex;
     height: 100%;
+
+    &:hover .project {
+      margin-top: calc(var(--size-xl) * -2);
+    }
   }
 
   .project {
     height: 100%;
+    transition: margin-top 0.3s 0.1s ease-in-out;
 
     & slot {
       align-items: center;
       display: flex;
       height: 100%;
+      padding: 0 var(--size-m);
       text-align: center;
       justify-content: center;
+    }
+
+    & slot[name="description"] {
+      font-size: var(--size-m);
     }
   }
 </style>
