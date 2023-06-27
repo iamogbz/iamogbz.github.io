@@ -4,8 +4,11 @@
     scale: 0.5;
   }
 
-  animated-button span {
-    padding: var(--size-sm) var(--size-m);
+  animated-button {
+    margin: var(--size-m);
+    & span {
+      padding: var(--size-sm) var(--size-m);
+    }
   }
 
   #lab-logo {
@@ -25,9 +28,12 @@
 
 <div class="page-section">
   <div class="section-header"><animated-logo></animated-logo></div>
-  <animated-button href="emmanuel.profile"
-    ><span>PROFILE</span></animated-button
-  >
+  <animated-button href="emmanuel.profile" id="link-profile"
+    ><span>PROFILE</span>
+  </animated-button>
+  <animated-button href="#lab-logo" id="link-projects"
+    ><span>PROJECTS</span>
+  </animated-button>
 </div>
 <div class="page-section">
   <div class="section-header">
@@ -39,4 +45,11 @@
     ></object>
   </div>
   <lab-projects id="lab"></lab-projects>
+</div>
+<div class="page-section">
+  <div class="section-header">
+    <animated-button href="https://github.com/iamogbz" id="link-promote"
+      ><span>PROMOTE</span>
+    </animated-button>
+  </div>
 </div>
