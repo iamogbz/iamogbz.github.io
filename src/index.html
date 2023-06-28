@@ -21,6 +21,14 @@
     width: var(--size-mml);
   }
 
+  #lab-header::after {
+    content: '';
+    display: block;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+  }
+
   #lab {
     margin-bottom: var(--size-m);
   }
@@ -29,7 +37,7 @@
 
 <div class="page-section">
   <div class="section-header"><animated-logo></animated-logo></div>
-  <animated-button href="emmanuel.profile" id="link-profile"
+  <animated-button href="profile/emmanuel.html" id="link-profile"
     ><span>PROFILE</span>
   </animated-button>
   <animated-button href="#lab-logo" id="link-projects"
@@ -37,13 +45,13 @@
   </animated-button>
 </div>
 <div class="page-section">
-  <div class="section-header">
+  <a class="section-header" id="lab-header" href="#lab-logo">
     <object
       data="./assets/images/flask.svg"
       id="lab-logo"
       width="48px"
     ></object>
-  </div>
+  </a>
   <lab-projects id="lab"></lab-projects>
 </div>
 <div class="page-section">
