@@ -9,6 +9,7 @@
   }
 
   .project {
+    cursor: pointer;
     height: 100%;
     transition: margin-top 0.3s 0.1s ease-in-out;
 
@@ -27,7 +28,7 @@
   }
 </style>
 
-<animated-button>
+<animated-button target="_blank">
   <div class="project">
     <slot name="name">Repo Name</slot>
     <slot name="description">Repo Description</slot>

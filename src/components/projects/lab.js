@@ -59,6 +59,10 @@ export class LabProjects extends CustomElement {
         const projectTileElem =
           this._root?.querySelectorAll(`${ProjectTile.tagName}`).item(i) ??
           document.createElement(ProjectTile.tagName);
+        projectTileElem.setAttribute(
+          "href",
+          `https://github.com/iamogbz/${slugName}`,
+        );
 
         const tileNameElem =
           projectTileElem.querySelector(`span[slot="name"]`) ??
@@ -84,7 +88,7 @@ customElements.define(LabProjects.tagName, LabProjects);
 // Component helpers
 
 export async function loadData() {
-  const repos = await fetchRepos({ username: "iamogbz", count: 0 });
+  const repos = await fetchRepos({ username: "iamogbz", count: 100 });
   return repos
     .filter(r => !r.archived)
     .filter(r => r.stargazers_count)
