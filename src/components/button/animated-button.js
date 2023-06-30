@@ -5,7 +5,7 @@ export const BUTTON_LINK_ATTRIBUTES = ["href", "target"];
 export class AnimatedButton extends CustomElement {
   constructor() {
     super({
-      templateSrc: "components/button/animated-button.html",
+      templateSrc: "../../components/button/animated-button.html",
       attributeMap: { "#button-link": ["href", "target"] },
     });
   }

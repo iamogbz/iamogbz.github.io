@@ -1,0 +1,112 @@
+<link rel="stylesheet" href="../styles/reset.css" />
+<style>
+  #avatar {
+    border-radius: 100%;
+    margin-top: 20vmin;
+    width: var(--size-xl);
+  }
+
+  #title,
+  #subtitle,
+  animated-button,
+  footer {
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  #title {
+    font-weight: bold;
+    font-size: var(--size-mmml);
+    letter-spacing: var(--size-m);
+    margin: var(--size-m);
+  }
+
+  #subtitle {
+    font-size: var(--size-sm);
+    letter-spacing: var(--size-s);
+
+    & span {
+      margin: 0;
+
+      &:not(:last-child)::after {
+        content: "/";
+        margin-left: var(--size-sm);
+      }
+    }
+  }
+
+  #resume animated-button {
+    display: inline-flex;
+    font-size: var(--size-sm);
+    margin-bottom: 50vh;
+
+    & span {
+      padding: var(--size-sm) var(--size-m);
+    }
+  }
+
+  #contact {
+    align-items: center;
+    background: var(--color-bg);
+    bottom: 0;
+    box-shadow: var(--color-bg) 0 0 var(--size-sm) var(--size-sm);
+    display: flex;
+    font-size: var(--size-sm);
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    position: fixed;
+    width: 100vw;
+
+    & a {
+      align-items: center;
+      color: var(--color-fg);
+      display: flex;
+      justify-content: center;
+      padding: var(--size-m);
+      text-align: center;
+      text-decoration: none;
+
+      & span {
+        margin-left: var(--size-ssm);
+      }
+    }
+  }
+</style>
+<script src="../index.js" type="module"></script>
+
+<image id="avatar" src="../assets/images/avatar.jpg" />
+<h1 id="title">Emmanuel Ogbizi Ugbe</h1>
+<p id="subtitle">
+  <span>developer</span>
+  <span>consultant</span>
+  <span>designer</span>
+</p>
+<p id="resume">
+  <animated-button
+    href="https://www.linkedin.com/in/emmanuel-ogbizi-ugbe#experience"
+  >
+    <span>Experience</span>
+  </animated-button>
+  <animated-button href="/#lab-logo">
+    <span>Experiments</span>
+  </animated-button>
+  <animated-button
+    href="https://www.linkedin.com/in/emmanuel-ogbizi-ugbe#education"
+  >
+    <span>Education</span>
+  </animated-button>
+</p>
+<footer id="contact">
+  <a id="location" href="https://goo.gl/maps/3PpbgtsWnSQ2">
+    <object data="../assets/images/location.svg"></object>
+    <span>toronto ontario</span>
+  </a>
+  <a id="message" href="mailto:eogbizi@gmail.com">
+    <object data="../assets/images/message.svg"></object>
+    <span>send an message</span>
+  </a>
+  <a id="call" href="tel:+1(289)700-5815">
+    <object data="../assets/images/call.svg"></object>
+    <span>make a call</span>
+  </a>
+</footer>

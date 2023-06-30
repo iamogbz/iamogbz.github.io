@@ -1,6 +1,6 @@
 :root {
   --color-fg: #ffd78e;
-  --color-bg: #121212;
+  --color-bg: #070707;
 }
 
 :root {
@@ -12,9 +12,9 @@
   --size-ssm: 13px;
   --size-sm: 21px;
   --size-m: 34px;
-  --size-ml: 55px;
+  --size-mmml: 55px;
   --size-mml: 89px;
-  --size-mmml: 144px;
+  --size-ml: 144px;
   --size-l: 233px;
   --size-xl: 377px;
   --size-xxl: 610px;
