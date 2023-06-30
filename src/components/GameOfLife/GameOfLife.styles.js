@@ -37,22 +37,24 @@ export const Board = styled.svg`
     overflow: hidden;
 `;
 
-export const Cell = ({ x, y, n }) => (
-    <rect
-        {...{
-            x: CELL_SIZE * x + CELL_BORDER,
-            y: CELL_SIZE * y + CELL_BORDER,
-            rx: CELL_SIZE,
-            ry: CELL_SIZE,
-            fill: CELL_COLOR,
-            width: CELL_SIZE - CELL_BORDER * 2,
-            height: CELL_SIZE - CELL_BORDER * 2,
-            style: {
-                opacity: (n + 1) / 4,
-            },
-        }}
-    />
-);
+export function Cell({ x, y, n }) {
+    return (
+        <rect
+            {...{
+                x: CELL_SIZE * x + CELL_BORDER,
+                y: CELL_SIZE * y + CELL_BORDER,
+                rx: CELL_SIZE,
+                ry: CELL_SIZE,
+                fill: CELL_COLOR,
+                width: CELL_SIZE - CELL_BORDER * 2,
+                height: CELL_SIZE - CELL_BORDER * 2,
+                style: {
+                    opacity: (n + 1) / 4,
+                },
+            }}
+        />
+    );
+}
 
 Cell.propTypes = {
     x: PropTypes.number.isRequired,

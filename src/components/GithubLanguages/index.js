@@ -9,10 +9,6 @@ import { LANG_BLACKLIST, GRAPH_QUERY } from "./GithubLanguages.constants";
 const getUserUrl = user => `https://github.com/${user.toLowerCase()}`;
 
 export default class GithubLanguages extends React.PureComponent {
-    static propTypes = {
-        authKey: PropTypes.string.isRequired,
-    };
-
     constructor(props) {
         super(props);
         const { authKey } = this.props;
@@ -90,3 +86,7 @@ export default class GithubLanguages extends React.PureComponent {
         });
     }
 }
+
+GithubLanguages.propTypes = {
+    authKey: PropTypes.string.isRequired,
+};

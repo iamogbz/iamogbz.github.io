@@ -8,22 +8,6 @@ import { BOARD_ID, CELL_SIZE } from "./GameOfLife.constants";
 import { Board, Cell } from "./GameOfLife.styles";
 
 class GameOfLife extends React.Component {
-    static propTypes = {
-        background: PropTypes.bool,
-        darkMode: PropTypes.bool,
-        fixed: PropTypes.bool,
-        interval: PropTypes.number,
-        isRunning: PropTypes.bool,
-    };
-
-    static defaultProps = {
-        background: false,
-        darkMode: false,
-        fixed: false,
-        interval: 100,
-        isRunning: true,
-    };
-
     constructor(props) {
         super(props);
         const { isRunning } = this.props;
@@ -34,7 +18,7 @@ class GameOfLife extends React.Component {
     }
 
     componentDidMount() {
-        this.runIteration();
+        this.startRunning();
     }
 
     componentWillUnmount() {
@@ -163,5 +147,21 @@ class GameOfLife extends React.Component {
         );
     }
 }
+
+GameOfLife.propTypes = {
+    background: PropTypes.bool,
+    darkMode: PropTypes.bool,
+    fixed: PropTypes.bool,
+    interval: PropTypes.number,
+    isRunning: PropTypes.bool,
+};
+
+GameOfLife.defaultProps = {
+    background: false,
+    darkMode: false,
+    fixed: false,
+    interval: 100,
+    isRunning: true,
+};
 
 export default GameOfLife;
