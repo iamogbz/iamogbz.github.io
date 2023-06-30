@@ -30,7 +30,7 @@ jobs:
       run: |
         git config user.name ${PUBLISH_USER}
         git config user.email ${PUBLISH_EMAIL}
-        git add ${PUBLISH_GLOB}
+        git add ${PUBLISH_GLOB} -f
         git status # useful for debugging
         git commit -m "chore: deploy website [skip ci]" || exit 0
     - name: Deploy

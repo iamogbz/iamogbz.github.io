@@ -9,6 +9,7 @@ import {
 import { Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
+import { decode } from "utils/encoder";
 import Link from "components/Link";
 import GithubLanguages from "components/GithubLanguages";
 import { GITHUB_KEY_B } from "./Emmanuel.constants";
@@ -101,7 +102,7 @@ export default function Emmanuel() {
                 <Subtitle>Consultant / Developer / Designer</Subtitle>
             </CenteredCell>
             <CenteredCell height={1} width={12}>
-                <GithubLanguages authKey={btoa(GITHUB_KEY_B)} />
+                <GithubLanguages authKey={decode(GITHUB_KEY_B)} />
             </CenteredCell>
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={3} />
