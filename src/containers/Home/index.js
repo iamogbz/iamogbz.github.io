@@ -5,10 +5,12 @@ import Link from "components/Link";
 import { Colors, Zindex } from "utils/constants";
 import { FullPageGrid, CenteredCell } from "./Home.styles";
 
-const headerCellStyle = { backgroundColor: "rgba(0,0,0,0.6)" };
+const headerCellStyle = {
+    backgroundColor: `color-mix(in srgb, ${Colors.DARK} 60%, transparent)`,
+};
 const linkCellStyle = {
     zIndex: Zindex.TOP,
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: `color-mix(in srgb, ${Colors.DARK} 80%, transparent)`,
 };
 
 export default function Home() {
@@ -26,7 +28,7 @@ export default function Home() {
     return (
         <FullPageGrid columns={3} rows={3} gap="0" key="page-grid">
             <CenteredCell width={3} height={2} style={headerCellStyle}>
-                <Logo size="40vh" />
+                <Logo size={document.body.clientHeight * 0.4} />
             </CenteredCell>
             {[
                 ["Source", "https://github.com/iamogbz/iamogbz.github.io"],

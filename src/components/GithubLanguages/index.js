@@ -62,10 +62,10 @@ export default class GithubLanguages extends React.PureComponent {
         const colors = {
             $: {
                 foreground: Colors.DARK,
-                background: "rgba(255, 255, 255, 0.7)",
+                background: `color-mix(in srgb, ${Colors.LIGHT} 70%, transparent)`,
             },
             hover: {
-                background: "rgba(255, 255, 255, 0.9)",
+                background: `color-mix(in srgb, ${Colors.LIGHT} 90%, transparent)`,
             },
         };
         const sortedDists = Object.entries(types).sort(

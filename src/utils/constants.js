@@ -1,6 +1,6 @@
 export const Colors = {
     ACTIVE: "#2386F1",
-    LIGHT: "#f8f8f8",
+    LIGHT: "#f8f0e8",
     DARK: "#101010",
     NONE: "transparent",
 };
