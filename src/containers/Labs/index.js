@@ -8,6 +8,7 @@ import { Beaker } from "styled-icons/octicons";
 import { TestTube } from "styled-icons/boxicons-regular";
 import { Colors, Zindex } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
+import Link from "components/Link";
 import { useGraphQuery } from "services/Github/useGraphQuery";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
@@ -45,17 +46,43 @@ function BrewingIcon() {
     );
 }
 
-function Project({ markdown }) {
+function Project({ markdown, url }) {
     if (!markdown) return <BrewingIcon />;
-    return <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>;
+    return (
+        <>
+            <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>
+            <Link
+                href={url}
+                target="_blank"
+                borderColor={Colors.LIGHT}
+                fontColors={{
+                    initial: Colors.LIGHT,
+                    active: Colors.ACTIVE,
+                }}
+                fontSize="24px"
+                buttonHeight="128px"
+                buttonWidth="480px"
+                style={{
+                    position: "fixed",
+                    left: 0,
+                    bottom: 24,
+                    width: "100%",
+                }}
+            >
+                View Source
+            </Link>
+        </>
+    );
 }
 
 Project.propTypes = {
     markdown: PropTypes.string,
+    url: PropTypes.string,
 };
 
 Project.defaultProps = {
     markdown: null,
+    url: null,
 };
 
 export default function Labs() {
@@ -113,7 +140,10 @@ export default function Labs() {
                 </Select>
             </SelectWrapper>
             <ProjectWrapper withContent={Boolean(projectMD)}>
-                <Project markdown={projectMD} />
+                <Project
+                    markdown={projectMD}
+                    url={projects[projectName]?.url}
+                />
             </ProjectWrapper>
         </FullGrid>,
     ];

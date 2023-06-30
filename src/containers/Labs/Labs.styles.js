@@ -36,7 +36,7 @@ export const ProjectWrapper = styled.div`
     max-width: calc(100% - 96px);
     border-radius: 2px;
     ${({ withContent }) =>
-        withContent ? "max" : "min"}-height: calc(100% - 144px);
+        withContent ? "max" : "min"}-height: calc(100% - 288px);
     overflow-y: auto;
     transition: all 0.2s ease-in-out;
 
