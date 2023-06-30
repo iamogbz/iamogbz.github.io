@@ -9,10 +9,6 @@ import { LANG_BLACKLIST, GRAPH_QUERY } from "./GithubLanguages.constants";
 const getUserUrl = user => `https://github.com/${user.toLowerCase()}`;
 
 export default class GithubLanguages extends React.PureComponent {
-    static propTypes = {
-        authKey: PropTypes.string.isRequired,
-    };
-
     constructor(props) {
         super(props);
         const { authKey } = this.props;
@@ -66,10 +62,10 @@ export default class GithubLanguages extends React.PureComponent {
         const colors = {
             $: {
                 foreground: Colors.DARK,
-                background: "rgba(255, 255, 255, 0.7)",
+                background: `color-mix(in srgb, ${Colors.LIGHT} 70%, transparent)`,
             },
             hover: {
-                background: "rgba(255, 255, 255, 0.9)",
+                background: `color-mix(in srgb, ${Colors.LIGHT} 90%, transparent)`,
             },
         };
         const sortedDists = Object.entries(types).sort(
@@ -90,3 +86,7 @@ export default class GithubLanguages extends React.PureComponent {
         });
     }
 }
+
+GithubLanguages.propTypes = {
+    authKey: PropTypes.string.isRequired,
+};

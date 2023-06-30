@@ -1,35 +1,42 @@
 import styled from "styled-components";
+import { Colors } from "utils/constants";
 
-const lineAnim = "dash 2s ease-in-out infinite forwards";
+const lineAnim = "progress 3s linear normal infinite";
 
 export const SVGWrapper = styled.div`
-    display: flex;
-    align-items: center;
-    justify-contents: center;
-    width: ${({ size }) => size};
-    height: ${({ size }) => size};
-    svg {
-        width: 100%;
-        height: 100%;
+    #logo {
+        background-color: color-mix(in srgb, ${Colors.DARK} 80%, transparent);
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-    .animline {
-        stroke-dasharray: 50;
-        stroke-dashoffset: 50;
+
+    #logo .ring {
         animation: ${lineAnim};
+        fill: none;
+        stroke-dasharray: 720 180;
     }
-    @keyframes dash {
-        to {
-            stroke-dashoffset: -50;
+
+    #logo .left {
+        transform: translate(100px, 0) rotate(90deg);
+    }
+
+    #logo .right {
+        animation-delay: 1.5s;
+        animation-direction: reverse;
+        transform: translate(100px, 200px) rotate(-90deg);
+    }
+
+    @keyframes progress {
+        0%,
+        10% {
+            stroke-dashoffset: 100;
         }
-    }
-    #circle {
-        transform-origin: center;
-        transform: rotate(0deg);
-        animation: ${lineAnim}, spin 2s linear infinite;
-    }
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
+
+        90%,
+        100% {
+            stroke-dashoffset: -900;
         }
     }
 `;

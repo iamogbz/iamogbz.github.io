@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import messages from "./PageLoading.messages";
 
-const PageLoading = ({ error, pastDelay }) => {
+function PageLoading({ error, pastDelay }) {
     if (error) {
         console.error(error); // eslint-disable-line
         return <p>{messages.errorMessage}</p>;
@@ -12,7 +12,7 @@ const PageLoading = ({ error, pastDelay }) => {
         return <p>{messages.loadingMessage}</p>;
     }
     return null;
-};
+}
 
 PageLoading.propTypes = {
     error: PropTypes.oneOfType([PropTypes.bool, PropTypes.instanceOf(Error)]),

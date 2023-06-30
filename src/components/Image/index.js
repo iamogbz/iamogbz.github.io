@@ -3,14 +3,18 @@ import PropTypes from "prop-types";
 
 const imageAssetPath = "assets/images";
 
-const Image = ({ name, size, type, className, style }) => (
-    <img
-        src={`/${imageAssetPath}/${name}.${type || Image.defaultProps.type}`}
-        alt={name}
-        className={className}
-        style={{ ...style, width: size }}
-    />
-);
+function Image({ name, size, type, className, style }) {
+    return (
+        <img
+            src={`/${imageAssetPath}/${name}.${
+                type || Image.defaultProps.type
+            }`}
+            alt={name}
+            className={className}
+            style={{ ...style, width: size }}
+        />
+    );
+}
 
 Image.propTypes = {
     name: PropTypes.string.isRequired,

@@ -1,10 +1,11 @@
 import styled, { createGlobalStyle } from "styled-components";
 import { Grid, Cell } from "styled-css-grid";
 import Image from "components/Image";
+import { Colors } from "utils/constants";
 
 export const ProfileStyle = createGlobalStyle`
     html, body {
-        color: #f8f8f8;
+        color: ${Colors.LIGHT};
     }
     html {
         background: url("assets/images/background.jpg") no-repeat;
@@ -12,7 +13,7 @@ export const ProfileStyle = createGlobalStyle`
         background-size: cover;
     }
     body {
-        background-color: rgba(0,0,0,0.8);
+        background-color: color-mix(in srgb, ${Colors.DARK} 80%, transparent);
     }
 `;
 
@@ -46,5 +47,5 @@ export const Title = styled.div`
 export const Subtitle = styled.div`
     text-transform: uppercase;
     font-size: 1.2vmax;
-    color: #c8c8c8;
+    color: ${Colors.LIGHT};
 `;

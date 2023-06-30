@@ -27,36 +27,94 @@
         "browser": false
     },
     "rules": {
-        "arrow-body-style": [2, "as-needed"],
-        "arrow-parens": [2, "as-needed"],
+        "arrow-body-style": [
+            2,
+            "as-needed"
+        ],
+        "arrow-parens": [
+            2,
+            "as-needed"
+        ],
         "class-methods-use-this": 0,
         "no-console": 1,
-        "no-param-reassign": ["error", { "props": false }],
+        "no-param-reassign": [
+            "error",
+            {
+                "props": false
+            }
+        ],
         "no-trailing-spaces": 2,
-        "no-use-before-define": [2, {
-            "functions": false
-        }],
-        "no-underscore-dangle": [2, { "allowAfterThis": true }],
-        "object-curly-newline": [2, {
-            "multiline": true,
-            "consistent": true
-        }],
-        "object-property-newline": [2, {
-            "allowAllPropertiesOnSameLine": true
-        }],
+        "no-use-before-define": [
+            2,
+            {
+                "functions": false
+            }
+        ],
+        "no-underscore-dangle": [
+            2,
+            {
+                "allowAfterThis": true
+            }
+        ],
+        "object-curly-newline": [
+            2,
+            {
+                "multiline": true,
+                "consistent": true
+            }
+        ],
+        "object-property-newline": [
+            2,
+            {
+                "allowAllPropertiesOnSameLine": true
+            }
+        ],
         "import/prefer-default-export": 0,
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "react/jsx-first-prop-new-line": [2, "multiline"],
-        "react/jsx-indent": [2, 4],
-        "react/jsx-indent-props": [2, 4],
+        "import/no-extraneous-dependencies": [
+            "error",
+            {
+                "devDependencies": [
+                    "webpack.config.js",
+                    "config/setupTests.js",
+                    "src/utils/testRenderers.js",
+                    "**/*.test.js",
+                    "**/*.spec.js"
+                ]
+            }
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
+        "react/jsx-first-prop-new-line": [
+            2,
+            "multiline"
+        ],
+        "react/jsx-indent": [
+            2,
+            4
+        ],
+        "react/jsx-indent-props": [
+            2,
+            4
+        ],
         "react/jsx-one-expression-per-line": 0,
         "react/jsx-props-no-spreading": 0,
-        "prettier/prettier": [2]
+        "prettier/prettier": [
+            2
+        ]
     },
     "settings": {
         "import/resolver": {
             "node": {
-                "paths": ["src"]
+                "paths": [
+                    "src"
+                ]
             }
         }
     }
