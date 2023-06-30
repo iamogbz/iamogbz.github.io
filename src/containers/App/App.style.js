@@ -10,5 +10,6 @@ export const GlobalStyle = createGlobalStyle`
         min-width: 768px;
         background-color: ${({ dark }) => (dark ? Colors.DARK : Colors.LIGHT)};
         color: ${({ dark }) => (dark ? Colors.LIGHT : Colors.DARK)};
+        scroll-behaviour: smooth;
     }
 `;

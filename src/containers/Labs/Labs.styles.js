@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { Colors } from "utils/constants";
 
 export const FullGrid = styled.div`
@@ -55,13 +56,32 @@ export const ProjectWrapper = styled.div`
 `;
 
 const optionFontSize = "1.2em";
-export const Option = styled.option``;
-export const Select = styled.select`
+export const Option = styled(ReactRouterLink)``;
+export const Select = styled.div`
     font-size: ${optionFontSize};
     width: 100%;
     padding: 12px 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    overflow: visible hidden;
+    align-item: center;
+    justify-content: space-between;
+    gap: 24px;
 
     ${Option} {
         font-size: ${optionFontSize};
+        min-width: 240px;
+        color: ${Colors.LIGHT};
+        text-decoration: none;
+        padding: 6px 18px;
+        border: solid 2px ${Colors.DARK};
+        border-radius: 4px;
+        background: color-mix(in srgb, ${Colors.DARK} 60%, transparent);
+
+        &:hover {
+            color: ${Colors.ACTIVE};
+            background: color-mix(in srgb, ${Colors.DARK} 90%, transparent);
+        }
     }
 `;

@@ -1,9 +1,10 @@
+/* eslint-disable no-irregular-whitespace */
 import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import { useMatches, useNavigate } from "react-router-dom";
+import { useMatches } from "react-router-dom";
 import { Beaker } from "styled-icons/octicons";
 import { TestTube } from "styled-icons/boxicons-regular";
 import { Colors, Zindex } from "utils/constants";
@@ -13,6 +14,7 @@ import { useGraphQuery } from "services/Github/useGraphQuery";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import { GITHUB_KEY } from "containers/Profiles/Emmanuel/Emmanuel.constants";
+import { OpenInNew } from "styled-icons/material";
 import { PROJ_BLACKLIST, GRAPH_QUERY } from "./Labs.constants";
 import {
     FullGrid,
@@ -50,26 +52,31 @@ function Project({ markdown, url }) {
     if (!markdown) return <BrewingIcon />;
     return (
         <>
-            <ReactMarkdown plugins={[gfm]}>{markdown}</ReactMarkdown>
+            <ReactMarkdown plugins={[gfm]} allowDangerousHtml>
+                {markdown}
+            </ReactMarkdown>
             <Link
                 href={url}
                 target="_blank"
+                backgroundColor={Colors.ACTIVE}
                 borderColor={Colors.LIGHT}
                 fontColors={{
                     initial: Colors.LIGHT,
-                    active: Colors.ACTIVE,
+                    active: Colors.DARK,
                 }}
-                fontSize="24px"
-                buttonHeight="128px"
-                buttonWidth="480px"
+                fontSize="12px"
+                buttonHeight="48px"
+                buttonWidth="48px"
+                borderWidth="0"
                 style={{
-                    position: "fixed",
-                    left: 0,
-                    bottom: 24,
-                    width: "100%",
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
                 }}
+                title="View source code"
+                tabIndex={0}
             >
-                View Source
+                <OpenInNew color={Colors.LIGHT} size="24px" />
             </Link>
         </>
     );
@@ -86,7 +93,6 @@ Project.defaultProps = {
 };
 
 export default function Labs() {
-    const navigate = useNavigate();
     const [match] = useMatches();
     const {
         pathname: path,
@@ -103,20 +109,25 @@ export default function Labs() {
     const projects = React.useMemo(
         () =>
             keyBy(
-                get(data, "viewer.repositories.nodes", []).filter(
-                    repo =>
-                        !PROJ_BLACKLIST.includes(repo.name) &&
-                        !repo.isArchived &&
-                        repo.stargazerCount > 0,
-                ),
+                get(data, "viewer.repositories.nodes", [])
+                    .map(repo => ({
+                        ...repo,
+                        readmeText:
+                            repo?.README?.text ??
+                            repo?.Readme?.text ??
+                            repo?.readme?.text,
+                    }))
+                    .filter(
+                        repo =>
+                            !PROJ_BLACKLIST.includes(repo.name) &&
+                            !repo.isArchived &&
+                            repo.readmeText &&
+                            repo.stargazerCount > 0,
+                    ),
                 "name",
             ),
         [data],
     );
-    const projectMD =
-        projects[projectName]?.README?.text ??
-        projects[projectName]?.Readme?.text ??
-        projects[projectName]?.readme?.text;
 
     return [
         <Helmet key="lab-helmet">
@@ -127,21 +138,44 @@ export default function Labs() {
         <GameOfLife key="game-of-life" fixed background darkMode />,
         <FullGrid key="lab-grid">
             <SelectWrapper>
-                <Select
-                    onChange={e => navigate(e.target.value)}
-                    defaultValue={xTo(path, projectName)}
-                >
-                    <Option value="/labs">Choose a project</Option>
-                    {Object.values(projects).map(({ name, description }) => (
-                        <Option key={name} value={xTo(path, name)}>
-                            {xName(name).toUpperCase()} ---- {description}
-                        </Option>
-                    ))}
+                <Select>
+                    <Option
+                        to="/labs"
+                        style={{
+                            flexGrow: 1,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "flex-start",
+                            flexDirection: "column",
+                        }}
+                    >
+                        {Object.keys(projects).length ? (
+                            <>
+                                <p>CLICK TO CLOSE PROJECT</p>
+                                <p>Scroll to view more 👉🏾</p>
+                            </>
+                        ) : (
+                            <p>LOADING PROJECTS...</p>
+                        )}
+                    </Option>
+                    {Object.values(projects).map(
+                        ({ name, descriptionHTML }) => (
+                            <Option key={name} to={xTo(path, name)}>
+                                <p>{xName(name).toUpperCase()}</p>
+                                <p
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                        __html: descriptionHTML,
+                                    }}
+                                />
+                            </Option>
+                        ),
+                    )}
                 </Select>
             </SelectWrapper>
-            <ProjectWrapper withContent={Boolean(projectMD)}>
+            <ProjectWrapper withContent={Boolean(projects[projectName])}>
                 <Project
-                    markdown={projectMD}
+                    markdown={projects[projectName]?.readmeText}
                     url={projects[projectName]?.url}
                 />
             </ProjectWrapper>

@@ -7,6 +7,7 @@ export const GRAPH_QUERY = `query getLangs($repoCount:Int!, $langCount:Int!) {
             nodes {
                 name
                 description
+                descriptionHTML
                 url
                 isArchived
                 isPrivate
