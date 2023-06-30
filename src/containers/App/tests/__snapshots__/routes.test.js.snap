@@ -11,7 +11,7 @@ exports[`Routes matches render snapshot 1`] = `
     "children": [
       {
         "exact": true,
-        "path": ":experiment",
+        "path": ":projectName",
       },
     ],
     "element": <Loadable />,

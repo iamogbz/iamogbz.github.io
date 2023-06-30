@@ -9,7 +9,7 @@ export default [
         exact: true,
         children: [
             {
-                path: ":experiment",
+                path: ":projectName",
                 exact: true,
             },
         ],
