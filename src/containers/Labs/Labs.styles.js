@@ -68,18 +68,26 @@ export const Select = styled.div`
     align-item: center;
     justify-content: space-between;
     gap: 24px;
+    scroll-behavior: smooth;
 
     ${Option} {
         font-size: ${optionFontSize};
         min-width: 240px;
         color: ${Colors.LIGHT};
         text-decoration: none;
-        padding: 6px 18px;
+        padding: 4px 24px;
         border: solid 2px ${Colors.DARK};
         border-radius: 4px;
         background: color-mix(in srgb, ${Colors.DARK} 60%, transparent);
+        transition: all 0.3s ease-in-out;
 
-        &:hover {
+        &.selected {
+            border: solid 4px ${Colors.ACTIVE};
+            border-radius: 12px;
+        }
+
+        &:hover,
+        &:active {
             color: ${Colors.ACTIVE};
             background: color-mix(in srgb, ${Colors.DARK} 90%, transparent);
         }

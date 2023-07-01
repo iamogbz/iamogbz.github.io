@@ -1,4 +1,3 @@
-/* eslint-disable no-irregular-whitespace */
 import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
@@ -15,7 +14,11 @@ import get from "lodash/get";
 import keyBy from "lodash/keyBy";
 import { GITHUB_KEY } from "containers/Profiles/Emmanuel/Emmanuel.constants";
 import { OpenInNew } from "styled-icons/material";
-import { PROJ_BLACKLIST, GRAPH_QUERY } from "./Labs.constants";
+import {
+    CLS_PROJECT_SELECTED,
+    PROJ_BLACKLIST,
+    GRAPH_QUERY,
+} from "./Labs.constants";
 import {
     FullGrid,
     SelectWrapper,
@@ -129,6 +132,13 @@ export default function Labs() {
         [data],
     );
 
+    React.useEffect(() => {
+        document.getElementById(projectName)?.scrollIntoView({
+            block: "center",
+            inline: "center",
+        });
+    }, [projects, projectName]);
+
     return [
         <Helmet key="lab-helmet">
             <title>
@@ -160,7 +170,16 @@ export default function Labs() {
                     </Option>
                     {Object.values(projects).map(
                         ({ name, descriptionHTML }) => (
-                            <Option key={name} to={xTo(path, name)}>
+                            <Option
+                                id={name}
+                                key={name}
+                                to={xTo(path, name)}
+                                className={
+                                    name === projectName
+                                        ? CLS_PROJECT_SELECTED
+                                        : ""
+                                }
+                            >
                                 <p>{xName(name).toUpperCase()}</p>
                                 <p
                                     // eslint-disable-next-line react/no-danger
