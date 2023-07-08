@@ -150,7 +150,7 @@ export default function Labs() {
             <SelectWrapper>
                 <Select>
                     <Option
-                        to="/labs"
+                        to="/"
                         style={{
                             flexGrow: 1,
                             display: "flex",
@@ -161,8 +161,8 @@ export default function Labs() {
                     >
                         {Object.keys(projects).length ? (
                             <>
-                                <p>CLICK TO CLOSE PROJECT</p>
-                                <p>Scroll to view more 👉🏾</p>
+                                <p>CLICK TO CLOSE</p>
+                                <p>scroll to view more 👉🏾</p>
                             </>
                         ) : (
                             <p>LOADING PROJECTS...</p>
