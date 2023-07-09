@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+. "${NVM_DIR}/nvm.sh"
+npm i -g pnpm
+pnpm i --shamefully-hoist
