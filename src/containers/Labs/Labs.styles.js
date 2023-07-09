@@ -2,6 +2,20 @@ import styled from "styled-components";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Colors } from "utils/constants";
 
+export const LoadingEllipsis = styled.span`
+    &: after {
+        content: '.';
+        position: absolute;
+        animation: loading-ellipsis 1s infinite alternate;
+    }
+    @keyframes loading-ellipsis {
+        from {content: '.'};
+        50% {content: '..'};
+        75% {content: '...'};
+        to {content: '....'};
+    }
+`
+
 export const FullGrid = styled.div`
     height: 100%;
     width: 100%;
@@ -59,7 +73,7 @@ const optionFontSize = "1.2em";
 export const Option = styled(ReactRouterLink)``;
 export const Select = styled.div`
     font-size: ${optionFontSize};
-    width: 100%;
+    width: calc(100% - 48px);
     padding: 12px 24px;
     text-align: center;
     display: flex;

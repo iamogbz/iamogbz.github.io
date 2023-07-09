@@ -20,6 +20,7 @@ import {
 } from "./Labs.constants";
 import {
     FullGrid,
+    LoadingEllipsis,
     SelectWrapper,
     Option,
     Select,
@@ -147,7 +148,7 @@ export default function Labs() {
                                 <p>scroll to view more 👉🏾</p>
                             </>
                         ) : (
-                            <p>LOADING PROJECTS...</p>
+                            <LoadingEllipsis>LOADING PROJECTS</LoadingEllipsis>
                         )}
                     </Option>
                     {Object.values(projects).map(
