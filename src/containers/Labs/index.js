@@ -4,11 +4,10 @@ import { Helmet } from "react-helmet";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { useMatches } from "react-router-dom";
-import { Beaker } from "styled-icons/octicons";
-import { TestTube } from "styled-icons/boxicons-regular";
 import { Colors, Zindex } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
 import Link from "components/Link";
+import Logo from "components/Logo";
 import { useGraphQuery } from "services/Github/useGraphQuery";
 import get from "lodash/get";
 import keyBy from "lodash/keyBy";
@@ -33,26 +32,8 @@ const xName = xSlug =>
     xSlug.substr(0, 1).toUpperCase() +
     xSlug.substr(1).replace(/-(\w)/g, ([, m]) => ` ${m.toUpperCase()}`);
 
-function BrewingIcon() {
-    return (
-        <SelectWrapper height={0} style={{ zIndex: Zindex.TOP }}>
-            <Beaker color={Colors.LIGHT} size="10vmax" />
-            <TestTube
-                color={Colors.LIGHT}
-                size="6vmax"
-                style={{
-                    transform: "rotate(-135deg)",
-                    position: "absolute",
-                    top: "calc(50% - 12vmax)",
-                    left: "6vmax",
-                }}
-            />
-        </SelectWrapper>
-    );
-}
-
 function Project({ markdown, url }) {
-    if (!markdown) return <BrewingIcon />;
+    if (!markdown) return <Link href="/"><Logo size={128} /></Link>;
     return (
         <>
             <ReactMarkdown plugins={[gfm]} allowDangerousHtml>
@@ -150,18 +131,19 @@ export default function Labs() {
             <SelectWrapper>
                 <Select>
                     <Option
-                        to="/"
+                        to="/labs"
                         style={{
                             flexGrow: 1,
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "flex-start",
                             flexDirection: "column",
+                            transition: "all 0.3s ease-in-out",
                         }}
                     >
                         {Object.keys(projects).length ? (
                             <>
-                                <p>CLICK TO CLOSE</p>
+                                <p>CLICK TO CLOSE PROJECT</p>
                                 <p>scroll to view more 👉🏾</p>
                             </>
                         ) : (

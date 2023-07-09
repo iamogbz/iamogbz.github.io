@@ -9,7 +9,6 @@ import {
 import { Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
-import { decode } from "utils/encoder";
 import Link from "components/Link";
 import GithubLanguages from "components/GithubLanguages";
 import { GITHUB_KEY } from "./Emmanuel.constants";
