@@ -1,12 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import {
-    Facebook,
-    Github,
-    Instagram,
-    StackExchange,
-} from "styled-icons/fa-brands";
-import { Call, Email, LocationCity } from "styled-icons/material";
+import { Facebook, Instagram, StackExchange } from "styled-icons/fa-brands";
+import { Notes, Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
 import Link from "components/Link";
@@ -23,14 +18,15 @@ import {
 
 const urls = {
     education: "https://www.linkedin.com/in/emmanuel-ogbizi-ugbe#education",
+    email: "mailto:eogbizi@gmail.com",
     experience: "https://www.linkedin.com/in/emmanuel-ogbizi-ugbe#experience",
     facebook: "https://www.facebook.com/Emmanuel.Ogbizi.Ugbe",
     github: "https://github.com/iamogbz",
     instagram: "https://instagram.com/iamogbz/",
-    stackexchange: "https://stackexchange.com/users/3690139/iamogbz",
+    labs: "#/labs",
     location: "https://goo.gl/maps/3PpbgtsWnSQ2",
+    stackexchange: "https://stackexchange.com/users/3690139/iamogbz",
     telephone: "tel:+1(289)700-5815",
-    email: "mailto:eogbizi@gmail.com",
 };
 
 const linkProps = {
@@ -53,11 +49,15 @@ const socialLinkProps = {
     style: { margin: "8px" },
 };
 
-const socialIconLink = ([IconComponent, href]) => (
-    <Link {...socialLinkProps} href={href} key={href}>
-        <IconComponent size="2vmax" />
-    </Link>
-);
+const iconLink = ([IconComponent, href]) => {
+    const iconLinkProps = { ...socialLinkProps };
+    if (href.startsWith("#")) delete iconLinkProps.target;
+    return (
+        <Link {...iconLinkProps} href={href} key={href}>
+            <IconComponent size="2vmax" />
+        </Link>
+    );
+};
 
 const contactLinkProps = {
     ...linkProps,
@@ -117,10 +117,10 @@ export default function Emmanuel() {
             <CenteredCell height={1} width={12}>
                 {[
                     [Facebook, urls.facebook],
-                    [Github, urls.github],
+                    [Notes, urls.labs],
                     [StackExchange, urls.stackexchange],
                     [Instagram, urls.instagram],
-                ].map(socialIconLink)}
+                ].map(iconLink)}
             </CenteredCell>
             {[
                 [LocationCity, urls.location, "Toronto Ontario"],
