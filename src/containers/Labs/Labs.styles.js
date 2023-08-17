@@ -4,17 +4,25 @@ import { Colors } from "utils/constants";
 
 export const LoadingEllipsis = styled.span`
     &: after {
-        content: '.';
+        content: ".";
         position: absolute;
         animation: loading-ellipsis 1s infinite alternate;
     }
     @keyframes loading-ellipsis {
-        from {content: '.'};
-        50% {content: '..'};
-        75% {content: '...'};
-        to {content: '....'};
+        from {
+            content: ".";
+        }
+        50% {
+            content: "..";
+        }
+        75% {
+            content: "...";
+        }
+        to {
+            content: "....";
+        }
     }
-`
+`;
 
 export const FullGrid = styled.div`
     height: 100%;

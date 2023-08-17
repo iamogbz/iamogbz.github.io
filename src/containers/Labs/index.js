@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
 import { useMatches } from "react-router-dom";
-import { Colors, Zindex } from "utils/constants";
+import { Colors } from "utils/constants";
 import GameOfLife from "components/GameOfLife";
 import Link from "components/Link";
 import Logo from "components/Logo";
@@ -34,7 +34,12 @@ const xName = xSlug =>
     xSlug.substr(1).replace(/-(\w)/g, ([, m]) => ` ${m.toUpperCase()}`);
 
 function Project({ markdown, url }) {
-    if (!markdown) return <Link href="/"><Logo size={128} /></Link>;
+    if (!markdown)
+        return (
+            <Link href="/">
+                <Logo size={128} />
+            </Link>
+        );
     return (
         <>
             <ReactMarkdown plugins={[gfm]} allowDangerousHtml>
