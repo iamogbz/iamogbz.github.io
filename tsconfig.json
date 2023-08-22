@@ -4,6 +4,7 @@
     "baseUrl": ".",
     "checkJs": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
     "outDir": "./dist",

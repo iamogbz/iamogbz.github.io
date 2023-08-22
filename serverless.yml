@@ -24,6 +24,7 @@ provider:
   name: aws
   runtime: nodejs18.x
   httpApi:
+    # https://raw.githubusercontent.com/lalcebo/json-schema/master/serverless/components/api.gateway.v1.json
     cors: true # this sets Access-Control-Allow-Origin to '*'
 
 # you can overwrite defaults here
@@ -36,30 +37,33 @@ plugins:
 
 custom:
   serverless-offline:
-    httpPort: 6789
+    httpPort: ${env:SLS_PORT}
     noPrependStageInUrl: true
   serverless-frontend-plugin:
+    # this indicates which directory gets uploaded to S3 to be served by Cloudfront
     distDir: frontend
+    distribution:
+      acmCertificateArn: ${env:ACM_CERT_ARN}
+      dnsName: ${env:DOMAIN_NAME} # Route53 record value
+      # hostedZoneName: ${env:HOSTED_ZONE} # Route53 Hosted Zone Name (Default: dnsName)
+    # production
     build:
       cwdDir: .
       command:
         - echo
         - noop
+      env:
+        NODE_ENV: production
+        API_BASE_URL: https://${env:DOMAIN_NAME}
+    # development
     offline:
       cwdDir: .
       command:
-        - npx
-        - serve
-        - frontend
-        - -p
-        - 8080
-    env:
-      NODE_ENV: development
-      APP_API_BASE_URL: http://localhost:6789
-    distribution:
-      acmCertificateArn: <your certificate arn>
-      dnsName: ogbizi.com # Route53 record value
-      hostedZoneName: ogbizi.com # Route53 Hosted Zone Name
+        - node
+        - serve.js
+      env:
+        NODE_ENV: development
+        API_BASE_URL: http://${env:DOMAIN_NAME}:${env:SLS_PORT}
 
 # you can add statements to the Lambda function's IAM Role here
 #  iam:
