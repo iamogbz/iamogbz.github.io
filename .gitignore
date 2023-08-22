@@ -1,4 +1,14 @@
+# ide directories
 .vscode/
-.github/
+
+# package directories
 node_modules/
+jspm_packages/
+
+# serverless directories
+.serverless/
+.build/
+
+# typescript directories
+dist/
 lib/

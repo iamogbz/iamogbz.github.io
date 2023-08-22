@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,26 +19,11 @@ jobs:
     - uses: pnpm/action-setup@v2.2.1
       with:
         version: 8
-        run_install: |
-            args: [--shamefully-hoist]
     - name: Build
       run: pnpm run build
     - name: Test
       run: pnpm run test
-    - name: Commit
-      env:
-        PUBLISH_GLOB: lib
-        PUBLISH_USER: github-actions
-        PUBLISH_EMAIL: actions@users.noreply.github.com
-      run: |
-        git config user.name ${PUBLISH_USER}
-        git config user.email ${PUBLISH_EMAIL}
-        git add ${PUBLISH_GLOB} -f
-        git status # useful for debugging
-        git commit -m "chore: deploy website [skip ci]" || exit 0
     - name: Deploy
-      if: github.ref == 'refs/heads/master' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
-      uses: ad-m/github-push-action@v0.6.0
-      with:
-        github_token: ${{ secrets.GH_TOKEN }}
-        branch: ${{ github.ref }}
+      if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+      run: |
+        echo 'serverless api deployment'

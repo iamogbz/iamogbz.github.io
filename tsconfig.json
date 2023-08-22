@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "baseUrl": ".",
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "target": "ES2015",
+  },
+  "exclude": [
+    "node_modules",
+  ]
+}
