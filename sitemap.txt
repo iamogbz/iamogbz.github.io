@@ -7,6 +7,7 @@ https://ogbizi.com/macos-quick-look-plugin-adobe-xd/
 https://ogbizi.com/nvshim/
 https://ogbizi.com/oh-my-wcs/
 https://ogbizi.com/portmanteaux/
+https://ogbizi.com/pyex/
 https://ogbizi.com/python-githooks/
 https://ogbizi.com/react-ducks/
 https://ogbizi.com/react-mirror/
