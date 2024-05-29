@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ogbizi.disnumber",
+      "sha256_cert_fingerprints": [
+        "99:7B:EA:03:3C:E4:8B:EA:A0:60:6A:09:FC:B6:C1:1A:E3:96:94:0D:C8:C0:AB:AB:A1:2C:6E:FD:82:CE:4C:60"
+      ]
+    }
+  }
+]
