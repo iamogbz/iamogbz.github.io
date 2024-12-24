@@ -1,10 +1,4 @@
 const path = require("path");
-const HtmlWebPackPlugin = require("html-webpack-plugin");
-
-const htmlPlugin = new HtmlWebPackPlugin({
-    template: "./src/index.html",
-    filename: "../index.html",
-});
 
 module.exports = {
     mode: "production",
@@ -35,5 +29,5 @@ module.exports = {
         ],
     },
     devtool: "source-map",
-    plugins: [htmlPlugin],
+    plugins: [],
 };
