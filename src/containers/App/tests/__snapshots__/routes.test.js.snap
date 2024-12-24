@@ -3,7 +3,14 @@
 exports[`Routes matches render snapshot 1`] = `
 [
   {
-    "element": <Loadable />,
+    "element": {
+      "$$typeof": Symbol(react.transitional.element),
+      "_owner": null,
+      "_store": {},
+      "key": null,
+      "props": {},
+      "type": [Function],
+    },
     "exact": true,
     "path": "/",
   },
@@ -14,14 +21,28 @@ exports[`Routes matches render snapshot 1`] = `
         "path": ":projectName",
       },
     ],
-    "element": <Loadable />,
+    "element": {
+      "$$typeof": Symbol(react.transitional.element),
+      "_owner": null,
+      "_store": {},
+      "key": null,
+      "props": {},
+      "type": [Function],
+    },
     "exact": true,
     "path": "labs",
   },
   {
     "children": [
       {
-        "element": <Loadable />,
+        "element": {
+          "$$typeof": Symbol(react.transitional.element),
+          "_owner": null,
+          "_store": {},
+          "key": null,
+          "props": {},
+          "type": [Function],
+        },
         "exact": true,
         "path": "emmanuel",
       },
@@ -29,7 +50,14 @@ exports[`Routes matches render snapshot 1`] = `
     "path": "profile",
   },
   {
-    "element": <Loadable />,
+    "element": {
+      "$$typeof": Symbol(react.transitional.element),
+      "_owner": null,
+      "_store": {},
+      "key": null,
+      "props": {},
+      "type": [Function],
+    },
     "exact": true,
     "path": "profile.emmanuel",
   },

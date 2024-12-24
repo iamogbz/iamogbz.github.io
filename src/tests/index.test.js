@@ -8,7 +8,11 @@ import puppeteer from "puppeteer";
 jest.setTimeout(15000);
 test("React starts successfully", async () => {
     // setup
-    const browser = await puppeteer.launch({ headless: "new" });
+    const browser = await puppeteer.launch({
+        disableSetuidSandbox: true,
+        headless: true,
+        noSandbox: true,
+    });
     const page = await browser.newPage();
     // test
     const url = `file:${path.join(__dirname, "../../index.html")}`;
