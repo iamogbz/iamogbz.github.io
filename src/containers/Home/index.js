@@ -17,8 +17,8 @@ export default function Home() {
     const linkProps = {
         borderColor: Colors.LIGHT,
         borderWidth: "4px",
-        buttonWidth: "256px",
-        buttonHeight: "6vmax",
+        buttonWidth: "26vw",
+        buttonHeight: "10vmax",
         fontSize: "1.0vmax",
         fontColors: {
             initial: Colors.LIGHT,
@@ -29,7 +29,7 @@ export default function Home() {
         <FullPageGrid
             columns={3}
             rows={3}
-            gap="3vmax"
+            gap="3vw"
             style={{ paddingBottom: "5vmax", justifyContents: "center" }}
             key="page-grid"
         >
