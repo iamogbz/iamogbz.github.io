@@ -23,7 +23,7 @@ const urls = {
     facebook: "https://www.facebook.com/Emmanuel.Ogbizi.Ugbe",
     github: "https://github.com/iamogbz",
     instagram: "https://instagram.com/iamogbz/",
-    labs: "#/labs",
+    labs: "/labs",
     location: "https://goo.gl/maps/3PpbgtsWnSQ2",
     stackexchange: "https://stackexchange.com/users/3690139/iamogbz",
     telephone: "tel:+1(289)700-5815",
@@ -50,10 +50,10 @@ const socialLinkProps = {
 };
 
 const iconLink = ([IconComponent, href]) => {
-    const iconLinkProps = { ...socialLinkProps };
-    if (href.startsWith("#")) delete iconLinkProps.target;
+    const iconLinkProps = { to: href, ...socialLinkProps };
+    if (href.startsWith("/")) delete iconLinkProps.target;
     return (
-        <Link {...iconLinkProps} href={href} key={href}>
+        <Link {...iconLinkProps} key={href}>
             <IconComponent size="2vmax" />
         </Link>
     );

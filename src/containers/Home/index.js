@@ -36,12 +36,7 @@ export default function Home() {
                 ["Profile", "/profile/emmanuel"],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
-                    <Link
-                        {...linkProps}
-                        {...(link.startsWith("http")
-                            ? { href: link, target: "_blank" }
-                            : { to: link })}
-                    >
+                    <Link {...linkProps} to={link}>
                         {name}
                     </Link>
                 </CenteredCell>

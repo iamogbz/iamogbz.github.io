@@ -7,8 +7,7 @@ import { Colors } from "utils/constants";
 import { AnimatedBorderedLinkWrapper } from "./Link.styles";
 
 function Link(props) {
-    const { href, children } = props;
-    const linkProps = pick(props, ["children", "href", "target", "to"]);
+    const linkProps = pick(props, ["children", "target", "to"]);
     const borderStyleProps = pick(props, [
         "active",
         "backgroundColor",
@@ -23,10 +22,17 @@ function Link(props) {
         "width",
         "height",
     ]);
+    if (linkProps.to?.startsWith("http")) {
+        Object.assign(linkProps, {
+            href: linkProps.to,
+            target: "_blank",
+            to: null,
+        });
+    }
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>
-            {href ? (
-                <a {...linkProps}>{children}</a>
+            {linkProps.href ? (
+                <a {...linkProps}>{props.children}</a>
             ) : (
                 <ReactRouterLink {...linkProps} />
             )}
