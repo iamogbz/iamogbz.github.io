@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Facebook, Instagram, StackExchange } from "styled-icons/fa-brands";
+import { Facebook, Instagram, Linkedin, StackExchange } from "styled-icons/fa-brands";
 import { Notes, Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
@@ -105,17 +105,10 @@ export default function Emmanuel() {
             </CenteredCell>
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={3} />
-            {["experience", "education"].map(a => (
-                <CenteredCell height={1} width={3} key={a}>
-                    <Link {...linkProps} href={urls[a]}>
-                        {a}
-                    </Link>
-                </CenteredCell>
-            ))}
-            <CenteredCell height={1} width={3} />
             <CenteredCell height={1} width={12} />
             <CenteredCell height={1} width={12}>
                 {[
+                    [Linkedin, urls.experience],
                     [Facebook, urls.facebook],
                     [Notes, urls.labs],
                     [StackExchange, urls.stackexchange],

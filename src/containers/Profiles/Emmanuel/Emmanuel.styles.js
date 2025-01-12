@@ -20,7 +20,7 @@ export const ProfileStyle = createGlobalStyle`
 export const PageGrid = styled(Grid)`
     height: 100%;
     width: 100%;
-    min-height: 34vmax;
+    min-height: max(768px, 50vmax);
 `;
 
 export const CenteredCell = styled(Cell)`

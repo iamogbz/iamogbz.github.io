@@ -32,8 +32,8 @@ export default function Home() {
             </CenteredCell>
             {[
                 ["Source", "https://github.com/iamogbz/iamogbz.github.io"],
-                ["Labs", "labs"],
-                ["Profile", "profile/emmanuel"],
+                ["Labs", "/labs"],
+                ["Profile", "/profile/emmanuel"],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
                     <Link

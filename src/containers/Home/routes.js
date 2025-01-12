@@ -8,4 +8,15 @@ export default [
         element: <Home />,
         exact: true,
     },
+    {
+        path: "labs",
+        element: <Home />,
+        exact: true,
+        children: [
+            {
+                path: ":projectName",
+                exact: true,
+            },
+        ],
+    },
 ];
