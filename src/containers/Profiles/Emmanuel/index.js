@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Facebook, Instagram, Linkedin, StackExchange } from "styled-icons/fa-brands";
+import { Facebook, Github, Instagram, Linkedin, StackExchange } from "styled-icons/fa-brands";
 import { Notes, Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
@@ -111,6 +111,7 @@ export default function Emmanuel() {
                     [Linkedin, urls.experience],
                     [Facebook, urls.facebook],
                     [Notes, urls.labs],
+                    [Github, urls.github],
                     [StackExchange, urls.stackexchange],
                     [Instagram, urls.instagram],
                 ].map(iconLink)}
