@@ -29,10 +29,13 @@ function Link(props) {
             to: null,
         });
     }
+    linkProps.children = (
+        <span style={{ padding: "1.4vmax" }}>{linkProps.children}</span>
+    );
     return (
         <AnimatedBorderedLinkWrapper {...borderStyleProps}>
             {linkProps.href ? (
-                <a {...linkProps}>{props.children}</a>
+                <a {...linkProps}>{linkProps.children}</a>
             ) : (
                 <ReactRouterLink {...linkProps} />
             )}
