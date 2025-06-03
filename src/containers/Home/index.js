@@ -28,7 +28,7 @@ export default function Home() {
     return (
         <FullPageGrid
             columns={3}
-            rows={3}
+            rows={5}
             gap="3vw"
             style={{ paddingBottom: "5vmax", justifyContents: "center" }}
             key="page-grid"
@@ -51,24 +51,32 @@ export default function Home() {
                     "https://letters-from-the-abyss.com/",
                 ],
                 [
-                    "🎮 Disnumber: game where you dismember the digits to find the solution",
-                    "https://ogbizi.com/disnumber",
-                ],
-                [
                     "🐱 Chrome Alt Tabs: shortcuts to speed up brower tab handling",
                     "https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon",
+                ],
+                [
+                    "📝 Story.AI: assists with writing stories from novel ideas",
+                    "https://qbrkts.com/story.ai",
+                ],
+                [
+                    "🎮 Disnumber: game where you dismember the digits to find the solution",
+                    "https://ogbizi.com/disnumber",
                 ],
                 [
                     "🧿 MacOS quicklook plugin to support previewing adobe xd files",
                     "https://ogbizi.com/macos-quick-look-plugin-adobe-xd/",
                 ],
                 [
-                    "🐒 Export Element: userscript for screenshotting html nodes",
-                    "https://ogbizi.com/oh-my-scripts/release",
-                ],
-                [
                     "📟 Animaterm: automatically prescript terminal animations",
                     "https://ogbizi.com/animaterm",
+                ],
+                [
+                    "🐒 Export Element: userscript for screenshotting html nodes",
+                    "https://ogbizi.com/oh-my-scripts/release?script=export-element",
+                ],
+                [
+                    "🖲️ Fancy Cursor: userscript for highlighting html nodes",
+                    "https://ogbizi.com/oh-my-scripts/release?script=fancy-cursor",
                 ],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
