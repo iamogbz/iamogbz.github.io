@@ -1,17 +1,20 @@
 import styled from "styled-components";
 
 const animTime = "0.1s";
-const getWidth = ({ width }) => width;
-const getHeight = ({ height }) => height;
-const getFontSize = ({ fontSize }) => fontSize;
-const getBgColor = ({ backgroundColor }) => backgroundColor;
-const getBorderColor = ({ borderColor }) => borderColor;
-const getBorderWidth = ({ borderWidth }) => borderWidth;
-const getButtonWidth = ({ buttonWidth }) => buttonWidth;
-const getButtonHeight = ({ buttonHeight }) => buttonHeight;
-const getActiveColor = ({ fontColors: { active } }) => active;
-const getHoverColor = ({ fontColors: { hover } }) => hover;
-const getInitialColor = ({ fontColors: { initial } }) => initial;
+const getStylePropWrapper = fn => {
+    return props => fn(props._styles);
+};
+const getWidth = getStylePropWrapper(style => style.width);
+const getHeight = getStylePropWrapper(style => style.height);
+const getFontSize = getStylePropWrapper(style => style.fontSize);
+const getBgColor = getStylePropWrapper(style => style.backgroundColor);
+const getBorderColor = getStylePropWrapper(style => style.borderColor);
+const getBorderWidth = getStylePropWrapper(style => style.borderWidth);
+const getButtonWidth = getStylePropWrapper(style => style.buttonWidth);
+const getButtonHeight = getStylePropWrapper(style => style.buttonHeight);
+const getActiveColor = getStylePropWrapper(style => style.fontColors.active);
+const getHoverColor = getStylePropWrapper(style => style.fontColors.hover);
+const getInitialColor = getStylePropWrapper(style => style.fontColors.initial);
 
 const lineBorderPsuedoElem = props => `
     content: "";

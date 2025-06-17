@@ -1,6 +1,12 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { Facebook, Github, Instagram, Linkedin, StackExchange } from "styled-icons/fa-brands";
+import {
+    Facebook,
+    Github,
+    Instagram,
+    Linkedin,
+    StackExchange,
+} from "styled-icons/fa-brands";
 import { Notes, Call, Email, LocationCity } from "styled-icons/material";
 
 import { Colors } from "utils/constants";
@@ -30,22 +36,27 @@ const urls = {
 };
 
 const linkProps = {
-    buttonHeight: "56px",
-    buttonWidth: "200px",
-    borderWidth: "2px",
-    borderColor: Colors.LIGHT,
-    fontColors: {
-        initial: Colors.LIGHT,
-        active: Colors.ACTIVE,
+    _styles: {
+        buttonHeight: "56px",
+        buttonWidth: "200px",
+        borderWidth: "2px",
+        borderColor: Colors.LIGHT,
+        fontColors: {
+            initial: Colors.LIGHT,
+            active: Colors.ACTIVE,
+        },
+        fontSize: "1.2vmax",
     },
-    fontSize: "1.2vmax",
     target: "_blank",
 };
 
 const socialLinkProps = {
     ...linkProps,
-    buttonHeight: "4vmax",
-    buttonWidth: "4vmax",
+    _styles: {
+        ...linkProps._styles,
+        buttonHeight: "4vmax",
+        buttonWidth: "4vmax",
+    },
     style: { margin: "8px" },
 };
 
@@ -61,10 +72,13 @@ const iconLink = ([IconComponent, href]) => {
 
 const contactLinkProps = {
     ...linkProps,
-    borderColor: Colors.NONE,
-    buttonHeight: "40px",
-    buttonWidth: "200px",
-    fontSize: "1vmax",
+    _styles: {
+        ...linkProps._styles,
+        borderColor: Colors.NONE,
+        buttonHeight: "40px",
+        buttonWidth: "200px",
+        fontSize: "1vmax",
+    },
 };
 
 const contactIconLink = ([IconComponent, href, text]) => (

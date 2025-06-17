@@ -10,15 +10,9 @@ function Link(props) {
     const linkProps = pick(props, ["children", "target", "to"]);
     const borderStyleProps = pick(props, [
         "active",
-        "backgroundColor",
-        "borderColor",
-        "borderWidth",
-        "buttonWidth",
-        "buttonHeight",
         "className",
-        "fontColors",
-        "fontSize",
         "style",
+        "_styles",
         "width",
         "height",
     ]);
@@ -48,24 +42,26 @@ Link.propTypes = {
     active: PropTypes.bool,
     /** HTML element content */
     children: PropTypes.node.isRequired,
-    /** CSS initial background color */
-    backgroundColor: PropTypes.string,
-    /** CSS border color */
-    borderColor: PropTypes.string,
-    /** CSS border thickness */
-    borderWidth: PropTypes.string,
-    /** Link button css width */
-    buttonWidth: PropTypes.string,
-    /** Link button height */
-    buttonHeight: PropTypes.string,
-    /** Link colors in various contexts */
-    fontColors: PropTypes.shape({
-        active: PropTypes.string,
-        hover: PropTypes.string,
-        initial: PropTypes.string,
+    _styles: PropTypes.shape({
+        /** CSS initial background color */
+        backgroundColor: PropTypes.string,
+        /** CSS border color */
+        borderColor: PropTypes.string,
+        /** CSS border thickness */
+        borderWidth: PropTypes.string,
+        /** Link button css width */
+        buttonWidth: PropTypes.string,
+        /** Link button height */
+        buttonHeight: PropTypes.string,
+        /** Link colors in various contexts */
+        fontColors: PropTypes.shape({
+            active: PropTypes.string,
+            hover: PropTypes.string,
+            initial: PropTypes.string,
+        }),
+        /** Link css font size */
+        fontSize: PropTypes.string,
     }),
-    /** Link css font size */
-    fontSize: PropTypes.string,
     /** If specified native html a link is used */
     href: PropTypes.string,
     /** HTML link target attribute */
@@ -79,18 +75,20 @@ Link.propTypes = {
 };
 
 Link.defaultProps = {
-    active: false,
-    backgroundColor: Colors.NONE,
-    borderColor: Colors.DARK,
-    borderWidth: "8px",
-    buttonWidth: "128px",
-    buttonHeight: "64px",
-    fontColors: {
-        active: Colors.LIGHT,
-        hover: Colors.ACTIVE,
-        initial: Colors.DARK,
+    active: undefined,
+    _styles: {
+        backgroundColor: Colors.NONE,
+        borderColor: Colors.DARK,
+        borderWidth: "8px",
+        buttonWidth: "128px",
+        buttonHeight: "64px",
+        fontColors: {
+            active: Colors.LIGHT,
+            hover: Colors.ACTIVE,
+            initial: Colors.DARK,
+        },
+        fontSize: "1.8vmax",
     },
-    fontSize: "1.8vmax",
     href: null,
     target: "_self",
     to: null,

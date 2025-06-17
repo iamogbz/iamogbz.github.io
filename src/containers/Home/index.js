@@ -14,7 +14,7 @@ const linkCellStyle = {
 };
 
 export default function Home() {
-    const linkProps = {
+    const linkPropStyles = {
         borderColor: Colors.LIGHT,
         borderWidth: "4px",
         buttonWidth: "26vw",
@@ -29,8 +29,7 @@ export default function Home() {
         <FullPageGrid
             columns={3}
             rows={5}
-            gap="3vw"
-            style={{ paddingBottom: "5vmax", justifyContents: "center" }}
+            style={{ gap: "3vw", paddingBottom: "5vmax", justifyContents: "center" }}
             key="page-grid"
         >
             <CenteredCell width={3} height={1} style={headerCellStyle}>
@@ -80,7 +79,7 @@ export default function Home() {
                 ],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
-                    <Link {...linkProps} to={link}>
+                    <Link _styles={linkPropStyles} to={link}>
                         {name}
                     </Link>
                 </CenteredCell>
