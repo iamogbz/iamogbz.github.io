@@ -58,8 +58,12 @@ export default function Home() {
                     "https://qbrkts.com/story.ai",
                 ],
                 [
-                    "🎮 Disnumber: game where you dismember the digits to find the solution",
+                    "🎮 Disnumber: A game where you dismember the digits to find the solution",
                     "https://ogbizi.com/disnumber",
+                ],
+                [
+                    "♟️ Chaos Chess: A game of simultaneous moves and strategic gambits",
+                    "https://chaos-chess.ogbizi.com",
                 ],
                 [
                     "🧿 MacOS quicklook plugin to support previewing adobe xd files",
