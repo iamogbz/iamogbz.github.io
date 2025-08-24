@@ -66,6 +66,10 @@ export default function Home() {
                     "https://chaos-chess.ogbizi.com",
                 ],
                 [
+                    "📚 Scrabblex: Combining the best parts of Scrabble and Crossword",
+                    "https://scrabblex.ogbizi.com",
+                ],
+                [
                     "🧿 MacOS quicklook plugin to support previewing adobe xd files",
                     "https://ogbizi.com/macos-quick-look-plugin-adobe-xd/",
                 ],
