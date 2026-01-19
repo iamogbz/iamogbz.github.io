@@ -70,8 +70,8 @@ export default function Home() {
                     "https://scrabblex.ogbizi.com",
                 ],
                 [
-                    "🧿 MacOS quicklook plugin to support previewing adobe xd files",
-                    "https://ogbizi.com/macos-quick-look-plugin-adobe-xd/",
+                    "🔄 Word Sync: A 2-Player Word Matching Game",
+                    "https://wordsync.ogbizi.com",
                 ],
                 [
                     "📟 Animaterm: automatically prescript terminal animations",
@@ -84,6 +84,10 @@ export default function Home() {
                 [
                     "🖲️ Fancy Cursor: userscript for highlighting html nodes",
                     "https://ogbizi.com/oh-my-scripts/release?script=fancy-cursor",
+                ],
+                [
+                    "🧿 MacOS quicklook plugin to support previewing adobe xd files",
+                    "https://ogbizi.com/macos-quick-look-plugin-adobe-xd/",
                 ],
             ].map(([name, link]) => (
                 <CenteredCell key={name} style={linkCellStyle}>
