@@ -29,7 +29,11 @@ export default function Home() {
         <FullPageGrid
             columns={3}
             rows={5}
-            style={{ gap: "3vw", paddingBottom: "5vmax", justifyContents: "center" }}
+            style={{
+                gap: "3vw",
+                paddingBottom: "5vmax",
+                justifyContents: "center",
+            }}
             key="page-grid"
         >
             <CenteredCell width={3} height={1} style={headerCellStyle}>
@@ -84,6 +88,10 @@ export default function Home() {
                 [
                     "🖲️ Fancy Cursor: userscript for highlighting html nodes",
                     "https://ogbizi.com/oh-my-scripts/release?script=fancy-cursor",
+                ],
+                [
+                    "🛠️ Oh My Web Components: Github Markdown Renderer",
+                    "https://ogbizi.com/oh-my-wcs/",
                 ],
                 [
                     "🧿 MacOS quicklook plugin to support previewing adobe xd files",
