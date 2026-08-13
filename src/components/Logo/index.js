@@ -13,7 +13,7 @@ export default function Logo({ size }) {
     };
     return (
         <SVGWrapper>
-            <div id="logo">
+            <div id="logo" style={{ marginTop: "1rem" }}>
                 <svg height={size} width={size} viewBox="-260 -260 720 720">
                     <path
                         className="ring left"
