@@ -6,6 +6,7 @@ https://ogbizi.com/disnumber/
 https://ogbizi.com/evil-forest/
 https://ogbizi.com/jest-mock-module/
 https://ogbizi.com/jest-mock-props/
+https://ogbizi.com/jest-react-snapshot/
 https://ogbizi.com/macos-quick-look-plugin-adobe-xd/
 https://ogbizi.com/notetris/
 https://ogbizi.com/nvshim/

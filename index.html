@@ -26,6 +26,7 @@
         overscroll-behavior: none;
       }
     </style>
+    <script src="https://cdn.jsdelivr.net/gh/iamogbz/oh-my-wcs@main/components/github-md-view.js"></script>
   </head>
   <body tabindex="-1">
     <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
@@ -207,9 +208,15 @@
               .footer {
                 height: 100vh;
                 width: 100vw;
-                background: black;
+                background: white;
                 position: absolute;
                 top: 232vw;
+                display: flex;
+                justify-content: center;
+                padding: 0.5rem 0;
+              }
+              .footer github-md-view {
+                text-align: center;
               }
             </style>
             <div class="sticky-stage" id="stage">
@@ -228,6 +235,7 @@
                 <div id="layer-fore" class="layer layer-fore">
                   <div class="art-bg bg-fore"></div>
                   <div class="footer">
+                    <github-md-view url="./README.md" from="0" to="100"></github-md-view>
                   </div>
                 </div>
               </div>
