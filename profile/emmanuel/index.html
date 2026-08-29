@@ -126,7 +126,7 @@
           /** @type {HTMLDivElement} */
           const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
           if (!targetElem) return;
-          targetElem.style.opacity = 0.5;
+          targetElem.style.opacity = 0;
         };
 
         /**
@@ -246,7 +246,7 @@
                 mix-blend-mode: overlay;
                 position: absolute;
                 transition: all 0.15s ease-in-out;
-                opacity: 0;
+                opacity: 1;
               }
               .highlight-guide {
                 position: absolute;
@@ -273,6 +273,11 @@
                 left: 31.4vw;
                 filter: blur(0.25rem);
               }
+              #phone-highlight {
+                top: 101vw;
+                left: 8.5vw;
+                width: 17vw;
+              }
             </style>
             <div class="sticky-stage" id="stage">
               <div class="canvas-frame" id="frame">
@@ -280,16 +285,18 @@
                 <div id="layer-sky" class="layer layer-sky">
                   <div class="art-bg bg-sky"></div>
                   <img src="/src/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
-                  <div id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 14.5vw;"></div>
+                  <a href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 14.5vw;"></a>
                 </div>
 
                 <!-- SECTION 2: MIDGROUND -->
                 <div id="layer-mid" class="layer layer-mid">
                   <div class="art-bg bg-mid"></div>
                   <img src="/src/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
+                  <img src="/src/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
                   <img src="/src/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
-                  <div id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 83vw; left: 18vw;"></div>
-                  <div id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 80vw; left: 32vw;"></div>
+                  <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 83vw; left: 18vw;"></a>
+                  <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 102vw; left: 9vw;"></a>
+                  <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 80vw; left: 32vw;"></a>
                 </div>
 
                 <!-- SECTION 3: FOREGROUND -->
