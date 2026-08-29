@@ -19,8 +19,7 @@
         background-repeat: no-repeat;
         background-size: 160vw;
         color: #fff;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         overflow-x: hidden;
         overflow-y: hidden;
         overscroll-behavior: none;
@@ -28,6 +27,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/gh/iamogbz/oh-my-wcs@main/components/github-md-view.js"></script>
   </head>
+
   <body tabindex="-1">
     <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
 
@@ -45,7 +45,7 @@
           super();
           this.attachShadow({ mode: "open" });
           this._ticking = false;
-          this.resetScrollBounds();
+          this._dimxChangeListener();
         }
 
         connectedCallback() {
@@ -58,11 +58,14 @@
           if (this._scrollListener) {
             this._stage.removeEventListener("scroll", this._scrollListener);
           }
-          window.removeEventListener("resize", this.resetScrollBounds);
-          window.removeEventListener(
-            "orientationchange",
-            this.resetScrollBounds
-          );
+          window.removeEventListener("resize", this._dimxChangeListener);
+          window.removeEventListener("orientationchange", this._dimxChangeListener);
+          this._frame.querySelectorAll(".highlight-guide").forEach((elem) => {
+            elem.removeEventListener("pointermove", this._pointerMoveListener);
+            elem.removeEventListener("pointerdown", this._pointerMoveListener);
+            elem.removeEventListener("pointerleave", this._pointerLeaveListener);
+            elem.removeEventListener("pointercancel", this._pointerLeaveListener);
+          });
         }
 
         cacheElements() {
@@ -74,30 +77,54 @@
         }
 
         setupEvents() {
-          this._scrollListener = (e) => {
-            if (!this._ticking) {
-              requestAnimationFrame(() => {
-                this.updateScroll(e);
-                this._ticking = false;
-              });
-              this._ticking = true;
-            }
-          };
-
-          window.addEventListener("resize", this.resetScrollBounds);
-          window.addEventListener("orientationchange", this.resetScrollBounds);
-          this._stage.addEventListener("scroll", this._scrollListener, {
-            passive: true,
+          this._frame.querySelectorAll(".highlight-guide").forEach((elem) => {
+            elem.addEventListener("pointermove", this._pointerMoveListener);
+            elem.addEventListener("pointerdown", this._pointerMoveListener);
+            elem.addEventListener("pointerleave", this._pointerLeaveListener);
+            elem.addEventListener("pointercancel", this._pointerLeaveListener);
           });
+          window.addEventListener("resize", this._dimxChangeListener);
+          window.addEventListener("orientationchange", this._dimxChangeListener);
+          this._stage.addEventListener("scroll", this._scrollListener, { passive: true });
           this.updateScroll();
         }
 
-        resetScrollBounds = () => {
+        _scrollListener = (e) => {
+          if (!this._ticking) {
+            requestAnimationFrame(() => {
+              this.updateScroll(e);
+              this._ticking = false;
+            });
+            this._ticking = true;
+          }
+        };
+
+        _dimxChangeListener = () => {
           this._scrollProgress = 0;
           this._scrollBaseline = Number.NEGATIVE_INFINITY;
           setTimeout(() => {
             this._stage?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
           }, 150);
+        };
+
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerMoveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (!targetElem) return;
+          targetElem.style.opacity = 1;
+        };
+
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerLeaveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (!targetElem) return;
+          targetElem.style.opacity = 0;
         };
 
         /**
@@ -111,31 +138,26 @@
           }
           const scrollable = this._frame.scrollHeight - window.innerHeight;
           if (scrollable <= 0) return;
-          const scrollProgress =
-            (this._scrollBaseline - rect.top) / (scrollable / 2);
+          const scrollProgress = (this._scrollBaseline - rect.top) / (scrollable / 2);
           this._scrollProgress = scrollProgress * scrollable;
 
-          const parallaxMult =
-            (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
+          const parallaxMult = (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
           const BLUR_PX = 9;
 
           if (this._skyLayer) {
-            const skyScrollDy =
-              (this._scrollProgress * SKY_PARALLAX) / parallaxMult;
+            const skyScrollDy = (this._scrollProgress * SKY_PARALLAX) / parallaxMult;
             this._skyLayer.style.transform = `translateY(-${skyScrollDy}px)`;
             const bgBlur = scrollProgress + 0.5 * BLUR_PX;
             this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
-            const midScrollDy =
-              (this._scrollProgress * GRASS_PARALLAX) / parallaxMult;
+            const midScrollDy = (this._scrollProgress * GRASS_PARALLAX) / parallaxMult;
             this._midLayer.style.transform = `translateY(-${midScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
             this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
-            const endScrollDy =
-              (this._scrollProgress * TABLE_PARALLAX) / parallaxMult;
+            const endScrollDy = (this._scrollProgress * TABLE_PARALLAX) / parallaxMult;
             this._foreLayer.style.transform = `translateY(-${endScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
@@ -218,12 +240,32 @@
               .footer github-md-view {
                 text-align: center;
               }
+              .highlight-overlay {
+                mix-blend-mode: color-burn;
+                position: absolute;
+                transition: all 0.15s ease-in-out;
+                opacity: 0;
+                filter: blur(0.25rem);
+              }
+              .highlight-guide {
+                position: absolute;
+                border: solid 1px red;
+                pointer-events: all;
+                cursor: pointer;
+              }
+              #tower-highlight {
+                width: 7vw;
+                top: 48.7vw;
+                left: 18.45vw;
+              }
             </style>
             <div class="sticky-stage" id="stage">
               <div class="canvas-frame" id="frame">
                 <!-- SECTION 1: SKY -->
                 <div id="layer-sky" class="layer layer-sky">
                   <div class="art-bg bg-sky"></div>
+                  <img src="/src/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
+                  <div id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 14.5vw;"></div>
                 </div>
 
                 <!-- SECTION 2: MIDGROUND -->
