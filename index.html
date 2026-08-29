@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domo - Ogbizi</title>
+    <title>Domo Ogbizi</title>
     <meta name="description" content="House of Ogbizi." />
     <meta name="theme-color" content="#000" />
     <style>
@@ -14,10 +14,9 @@
         width: 100vw;
         height: 100vh;
         background-color: #000;
-        background-image: url("/src/assets/images/full_site.png");
         background-position: center top;
         background-repeat: no-repeat;
-        background-size: 160vw;
+        background-size: cover;
         color: #fff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           Roboto, sans-serif;
@@ -25,226 +24,97 @@
         overflow-y: hidden;
         overscroll-behavior: none;
       }
-    </style>
-    <script src="https://cdn.jsdelivr.net/gh/iamogbz/oh-my-wcs@main/components/github-md-view.js"></script>
-  </head>
-  <body tabindex="-1">
-    <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
 
-    <script>
-      const ARTWORK_SRC_TOP = "/src/assets/images/sky_cutout.png";
-      const ARTWORK_SRC_MID = "/src/assets/images/grass_cutout.png";
-      const ARTWORK_SRC_END = "/src/assets/images/table_cutout.png";
-      const SKY_PARALLAX = 0.05;
-      const GRASS_PARALLAX = 0.07;
-      const TABLE_PARALLAX = 0.1;
-      const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
+      body {
+        background-image: url("src/assets/images/background.jpg");
+      }
 
-      class ParallaxArtExplorer extends HTMLElement {
-        constructor() {
-          super();
-          this.attachShadow({ mode: "open" });
-          this._ticking = false;
-          this.resetScrollBounds();
+      #logo {
+        background-color: color-mix(in srgb, #000 80%, transparent);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        cursor: pointer;
+      }
+
+      #logo .ring {
+        animation: progress 3s linear normal infinite;
+        fill: none;
+        stroke-dasharray: 720 180;
+      }
+
+      #logo .left {
+        transform: translate(100px, 0) rotate(90deg);
+      }
+
+      #logo .right {
+        animation-delay: 1.5s;
+        animation-direction: reverse;
+        transform: translate(100px, 200px) rotate(-90deg);
+      }
+
+      @keyframes progress {
+        0%,
+        10% {
+          stroke-dashoffset: 100;
         }
 
-        connectedCallback() {
-          this.render();
-          this.cacheElements();
-          this.setupEvents();
-        }
-
-        disconnectedCallback() {
-          if (this._scrollListener) {
-            this._stage.removeEventListener("scroll", this._scrollListener);
-          }
-          window.removeEventListener("resize", this.resetScrollBounds);
-          window.removeEventListener(
-            "orientationchange",
-            this.resetScrollBounds
-          );
-        }
-
-        cacheElements() {
-          this._stage = this.shadowRoot.getElementById("stage");
-          this._frame = this.shadowRoot.getElementById("frame");
-          this._skyLayer = this.shadowRoot.getElementById("layer-sky");
-          this._midLayer = this.shadowRoot.getElementById("layer-mid");
-          this._foreLayer = this.shadowRoot.getElementById("layer-fore");
-        }
-
-        setupEvents() {
-          this._scrollListener = (e) => {
-            if (!this._ticking) {
-              requestAnimationFrame(() => {
-                this.updateScroll(e);
-                this._ticking = false;
-              });
-              this._ticking = true;
-            }
-          };
-
-          window.addEventListener("resize", this.resetScrollBounds);
-          window.addEventListener("orientationchange", this.resetScrollBounds);
-          this._stage.addEventListener("scroll", this._scrollListener, {
-            passive: true,
-          });
-          this.updateScroll();
-        }
-
-        resetScrollBounds = () => {
-          this._scrollProgress = 0;
-          this._scrollBaseline = Number.NEGATIVE_INFINITY;
-          setTimeout(() => {
-            this._stage?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-          }, 150);
-        };
-
-        /**
-         * @param {ScrollEvent} e
-         */
-        updateScroll(e) {
-          if (!this._frame) return;
-          const rect = this._frame.getBoundingClientRect();
-          if (rect.top > this._scrollBaseline) {
-            this._scrollBaseline = rect.top;
-          }
-          const scrollable = this._frame.scrollHeight - window.innerHeight;
-          if (scrollable <= 0) return;
-          const scrollProgress =
-            (this._scrollBaseline - rect.top) / (scrollable / 2);
-          this._scrollProgress = scrollProgress * scrollable;
-
-          const parallaxMult =
-            (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
-          const BLUR_PX = 9;
-
-          if (this._skyLayer) {
-            const skyScrollDy =
-              (this._scrollProgress * SKY_PARALLAX) / parallaxMult;
-            this._skyLayer.style.transform = `translateY(-${skyScrollDy}px)`;
-            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
-            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
-          }
-          if (this._midLayer) {
-            const midScrollDy =
-              (this._scrollProgress * GRASS_PARALLAX) / parallaxMult;
-            this._midLayer.style.transform = `translateY(-${midScrollDy}px)`;
-            const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
-            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
-          }
-          if (this._foreLayer) {
-            const endScrollDy =
-              (this._scrollProgress * TABLE_PARALLAX) / parallaxMult;
-            this._foreLayer.style.transform = `translateY(-${endScrollDy}px)`;
-            const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
-            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
-          }
-        }
-
-        render() {
-          this.shadowRoot.innerHTML = `
-            <style>
-              :host {
-                display: block;
-                width: 100vw;
-                height: 100vh;
-                overflow: hidden;
-              }
-              .sticky-stage {
-                position: sticky;
-                top: 0;
-                width: 100vw;
-                height: 100vh;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                overflow-x: hidden;
-              }
-              .canvas-frame {
-                position: absolute;
-                width: 100vw;
-                height: 1000vw;
-                overflow: hidden;
-              }
-              .layer {
-                position: fixed;
-                left: 0;
-                right: 0;
-                top: 0;
-                height: 1000vw;
-                overflow: hidden;
-                pointer-events: none;
-                will-change: transform;
-                transition: transform 0.15s ease-out;
-              }
-              .art-bg {
-                position: absolute;
-                left: 0;
-                right: 0;
-                width: 100vw;
-                height: 1000vw;
-                background-repeat: no-repeat;
-                background-size: cover;
-              }
-              .bg-sky {
-                top: 0;
-                height: 94vw;
-                background-position: center top;
-                background-image: url('${ARTWORK_SRC_TOP}');
-              }
-              .bg-mid {
-                top: 68vw;
-                height: 84vw;
-                background-position: center top;
-                background-image: url('${ARTWORK_SRC_MID}');
-              }
-              .bg-fore {
-                top: 109vw;
-                height: 123vw;
-                background-position: center top;
-                background-image: url('${ARTWORK_SRC_END}');
-              }
-              .footer {
-                height: 100vh;
-                width: 100vw;
-                background: white;
-                position: absolute;
-                top: 232vw;
-                display: flex;
-                justify-content: center;
-                padding: 0.5rem 0;
-              }
-              .footer github-md-view {
-                text-align: center;
-              }
-            </style>
-            <div class="sticky-stage" id="stage">
-              <div class="canvas-frame" id="frame">
-                <!-- SECTION 1: SKY -->
-                <div id="layer-sky" class="layer layer-sky">
-                  <div class="art-bg bg-sky"></div>
-                </div>
-
-                <!-- SECTION 2: MIDGROUND -->
-                <div id="layer-mid" class="layer layer-mid">
-                  <div class="art-bg bg-mid"></div>
-                </div>
-
-                <!-- SECTION 3: FOREGROUND -->
-                <div id="layer-fore" class="layer layer-fore">
-                  <div class="art-bg bg-fore"></div>
-                  <div class="footer">
-                    <github-md-view url="./README.md" from="0" to="100"></github-md-view>
-                  </div>
-                </div>
-              </div>
-            </div>
-          `;
+        90%,
+        100% {
+          stroke-dashoffset: -900;
         }
       }
 
-      customElements.define("parallax-art-explorer", ParallaxArtExplorer);
-    </script>
+      #enter-btn {
+        text-transform: uppercase;
+        text-decoration: none;
+        color: white;
+        background-color: FFFFFF00;
+        corner-shape: superellipse(2);
+        border: solid #ffffff00 0.2rem;
+        border-radius: 1rem;
+        padding: 1rem 2rem;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      #enter-btn:hover {
+        border-radius: 4rem;
+        background-color: #ffffff11;
+        border-color: #ffffffff;
+      }
+    </style>
+  </head>
+  <body tabindex="-1">
+    <div id="logo">
+      <svg
+        height="192.60000000000002"
+        width="192.60000000000002"
+        viewBox="-260 -260 720 720"
+      >
+        <path
+          class="ring left"
+          stroke="#f8f4f2"
+          stroke-linecap="round"
+          stroke-width="32"
+          fill-rule="nonzero"
+          fill="none"
+          d="M100,0 a100,100 0 0 1 0,200 a100,100 0 0 1 0,-200,0"
+        ></path>
+        <path
+          class="ring right"
+          stroke="#f8f4f2"
+          stroke-linecap="round"
+          stroke-width="32"
+          fill-rule="nonzero"
+          fill="none"
+          d="M100,0 a100,100 0 0 1 0,200 a100,100 0 0 1 0,-200,0"
+        ></path>
+      </svg>
+      <a id="enter-btn" href="/profile/emmanuel">VIEW PAGE</a>
+    </div>
   </body>
 </html>
