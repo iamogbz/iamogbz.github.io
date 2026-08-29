@@ -12,3 +12,11 @@ jspm_packages/
 # typescript directories
 dist/
 lib/
+
+# others
+build/
+coverage/
+.DS_Store
+*.log
+.env*
+!.env.example
