@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./frontend",
+    "baseUrl": "./public",
     "moduleResolution": "classic"
   }
 }

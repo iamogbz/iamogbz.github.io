@@ -23,7 +23,3 @@ jobs:
       run: pnpm run build
     - name: Test
       run: pnpm run test
-    - name: Deploy
-      if: github.ref == 'refs/heads/main' && github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
-      run: |
-        echo 'serverless api deployment'
