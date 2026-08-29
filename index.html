@@ -14,10 +14,10 @@
         width: 100vw;
         height: 100vh;
         background-color: #000;
-        /* background-image: url('/src/assets/images/full_site.png'); */
+        background-image: url("/src/assets/images/full_site.png");
         background-position: center top;
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: 160vw;
         color: #fff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
           Roboto, sans-serif;
@@ -116,23 +116,28 @@
 
           const parallaxMult =
             (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
-
-          console.log(scrollProgress, parallaxMult);
+          const BLUR_PX = 9;
 
           if (this._skyLayer) {
             const skyScrollDy =
               (this._scrollProgress * SKY_PARALLAX) / parallaxMult;
             this._skyLayer.style.transform = `translateY(-${skyScrollDy}px)`;
+            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
+            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
             const midScrollDy =
               (this._scrollProgress * GRASS_PARALLAX) / parallaxMult;
             this._midLayer.style.transform = `translateY(-${midScrollDy}px)`;
+            const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
+            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
             const endScrollDy =
               (this._scrollProgress * TABLE_PARALLAX) / parallaxMult;
             this._foreLayer.style.transform = `translateY(-${endScrollDy}px)`;
+            const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
+            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
         }
 
@@ -165,20 +170,12 @@
                 position: fixed;
                 left: 0;
                 right: 0;
+                top: 0;
                 height: 1000vw;
                 overflow: hidden;
                 pointer-events: none;
                 will-change: transform;
                 transition: transform 0.15s ease-out;
-              }
-              .layer-sky {
-                top: 0;
-              }
-              .layer-mid {
-                top: 68vw;
-              }
-              .layer-fore {
-                top: 108.4vw;
               }
               .art-bg {
                 position: absolute;
@@ -191,21 +188,28 @@
               }
               .bg-sky {
                 top: 0;
-                height: 100vw;
+                height: 94vw;
                 background-position: center top;
                 background-image: url('${ARTWORK_SRC_TOP}');
               }
               .bg-mid {
-                top: 0;
+                top: 68vw;
                 height: 84vw;
                 background-position: center top;
                 background-image: url('${ARTWORK_SRC_MID}');
               }
               .bg-fore {
-                top: 0;
+                top: 109vw;
                 height: 123vw;
                 background-position: center top;
                 background-image: url('${ARTWORK_SRC_END}');
+              }
+              .footer {
+                height: 100vh;
+                width: 100vw;
+                background: black;
+                position: absolute;
+                top: 232vw;
               }
             </style>
             <div class="sticky-stage" id="stage">
@@ -223,6 +227,8 @@
                 <!-- SECTION 3: FOREGROUND -->
                 <div id="layer-fore" class="layer layer-fore">
                   <div class="art-bg bg-fore"></div>
+                  <div class="footer">
+                  </div>
                 </div>
               </div>
             </div>
