@@ -12,11 +12,17 @@ https://ogbizi.com/macos-quick-look-plugin-adobe-xd/
 https://ogbizi.com/notetris/
 https://ogbizi.com/nvshim/
 https://ogbizi.com/oh-my-wcs/
+https://ogbizi.com/oh-my-scripts/
 https://ogbizi.com/portmanteaux/
 https://ogbizi.com/pyex/
 https://ogbizi.com/python-githooks/
 https://ogbizi.com/react-ducks/
+https://ogbizi.com/react-global-local-state/
 https://ogbizi.com/react-mirror/
 https://ogbizi.com/react-router-chart/
+https://ogbizi.com/react-state-url-fragment/
 https://ogbizi.com/unit-converter/
 https://ogbizi.com/webpack-compiler-plugin/
+
+https://github.com/iamogbz/ml-dragon/
+https://github.com/iamogbz/spirit-sword/

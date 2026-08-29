@@ -241,22 +241,29 @@
                 text-align: center;
               }
               .highlight-overlay {
-                mix-blend-mode: color-burn;
+                mix-blend-mode: overlay;
                 position: absolute;
                 transition: all 0.15s ease-in-out;
                 opacity: 0;
-                filter: blur(0.25rem);
               }
               .highlight-guide {
                 position: absolute;
                 border: solid 1px red;
                 pointer-events: all;
                 cursor: pointer;
+                user-select: none;
               }
               #tower-highlight {
                 width: 7vw;
                 top: 48.7vw;
                 left: 18.45vw;
+                filter: blur(0.25rem);
+              }
+              #mail-highlight {
+                width: 14vw;
+                top: 84vw;
+                left: 19vw;
+                filter: blur(0.1rem);
               }
             </style>
             <div class="sticky-stage" id="stage">
@@ -271,6 +278,8 @@
                 <!-- SECTION 2: MIDGROUND -->
                 <div id="layer-mid" class="layer layer-mid">
                   <div class="art-bg bg-mid"></div>
+                  <img src="/src/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
+                  <div id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 83vw; left: 18vw;"></div>
                 </div>
 
                 <!-- SECTION 3: FOREGROUND -->
