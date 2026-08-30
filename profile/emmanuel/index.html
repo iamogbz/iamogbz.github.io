@@ -237,21 +237,22 @@
                 display: flex;
                 justify-content: center;
                 padding: 0.5rem 0;
-                pointer-events: all;
               }
               .footer github-md-view {
                 text-align: center;
+                pointer-events: auto;
               }
               .highlight-overlay {
                 mix-blend-mode: overlay;
                 position: absolute;
                 transition: all 0.15s ease-in-out;
-                opacity: 1;
+                opacity: 0;
+                user-select: none;
               }
               .highlight-guide {
                 position: absolute;
                 border: solid 1px red;
-                pointer-events: all;
+                pointer-events: auto;
                 cursor: pointer;
                 user-select: none;
               }
@@ -284,6 +285,54 @@
                 width: 40vw;
                 filter: blur(0.5rem);
               }
+              #disnumber-highlight {
+                top: 138.1vw;
+                left: 10.6vw;
+                width: 23vw;
+                filter: blur(0.25rem);
+              }
+              #disnumber-cover {
+                top: 141vw;
+                left: 18vw;
+                width: 8.6vw;
+                mix-blend-mode: normal;
+              }
+              #disnumber-text {
+                align-items: center;
+                display: flex;
+                color: #715D3F;
+                filter: blur(0.025rem);
+                font-family: monospace;
+                font-weight: 900;
+                font-size: 0.75rem;
+                height: 2.7vw;
+                width: 6vw;
+                justify-content: center;
+                position: relative;
+                top: 143vw;
+                left: 19.4vw;
+                scale: 0.9 1.5;
+                transform: skew(175deg, 353deg);
+                user-select: none;
+              }
+              #story-highlight {
+              }
+              #chess-highlight {
+              }
+              #cats-highlight {
+              }
+              #photo-highlight {
+              }
+              #letters-highlight {
+              }
+              #blog-highlight {
+              }
+              #crystal-highlight {
+              }
+              #tiles-highlight {
+              }
+              #mouse-highlight {
+              }
             </style>
             <div class="sticky-stage" id="stage">
               <div class="canvas-frame" id="frame">
@@ -310,6 +359,18 @@
                 <!-- SECTION 3: FOREGROUND -->
                 <div id="layer-fore" class="layer layer-fore">
                   <div class="art-bg bg-fore"></div>
+                  <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" style="opacity: 1" />
+                  <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" style="opacity: 1" />
+                  <span id="disnumber-text">1 2 3 4</span>
+                  <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" style="opacity: 1" />
+                  <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" style="opacity: 1" />
+                  <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" style="opacity: 1" />
+                  <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" style="opacity: 1" />
+                  <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" style="opacity: 1" />
+                  <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" style="opacity: 1" />
+                  <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" style="opacity: 1" />
+                  <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" style="opacity: 1" />
+                  <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" style="opacity: 1" />
                   <div class="footer">
                     <github-md-view url="/README.md" from="0" to="100"></github-md-view>
                   </div>
