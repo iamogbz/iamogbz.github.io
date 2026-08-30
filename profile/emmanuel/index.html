@@ -14,10 +14,6 @@
         width: 100vw;
         height: 100vh;
         background-color: #000;
-        background-image: url("/assets/images/full_site.png");
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-size: 160vw;
         color: #fff;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         overflow-x: hidden;
@@ -35,9 +31,9 @@
       const ARTWORK_SRC_TOP = "/assets/images/sky_cutout.png";
       const ARTWORK_SRC_MID = "/assets/images/grass_cutout.png";
       const ARTWORK_SRC_END = "/assets/images/table_cutout.png";
-      const SKY_PARALLAX = 0.05;
-      const GRASS_PARALLAX = 0.07;
-      const TABLE_PARALLAX = 0.1;
+      const SKY_PARALLAX = 0.3;
+      const GRASS_PARALLAX = 0.7;
+      const TABLE_PARALLAX = 1.0;
       const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
 
       class ParallaxArtExplorer extends HTMLElement {
@@ -45,7 +41,6 @@
           super();
           this.attachShadow({ mode: "open" });
           this._ticking = false;
-          this._dimxChangeListener();
         }
 
         connectedCallback() {
@@ -56,11 +51,9 @@
         }
 
         disconnectedCallback() {
-          if (this._scrollListener) {
-            this._stage.removeEventListener("scroll", this._scrollListener);
-          }
-          window.removeEventListener("resize", this._dimxChangeListener);
-          window.removeEventListener("orientationchange", this._dimxChangeListener);
+          this._stage.removeEventListener("scroll", this._scrollListener);
+          window.removeEventListener("resize", this._scrollListener);
+          window.removeEventListener("orientationchange", this._scrollListener);
           this._frame.querySelectorAll(".highlight-guide").forEach((elem) => {
             elem.removeEventListener("pointerenter", this._pointerMoveListener);
             elem.removeEventListener("pointermove", this._pointerMoveListener);
@@ -86,8 +79,8 @@
             elem.addEventListener("pointerleave", this._pointerLeaveListener);
             elem.addEventListener("pointercancel", this._pointerLeaveListener);
           });
-          window.addEventListener("resize", this._dimxChangeListener);
-          window.addEventListener("orientationchange", this._dimxChangeListener);
+          window.addEventListener("orientationchange", this._scrollListener);
+          window.addEventListener("resize", this._scrollListener);
           this._stage.addEventListener("scroll", this._scrollListener, { passive: true });
           this.updateScroll();
         }
@@ -105,6 +98,7 @@
         }
 
         _scrollListener = (e) => {
+          // TODO: make scrolling response smoother
           if (!this._ticking) {
             requestAnimationFrame(() => {
               this.updateScroll(e);
@@ -112,13 +106,6 @@
             });
             this._ticking = true;
           }
-        };
-
-        _dimxChangeListener = () => {
-          this._scrollBaseline = Number.NEGATIVE_INFINITY;
-          setTimeout(() => {
-            this._stage?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-          }, 150);
         };
 
         /**
@@ -146,34 +133,31 @@
          */
         updateScroll(e) {
           if (!this._frame) return;
-          const rect = this._frame.getBoundingClientRect();
-          if (rect.top > this._scrollBaseline) {
-            this._scrollBaseline = rect.top;
-          }
           const scrollable = this._frame.scrollHeight - window.innerHeight;
           if (scrollable <= 0) return;
-          // TODO: adjust for different screen heights using the fact that the total scroll distance is always a multiple of the screen width
-          const scrollProgress = (this._scrollBaseline - rect.top) / (scrollable / 2);
-          const pageScrollDistance = scrollProgress * scrollable;
-
-          const parallaxMult = (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
+          const scrollableContainerRect = this._frame.getBoundingClientRect();
+          const scrollProgress = -scrollableContainerRect.top / scrollable;
+          const lastLayerRect = this._foreLayer.getBoundingClientRect();
+          // this is highly fragile if the code changes this magic number needs to be updated
+          const lastLayerTopPosition = 1.09999 * window.innerWidth;
+          const maxDyPx = Math.max(0, lastLayerTopPosition + lastLayerRect.height - window.innerHeight);
           const BLUR_PX = 9;
 
           if (this._skyLayer) {
-            const skyScrollDy = (pageScrollDistance * SKY_PARALLAX) / parallaxMult;
-            this._skyLayer.style.transform = `translateY(-${skyScrollDy}px)`;
+            const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX + scrollableContainerRect.top;
+            this._skyLayer.style.transform = `translateY(${-skyScrollDy}px)`;
             const bgBlur = scrollProgress + 0.5 * BLUR_PX;
             this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
-            const midScrollDy = (pageScrollDistance * GRASS_PARALLAX) / parallaxMult;
-            this._midLayer.style.transform = `translateY(-${midScrollDy}px)`;
+            const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX + scrollableContainerRect.top;
+            this._midLayer.style.transform = `translateY(${-midScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
             this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
-            const endScrollDy = (pageScrollDistance * TABLE_PARALLAX) / parallaxMult;
-            this._foreLayer.style.transform = `translateY(-${endScrollDy}px)`;
+            const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX + scrollableContainerRect.top;
+            this._foreLayer.style.transform = `translateY(${-endScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
@@ -188,64 +172,60 @@
                 height: 100vh;
                 overflow: hidden;
               }
-              .sticky-stage {
-                position: sticky;
+              .static-container {
+                position: fixed;
                 top: 0;
                 width: 100vw;
                 height: 100vh;
                 display: flex;
-                align-items: center;
+                align-items: start;
                 justify-content: center;
                 overflow-x: hidden;
+                overflow-y: auto;
               }
-              .canvas-frame {
-                position: absolute;
+              .scrollable-container {
+                position: relative;
                 width: 100vw;
-                height: 1000vw;
-                overflow: hidden;
+                background-image: url("/assets/images/full_site.png");
+                background-attachment: fixed;
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-size: 160vw;
               }
               .layer {
-                position: fixed;
+                position: relative;
                 left: 0;
                 right: 0;
                 top: 0;
-                height: 1000vw;
-                overflow: hidden;
+                overflow-x: hidden;
+                overflow-y: hidden;
                 pointer-events: none;
                 will-change: transform;
-              }
-              .art-bg {
-                position: absolute;
-                left: 0;
-                right: 0;
                 width: 100vw;
-                height: 1000vw;
                 background-repeat: no-repeat;
-                background-size: cover;
+                background-size: 100vw;
+                /* TODO: migrate app to use center bottom for aligning the backgrounds */
+                background-position: center top;
               }
-              .bg-sky {
+              .layer-sky {
                 top: 0;
                 height: 94vw;
-                background-position: center top;
                 background-image: url('${ARTWORK_SRC_TOP}');
               }
-              .bg-mid {
-                top: 68vw;
-                height: 84vw;
-                background-position: center top;
+              .layer-mid {
+                top: -25.7vw;
+                height: 86vw;
                 background-image: url('${ARTWORK_SRC_MID}');
               }
-              .bg-fore {
-                top: 109vw;
+              .layer-fore {
+                top: -70vw;
                 height: 123vw;
-                background-position: center top;
                 background-image: url('${ARTWORK_SRC_END}');
               }
               .footer {
-                height: 1000vh;
                 width: 100vw;
                 background: white;
-                position: absolute;
+                position: relative;
                 top: 232vw;
                 display: flex;
                 justify-content: center;
@@ -270,45 +250,52 @@
               }
               #tower-highlight {
                 width: 7vw;
-                top: 48.7vw;
-                left: 18.45vw;
+                top: 48vw;
+                left: 19vw;
                 filter: blur(0.25rem);
               }
               #mail-highlight {
                 width: 14vw;
-                top: 84vw;
+                top: 16vw;
                 left: 19vw;
                 filter: blur(0.125rem);
               }
               #paint-highlight {
                 width: 32vw;
-                top: 82vw;
+                top: 14vw;
                 left: 31.4vw;
                 filter: blur(0.5rem);
               }
               #phone-highlight {
-                top: 101vw;
+                top: 33vw;
                 left: 8.5vw;
                 width: 17vw;
               }
               #shrouded-highlight {
-                top: 92vw;
+                top: 24vw;
                 left: 62vw;
                 width: 40vw;
                 filter: blur(0.5rem);
               }
               #disnumber-highlight {
-                top: 138.1vw;
+                top: 29vw;
                 left: 10.6vw;
                 width: 23vw;
                 filter: blur(0.25rem);
               }
-              #disnumber-cover {
-                top: 141vw;
+              #disnumber-display {
+                display: inline-flex;
+                position: relative;
+                top: 32vw;
                 left: 18vw;
+                align-items: center;
+                justify-content: center;
+              }
+              #disnumber-cover {
                 width: 8.6vw;
                 opacity: 1;
                 mix-blend-mode: multiply;
+                position: relative;
               }
               #disnumber-text {
                 align-items: center;
@@ -321,52 +308,50 @@
                 height: 2.7vw;
                 width: 6vw;
                 justify-content: center;
-                position: relative;
-                top: 143vw;
-                left: 19.4vw;
+                position: absolute;
                 scale: 0.9 1.5;
-                transform: skew(175deg, 353deg);
+                transform: skew(181deg, 353deg);
                 user-select: none;
               }
               #story-highlight {
-                top: 136vw;
+                top: 27vw;
                 left: 35.2vw;
                 width: 21vw;
                 filter: blur(0.25rem);
               }
               #chess-highlight {
-                top: 152vw;
+                top: 43vw;
                 left: 30.4vw;
                 width: 24.2vw;
                 filter: blur(0.125rem);
                 mix-blend-mode: soft-light;
               }
               #cats-highlight {
-                top: 139.5vw;
+                top: 30.5vw;
                 left: 61.5vw;
                 width: 28vw;
                 filter: blur(0.25rem);
               }
               #photo-highlight {
-                top: 161.6vw;
+                top: 52vw;
                 left: 1vw;
                 width: 26.5vw;
                 filter: blur(0.25rem);
               }
               #letters-highlight {
-                top: 150.5vw;
+                top: 42vw;
                 left: 24vw;
                 width: 54.5vw;
                 filter: blur(0.25rem);
               }
               #blog-highlight {
-                top: 173.5vw;
+                top: 64vw;
                 left: 25.5vw;
                 width: 47.8vw;
                 filter: blur(0.25rem);
               }
               #crystal-highlight {
-                top: 160vw;
+                top: 52vw;
                 left: 68.5vw;
                 width: 31.8vw;
                 filter: blur(0.25rem);
@@ -422,47 +407,46 @@
                 }
               }
               #tiles-highlight {
-                top: 184vw;
+                top: 75vw;
                 left: 0vw;
                 width: 28vw;
                 filter: blur(0.125rem);
                 mix-blend-mode: soft-light;
               }
               #mouse-highlight {
-                top: 197.5vw;
+                top: 88.5vw;
                 left: 70.8vw;
                 width: 28vw;
                 filter: blur(0.125rem);
               }
             </style>
-            <div class="sticky-stage" id="stage">
-              <div class="canvas-frame" id="frame">
+            <div class="static-container" id="stage">
+              <div class="scrollable-container" id="frame">
                 <!-- SECTION 1: SKY -->
                 <div id="layer-sky" class="layer layer-sky">
-                  <div class="art-bg bg-sky"></div>
                   <img src="/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
                   <a href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 14.5vw;"></a>
                 </div>
 
                 <!-- SECTION 2: MIDGROUND -->
                 <div id="layer-mid" class="layer layer-mid">
-                  <div class="art-bg bg-mid"></div>
                   <img src="/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
                   <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
                   <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
                   <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
-                  <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 83vw; left: 18vw;"></a>
-                  <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 102vw; left: 9vw;"></a>
-                  <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 80vw; left: 32vw;"></a>
-                  <a href="/labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 90vw; left: 60vw;"></a>
+                  <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 15vw; left: 18vw;"></a>
+                  <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 34vw; left: 9vw;"></a>
+                  <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 12vw; left: 32vw;"></a>
+                  <a href="/labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 22vw; left: 60vw;"></a>
                 </div>
 
                 <!-- SECTION 3: FOREGROUND -->
                 <div id="layer-fore" class="layer layer-fore">
-                  <div class="art-bg bg-fore"></div>
                   <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" />
-                  <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
-                  <span id="disnumber-text">1 2 3 4</span>
+                  <div id="disnumber-display">
+                    <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
+                    <span id="disnumber-text">1 2 3 4</span>
+                  </div>
                   <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" />
                   <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" />
                   <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" />
@@ -470,18 +454,18 @@
                   <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
                   <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
                   <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
-                  <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 160vw; left: 68vw;"><div id="crystal-blur"></div></a>
+                  <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 51vw; left: 68vw;"><div id="crystal-blur"></div></a>
                   <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
                   <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
-                  <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 138vw; left: 11vw;"></a>
-                  <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 137vw; left: 35vw;"></a>
-                  <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 137vw; left: 60vw;"></a>
-                  <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 152vw; left: 28vw;"></a>
-                  <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 163vw; left: 2.7vw;"></a>
-                  <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 185vw; left: 2.7vw;"></a>
-                  <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 173vw; left: 27vw;"></a>
-                  <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 213vw; left: 27vw;"></a>
-                  <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 199vw; left: 72vw;"></a>
+                  <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 29vw; left: 11vw;"></a>
+                  <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 28vw; left: 35vw;"></a>
+                  <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 28vw; left: 60vw;"></a>
+                  <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 43vw; left: 28vw;"></a>
+                  <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 54vw; left: 2.7vw;"></a>
+                  <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 76vw; left: 2.7vw;"></a>
+                  <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 64vw; left: 27vw;"></a>
+                  <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 104vw; left: 27vw;"></a>
+                  <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 90vw; left: 72vw;"></a>
                   <div class="footer">
                     <github-md-view url="/README.md" from="0" to="100"></github-md-view>
                   </div>
