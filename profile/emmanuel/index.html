@@ -52,7 +52,7 @@
           this.render();
           this.cacheElements();
           this.setupEvents();
-          this.setupTimer();
+          this.setupTimers();
         }
 
         disconnectedCallback() {
@@ -92,7 +92,7 @@
           this.updateScroll();
         }
 
-        setupTimer() {
+        setupTimers() {
           const disnumberElement = this.shadowRoot.getElementById("disnumber-text");
           this.disnumberIntervalId = setInterval(() => {
             if (!disnumberElement) return window.clearInterval(this.disnumberIntervalId);
@@ -101,7 +101,7 @@
               .sort(() => Math.random() - 0.5)
               .join(" ");
             disnumberElement.innerText = timeDigitsRandomised;
-          }, 1000);
+          }, 600);
         }
 
         _scrollListener = (e) => {
@@ -329,18 +329,99 @@
                 user-select: none;
               }
               #story-highlight {
+                top: 136vw;
+                left: 35.2vw;
+                width: 21vw;
+                filter: blur(0.25rem);
               }
               #chess-highlight {
+                top: 152vw;
+                left: 30.4vw;
+                width: 24.2vw;
+                filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
               }
               #cats-highlight {
+                top: 139.5vw;
+                left: 61.5vw;
+                width: 28vw;
+                filter: blur(0.25rem);
               }
               #photo-highlight {
+                top: 161.6vw;
+                left: 1vw;
+                width: 26.5vw;
+                filter: blur(0.25rem);
               }
               #letters-highlight {
+                top: 171.5vw;
+                left: 24.2vw;
+                width: 46vw;
+                filter: blur(0.25rem);
               }
               #blog-highlight {
+                top: 173.5vw;
+                left: 25.5vw;
+                width: 47.8vw;
+                filter: blur(0.25rem);
               }
               #crystal-highlight {
+                top: 160vw;
+                left: 68.5vw;
+                width: 31.8vw;
+                filter: blur(0.25rem);
+                pointer-events: auto;
+              }
+              #crystal-blur {
+                content: '';
+                top: 160vw;
+                left: 71.3vw;
+                display: block;
+                width: 26vw;
+                aspect-ratio: 1 / 1;
+                border-radius: 50%;
+                position: relative;
+                transition: all 0.3s ease-out;
+                pointer-events: auto;
+                animation: hueloop 5s ease-in-out infinite alternate, bghue 3s ease-in-out infinite alternate, bgblur 4s ease-in-out infinite alternate;
+                mask-image: radial-gradient(circle, white 30%, transparent 120%);
+                mask-position: center;
+                mask-repeat: no-repeat;
+                mask-size: 100%;
+                opacity: 1;
+              }
+              #crystal-blur:hover {
+                opacity: 0;
+              }
+              @keyframes hueloop {
+                0% {
+                  filter: hue-rotate(0deg);
+                }
+                50% {
+                  filter: hue-rotate(180deg);
+                }
+                100% {
+                  filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bghue {
+                0% {
+                  backdrop-filter: hue-rotate(0deg);
+                }
+                50% {
+                  backdrop-filter: hue-rotate(180deg);
+                }
+                100% {
+                  backdrop-filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bgblur {
+                0% {
+                  backdrop-filter: blur(4px);
+                }
+                100% {
+                  backdrop-filter: blur(16px);
+                }
               }
               #tiles-highlight {
               }
@@ -382,6 +463,7 @@
                   <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" style="opacity: 1" />
                   <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" style="opacity: 1" />
                   <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" style="opacity: 1" />
+                  <div id="crystal-blur"></div>
                   <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" style="opacity: 1" />
                   <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" style="opacity: 1" />
                   <div class="footer">
