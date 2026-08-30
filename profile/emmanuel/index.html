@@ -52,6 +52,7 @@
           this.render();
           this.cacheElements();
           this.setupEvents();
+          this.setupTimer();
         }
 
         disconnectedCallback() {
@@ -89,6 +90,18 @@
           window.addEventListener("orientationchange", this._dimxChangeListener);
           this._stage.addEventListener("scroll", this._scrollListener, { passive: true });
           this.updateScroll();
+        }
+
+        setupTimer() {
+          const disnumberElement = this.shadowRoot.getElementById("disnumber-text");
+          this.disnumberIntervalId = setInterval(() => {
+            if (!disnumberElement) return window.clearInterval(this.disnumberIntervalId);
+            const timeDigitsRandomised = Array.from(new Set(new Date().toTimeString().substring(0, 8).replace(/\:/g, "") + "0123456789"))
+              .slice(0, 4)
+              .sort(() => Math.random() - 0.5)
+              .join(" ");
+            disnumberElement.innerText = timeDigitsRandomised;
+          }, 1000);
         }
 
         _scrollListener = (e) => {
