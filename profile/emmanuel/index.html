@@ -102,7 +102,6 @@
         };
 
         _dimxChangeListener = () => {
-          this._scrollProgress = 0;
           this._scrollBaseline = Number.NEGATIVE_INFINITY;
           setTimeout(() => {
             this._stage?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -140,26 +139,27 @@
           }
           const scrollable = this._frame.scrollHeight - window.innerHeight;
           if (scrollable <= 0) return;
+          // TODO: adjust for different screen heights using the fact that the total scroll distance is always a multiple of the screen width
           const scrollProgress = (this._scrollBaseline - rect.top) / (scrollable / 2);
-          this._scrollProgress = scrollProgress * scrollable;
+          const pageScrollDistance = scrollProgress * scrollable;
 
           const parallaxMult = (PARALLAX_WH_ASPECT_RATIO * window.innerHeight) / window.innerWidth;
           const BLUR_PX = 9;
 
           if (this._skyLayer) {
-            const skyScrollDy = (this._scrollProgress * SKY_PARALLAX) / parallaxMult;
+            const skyScrollDy = (pageScrollDistance * SKY_PARALLAX) / parallaxMult;
             this._skyLayer.style.transform = `translateY(-${skyScrollDy}px)`;
             const bgBlur = scrollProgress + 0.5 * BLUR_PX;
             this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
-            const midScrollDy = (this._scrollProgress * GRASS_PARALLAX) / parallaxMult;
+            const midScrollDy = (pageScrollDistance * GRASS_PARALLAX) / parallaxMult;
             this._midLayer.style.transform = `translateY(-${midScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
             this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
-            const endScrollDy = (this._scrollProgress * TABLE_PARALLAX) / parallaxMult;
+            const endScrollDy = (pageScrollDistance * TABLE_PARALLAX) / parallaxMult;
             this._foreLayer.style.transform = `translateY(-${endScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
@@ -200,7 +200,6 @@
                 overflow: hidden;
                 pointer-events: none;
                 will-change: transform;
-                transition: transform 0.15s ease-out;
               }
               .art-bg {
                 position: absolute;
@@ -230,7 +229,7 @@
                 background-image: url('${ARTWORK_SRC_END}');
               }
               .footer {
-                height: 100vh;
+                height: 1000vh;
                 width: 100vw;
                 background: white;
                 position: absolute;
