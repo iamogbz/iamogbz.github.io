@@ -264,7 +264,6 @@
               }
               .highlight-guide {
                 position: absolute;
-                border: solid 1px red;
                 pointer-events: auto;
                 cursor: pointer;
                 user-select: none;
@@ -308,7 +307,8 @@
                 top: 141vw;
                 left: 18vw;
                 width: 8.6vw;
-                mix-blend-mode: normal;
+                opacity: 1;
+                mix-blend-mode: multiply;
               }
               #disnumber-text {
                 align-items: center;
@@ -317,7 +317,7 @@
                 filter: blur(0.025rem);
                 font-family: monospace;
                 font-weight: 900;
-                font-size: 0.75rem;
+                font-size: 1vw;
                 height: 2.7vw;
                 width: 6vw;
                 justify-content: center;
@@ -354,9 +354,9 @@
                 filter: blur(0.25rem);
               }
               #letters-highlight {
-                top: 171.5vw;
-                left: 24.2vw;
-                width: 46vw;
+                top: 150.5vw;
+                left: 24vw;
+                width: 54.5vw;
                 filter: blur(0.25rem);
               }
               #blog-highlight {
@@ -370,12 +370,10 @@
                 left: 68.5vw;
                 width: 31.8vw;
                 filter: blur(0.25rem);
-                pointer-events: auto;
               }
               #crystal-blur {
-                content: '';
-                top: 160vw;
-                left: 71.3vw;
+                top: 2.6vw;
+                left: 3.3vw;
                 display: block;
                 width: 26vw;
                 aspect-ratio: 1 / 1;
@@ -424,8 +422,17 @@
                 }
               }
               #tiles-highlight {
+                top: 184vw;
+                left: 0vw;
+                width: 28vw;
+                filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
               }
               #mouse-highlight {
+                top: 197.5vw;
+                left: 70.8vw;
+                width: 28vw;
+                filter: blur(0.125rem);
               }
             </style>
             <div class="sticky-stage" id="stage">
@@ -447,25 +454,34 @@
                   <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 83vw; left: 18vw;"></a>
                   <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 102vw; left: 9vw;"></a>
                   <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 80vw; left: 32vw;"></a>
-                  <a href="./labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 90vw; left: 60vw;"></a>
+                  <a href="/labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 90vw; left: 60vw;"></a>
                 </div>
 
                 <!-- SECTION 3: FOREGROUND -->
                 <div id="layer-fore" class="layer layer-fore">
                   <div class="art-bg bg-fore"></div>
-                  <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" style="opacity: 1" />
-                  <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" style="opacity: 1" />
+                  <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" />
+                  <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
                   <span id="disnumber-text">1 2 3 4</span>
-                  <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" style="opacity: 1" />
-                  <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" style="opacity: 1" />
-                  <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" style="opacity: 1" />
-                  <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" style="opacity: 1" />
-                  <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" style="opacity: 1" />
-                  <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" style="opacity: 1" />
-                  <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" style="opacity: 1" />
-                  <div id="crystal-blur"></div>
-                  <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" style="opacity: 1" />
-                  <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" style="opacity: 1" />
+                  <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" />
+                  <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" />
+                  <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" />
+                  <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" />
+                  <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
+                  <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
+                  <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
+                  <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 160vw; left: 68vw;"><div id="crystal-blur"></div></a>
+                  <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
+                  <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
+                  <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 138vw; left: 11vw;"></a>
+                  <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 137vw; left: 35vw;"></a>
+                  <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 137vw; left: 60vw;"></a>
+                  <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 152vw; left: 28vw;"></a>
+                  <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 163vw; left: 2.7vw;"></a>
+                  <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 185vw; left: 2.7vw;"></a>
+                  <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 173vw; left: 27vw;"></a>
+                  <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 213vw; left: 27vw;"></a>
+                  <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 199vw; left: 72vw;"></a>
                   <div class="footer">
                     <github-md-view url="/README.md" from="0" to="100"></github-md-view>
                   </div>
