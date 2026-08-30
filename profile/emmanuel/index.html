@@ -140,7 +140,10 @@
           const lastLayerRect = this._foreLayer.getBoundingClientRect();
           // this is highly fragile if the code changes this magic number needs to be updated
           const lastLayerTopPosition = 1.09999 * window.innerWidth;
-          const maxDyPx = Math.max(0, lastLayerTopPosition + lastLayerRect.height - window.innerHeight);
+          // used to give some extra space at the bottom for possible footer items;
+          const extraBottomHeight = 0.23 * window.innerWidth;
+          const maxDyPxBase = Math.max(0, lastLayerTopPosition + lastLayerRect.height - window.innerHeight);
+          const maxDyPx = maxDyPxBase + extraBottomHeight;
           const BLUR_PX = 9;
 
           if (this._skyLayer) {
@@ -161,6 +164,8 @@
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
+          const blackStop = Math.floor(scrollProgress * maxDyPx > maxDyPxBase ? 50 : 0);
+          this._frame.style.backgroundImage = `linear-gradient(0deg, black 0, black ${blackStop}vh, transparent ${blackStop}vh, transparent 100vh), url("/assets/images/full_site.png")`;
         }
 
         render() {
@@ -201,6 +206,7 @@
                 overflow-y: hidden;
                 pointer-events: none;
                 will-change: transform;
+                transition: transform 0.01s ease-in-out;
                 width: 100vw;
                 background-repeat: no-repeat;
                 background-size: 100vw;
@@ -221,19 +227,6 @@
                 top: -70vw;
                 height: 123vw;
                 background-image: url('${ARTWORK_SRC_END}');
-              }
-              .footer {
-                width: 100vw;
-                background: white;
-                position: relative;
-                top: 232vw;
-                display: flex;
-                justify-content: center;
-                padding: 0.5rem 0;
-              }
-              .footer github-md-view {
-                text-align: center;
-                pointer-events: auto;
               }
               .highlight-overlay {
                 mix-blend-mode: overlay;
@@ -466,9 +459,6 @@
                   <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 64vw; left: 27vw;"></a>
                   <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 104vw; left: 27vw;"></a>
                   <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 90vw; left: 72vw;"></a>
-                  <div class="footer">
-                    <github-md-view url="/README.md" from="0" to="100"></github-md-view>
-                  </div>
                 </div>
               </div>
             </div>
