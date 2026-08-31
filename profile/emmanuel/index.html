@@ -84,6 +84,8 @@
             elem.removeEventListener("pointerdown", this._pointerMoveListener);
             elem.removeEventListener("pointerleave", this._pointerLeaveListener);
             elem.removeEventListener("pointercancel", this._pointerLeaveListener);
+            elem.removeEventListener("focus", this._focusListener);
+            elem.removeEventListener("blur", this._blurListener);
           });
         }
 
@@ -167,6 +169,7 @@
         }
 
         _globalPointerMoveListener = (e) => {
+          this._focusedElement = null;
           this._pointerX = e.clientX;
           this._pointerY = e.clientY;
           this.startCursorAnimation();
@@ -180,6 +183,8 @@
             elem.addEventListener("pointerdown", this._pointerMoveListener);
             elem.addEventListener("pointerleave", this._pointerLeaveListener);
             elem.addEventListener("pointercancel", this._pointerLeaveListener);
+            elem.addEventListener("focus", this._focusListener);
+            elem.addEventListener("blur", this._blurListener);
           });
           window.addEventListener("orientationchange", this._scrollListener);
           window.addEventListener("resize", this._scrollListener);
@@ -247,6 +252,83 @@
         };
 
         /**
+         * @param {FocusEvent} e
+         */
+        _focusListener = (e) => {
+          const link = e.currentTarget?.closest("a") || e.target?.closest("a");
+          if (!link) return;
+
+          this._focusedElement = link;
+
+          const targetId = link.dataset?.targetId;
+          const targetElem = targetId ? this.shadowRoot.getElementById(targetId) : null;
+          if (targetElem) targetElem.style.opacity = 1;
+
+          const title = link.getAttribute("title") || link.title;
+          if (title && this._cursorBubble && this._cursorBubbleText) {
+            if (this._cursorBubbleText.innerText !== title) {
+              this._cursorBubbleText.innerText = title;
+            }
+            this._cursorBubble.classList.add("visible");
+            this._cursorBubble.classList.add("has-title");
+          }
+
+          this.scrollToElement(link);
+          const rect = link.getBoundingClientRect();
+          this._pointerX = rect.left + rect.width / 2;
+          this._pointerY = rect.top + rect.height / 2;
+          this.startCursorAnimation();
+        };
+
+        /**
+         * @param {FocusEvent} e
+         */
+        _blurListener = (e) => {
+          const link = e.currentTarget?.closest("a") || e.target?.closest("a");
+          if (this._focusedElement === link) {
+            this._focusedElement = null;
+          }
+
+          const targetId = link?.dataset?.targetId;
+          const targetElem = targetId ? this.shadowRoot.getElementById(targetId) : null;
+          if (targetElem) targetElem.style.opacity = 0;
+
+          if (this._cursorBubble && this._cursorBubble.classList.contains("has-title")) {
+            this._cursorBubble.classList.remove("has-title");
+            this.startCursorAnimation();
+          }
+        };
+
+        scrollToElement(elem) {
+          if (!this._scrollWrapper || !this._scrollContent) return;
+          const scrollable = this._scrollContent.scrollHeight - window.innerHeight;
+          if (scrollable <= 0) return;
+
+          const layer = elem.closest(".layer");
+          let parallaxFactor = TABLE_PARALLAX;
+          if (layer?.id === "layer-sky") {
+            parallaxFactor = SKY_PARALLAX;
+          } else if (layer?.id === "layer-mid") {
+            parallaxFactor = GRASS_PARALLAX;
+          }
+
+          const lastLayerRect = this._foreLayer ? this._foreLayer.getBoundingClientRect() : null;
+          const maxDyPx = lastLayerRect ? Math.max(0, lastLayerRect.height - window.innerHeight) : 0;
+
+          if (maxDyPx > 0 && parallaxFactor > 0) {
+            const elemTop = elem.offsetTop;
+            const targetLayerScrollDy = elemTop - window.innerHeight * 0.35;
+            const progress = Math.max(0, Math.min(1, targetLayerScrollDy / (maxDyPx * parallaxFactor)));
+            const targetScroll = progress * scrollable;
+
+            this._scrollWrapper.scrollTo({
+              top: targetScroll,
+              behavior: "smooth"
+            });
+          }
+        }
+
+        /**
          * @param {ScrollEvent} e
          */
         updateScroll(e) {
@@ -270,6 +352,13 @@
           if (this._foreLayer) {
             const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
             this._foreLayer.style.transform = `translate3d(0, ${Math.min(0, -endScrollDy)}px, 0)`;
+          }
+
+          if (this._focusedElement) {
+            const rect = this._focusedElement.getBoundingClientRect();
+            this._pointerX = rect.left + rect.width / 2;
+            this._pointerY = rect.top + rect.height / 2;
+            this.startCursorAnimation();
           }
         }
 
@@ -331,14 +420,11 @@
               }
               .cursor-bubble span {
                 display: inline-block;
-                transition: corner-shape 0.3s ease-in-out, scale 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.4s ease-in-out, box-shadow 0.3s ease-in-out;
+                transition: corner-shape 0.3s ease-in-out, scale 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.4s ease-in-out;
               }
               .cursor-bubble.visible {
                 opacity: 1;
                 transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(1);
-              }
-              .cursor-bubble.dot {
-                corner-shape: round;
               }
               .cursor-bubble.dot:not(.has-title) {
                 padding: 0;
@@ -347,8 +433,11 @@
                 min-width: 8px;
                 min-height: 8px;
                 border-radius: 50%;
+                background-color: #ffffff;
                 border: 1px solid rgba(255, 255, 255, 0.8);
                 box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
               }
               .cursor-bubble.dot:not(.has-title) span {
                 opacity: 0;
@@ -476,25 +565,32 @@
                 pointer-events: auto;
                 cursor: pointer;
                 user-select: none;
+                border-radius: 0.75rem;
+                outline: none;
+                transition: outline-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+              }
+              .highlight-guide:focus-visible {
+                outline: 2px solid rgba(255, 255, 255, 0.85);
+                outline-offset: 4px;
+                box-shadow: 0 0 16px rgba(255, 255, 255, 0.5), inset 0 0 12px rgba(255, 255, 255, 0.15);
               }
               #tower-highlight {
                 width: 7vw;
                 top: 49vw;
                 left: 19vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #mail-highlight {
                 width: 14vw;
-                aspect-ratio: 1/1.6;
-                top: 85.5vw;
+                top: 85.3vw;
                 left: 19vw;
-                filter: blur(0.162vw);
+                filter: blur(0.125rem);
               }
               #paint-highlight {
                 width: 32vw;
                 top: 84vw;
                 left: 31.4vw;
-                filter: blur(0.625vw);
+                filter: blur(0.5rem);
               }
               #paint-splatters {
                 position: absolute;
@@ -552,13 +648,13 @@
                 top: 94vw;
                 left: 62vw;
                 width: 40vw;
-                filter: blur(0.625vw);
+                filter: blur(0.5rem);
               }
               #disnumber-highlight {
                 top: 140vw;
                 left: 10.6vw;
                 width: 23vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #disnumber-display {
                 display: inline-flex;
@@ -578,7 +674,7 @@
                 align-items: center;
                 display: flex;
                 color: #715D3F;
-                filter: blur(0);
+                filter: blur(0.025rem);
                 font-family: monospace;
                 font-weight: 900;
                 font-size: 1vw;
@@ -594,14 +690,14 @@
                 top: 138vw;
                 left: 35.2vw;
                 width: 21vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #hotspot-story::before, #hotspot-story::after {
                 content: '';
                 display: block;
                 position: absolute;
                 box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0);
+                filter: blur(0.75px);
                 width: 1.5vw;
                 aspect-ratio: 1/1;
                 border-radius: 50%;
@@ -610,7 +706,7 @@
                 background-repeat: no-repeat;
                 background-position: top right, bottom left;
                 background-size: 40% 40%, 80% 80%;
-                background-image: radial-gradient(circle, white 50%, transparent 100%), radial-gradient(circle, #000 50%, #6C4616 50%, transparent 80%);
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 50%, #6C4616 50%, #6C4616 100%);
                 transition: background-position 0.1s ease-in-out;
                 animation: robot-eye-saccade 3s 1s infinite alternate ease-in-out;
                 animation-duration: random(2s, 5s);
@@ -642,21 +738,21 @@
                 top: 154vw;
                 left: 30.4vw;
                 width: 24.2vw;
-                filter: blur(0.162vw);
+                filter: blur(0.125rem);
                 mix-blend-mode: soft-light;
               }
               #cats-highlight {
                 top: 141.5vw;
                 left: 61.5vw;
                 width: 28vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #hotspot-cats::before, #hotspot-cats::after {
                 content: '';
                 display: block;
                 position: absolute;
                 box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0);
+                filter: blur(0.5px);
                 width: 2.4vw;
                 aspect-ratio: 7/6;
                 border-radius: 50%;
@@ -665,7 +761,7 @@
                 background-repeat: no-repeat;
                 background-position: top right, center center;
                 background-size: 40% 40%, 30% 100%;
-                background-image: radial-gradient(circle, white 50%, transparent 100%), radial-gradient(circle, #000 70%, #e2b340 70%, transparent 100%);
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 70%, #e2b340 70%, #e2b340 100%);
                 transition: background-position 0.1s ease-in-out, background-size 0.1s ease-in-out;
                 animation: cat-eye-saccade 15s 5s infinite alternate ease-in-out;
                 animation-timing-function: ease-in-out;
@@ -706,25 +802,25 @@
                 top: 163vw;
                 left: 1vw;
                 width: 26.5vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #letters-highlight {
                 top: 153vw;
                 left: 24vw;
                 width: 54.5vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #blog-highlight {
                 top: 175vw;
                 left: 25.5vw;
                 width: 47.8vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #crystal-highlight {
                 top: 163vw;
                 left: 68.5vw;
                 width: 31.8vw;
-                filter: blur(0.313vw);
+                filter: blur(0.25rem);
               }
               #crystal-blur {
                 top: 2.6vw;
@@ -764,14 +860,14 @@
                 top: 186vw;
                 left: 0vw;
                 width: 28vw;
-                filter: blur(0.162vw);
+                filter: blur(0.125rem);
                 mix-blend-mode: soft-light;
               }
               #mouse-highlight {
                 top: 199.5vw;
                 left: 70.8vw;
                 width: 28vw;
-                filter: blur(0.162vw);
+                filter: blur(0.125rem);
               }
             </style>
             <div id="loading-overlay" class="loading-overlay">
@@ -786,7 +882,7 @@
                   <!-- SECTION 1: SKY -->
                   <div id="layer-sky" class="layer layer-sky">
                     <img src="/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
-                    <a title="Front St W Toronto" href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 15vw;"></a>
+                    <a title="Front St W Toronto" aria-label="Front St W Toronto" href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" rel="noopener noreferrer" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 15vw;"></a>
                   </div>
 
                   <!-- SECTION 2: MIDGROUND -->
@@ -795,9 +891,9 @@
                     <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
                     <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
                     <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
-                    <a title="Send some mail" href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
-                    <a title="Leave a message" href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
-                    <a title="PAINT by COLOURS" href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;">
+                    <a title="Send some mail" aria-label="Send some mail" href="mailto:eogbizi@gmail.com" target="_blank" rel="noopener noreferrer" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
+                    <a title="Leave a message" aria-label="Leave a message" href="tel:+12897005815" target="_blank" rel="noopener noreferrer" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
+                    <a title="PAINT by COLOURS" aria-label="PAINT by COLOURS" href="https://paint.ogbizi.com" target="_blank" rel="noopener noreferrer" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;">
                       <div id="paint-splatters">
                         <div class="paint-blob b1"></div>
                         <div class="paint-blob b2"></div>
@@ -811,7 +907,7 @@
                         <div class="paint-blob b10"></div>
                       </div>
                     </a>
-                    <a title="Ongoing Experiments" href="/labs/" target="_blank" id="hotspot-shrouded" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 92vw; left: 60vw;"></a>
+                    <a title="Ongoing Experiments" aria-label="Ongoing Experiments" href="/labs/" target="_blank" rel="noopener noreferrer" id="hotspot-shrouded" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 92vw; left: 60vw;"></a>
                   </div>
 
                   <!-- SECTION 3: FOREGROUND -->
@@ -828,18 +924,18 @@
                     <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
                     <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
                     <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
-                    <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 162vw; left: 68vw;"><div id="crystal-blur"></div></a>
+                    <a title="Play Word Sync Guessing Game" aria-label="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" rel="noopener noreferrer" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 162vw; left: 68vw;"><div id="crystal-blur"></div></a>
                     <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
                     <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
-                    <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 140vw; left: 11vw;"></a>
-                    <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 139vw; left: 35vw;"></a>
-                    <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 139vw; left: 60vw;"></a>
-                    <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 154vw; left: 28vw;"></a>
-                    <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 165vw; left: 2.7vw;"></a>
-                    <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 187vw; left: 2.7vw;"></a>
-                    <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 175vw; left: 27vw;"></a>
-                    <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 215vw; left: 27vw;"></a>
-                    <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 201vw; left: 72vw;"></a>
+                    <a title="Play Disnumber Game" aria-label="Play Disnumber Game" href="https://disnumber.com" target="_blank" rel="noopener noreferrer" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 140vw; left: 11vw;"></a>
+                    <a title="Read ongoing writing experiment" aria-label="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" rel="noopener noreferrer" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 139vw; left: 35vw;"></a>
+                    <a title="Chrome Alt Tabs Shortcuts" aria-label="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" rel="noopener noreferrer" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 139vw; left: 60vw;"></a>
+                    <a title="Play Chaos Chess Game" aria-label="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" rel="noopener noreferrer" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 154vw; left: 28vw;"></a>
+                    <a title="Instagram" aria-label="Instagram" href="https://instagram.com/iamogbz" target="_blank" rel="noopener noreferrer" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 165vw; left: 2.7vw;"></a>
+                    <a title="Play Tile X Words Game" aria-label="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" rel="noopener noreferrer" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 187vw; left: 2.7vw;"></a>
+                    <a title="Read letters from the abyss" aria-label="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" rel="noopener noreferrer" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 175vw; left: 27vw;"></a>
+                    <a title="Read technical and general blog posts" aria-label="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" rel="noopener noreferrer" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 215vw; left: 27vw;"></a>
+                    <a title="Fancy Webpage Cursor" aria-label="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" rel="noopener noreferrer" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 201vw; left: 72vw;"></a>
                   </div>
                 </div>
               </div>
