@@ -31,8 +31,8 @@
       const ARTWORK_SRC_TOP = "/assets/images/sky_cutout.png";
       const ARTWORK_SRC_MID = "/assets/images/grass_cutout.png";
       const ARTWORK_SRC_END = "/assets/images/table_cutout.png";
-      const SKY_PARALLAX = 0.3;
-      const GRASS_PARALLAX = 0.7;
+      const SKY_PARALLAX = 0.6;
+      const GRASS_PARALLAX = 0.8;
       const TABLE_PARALLAX = 1.0;
       const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
 
@@ -41,6 +41,7 @@
           super();
           this.attachShadow({ mode: "open" });
           this._ticking = false;
+          this._scrollProgress = 0
         }
 
         connectedCallback() {
@@ -220,6 +221,9 @@
                 background-size: 100vw;
                 background-position: center bottom;
               }
+              .layer * {
+                user-select: none;
+              }
               .layer-sky {
                 height: 94vw;
                 background-image: url('${ARTWORK_SRC_TOP}');
@@ -231,6 +235,19 @@
               .layer-fore {
                 height: 234vw;
                 background-image: url('${ARTWORK_SRC_END}');
+                overflow: visible;
+              }
+              .layer-fore::after {
+                content: '';
+                display: flex;
+                background-color: black;
+                background-position: center bottom;
+                background-repeat: no-repeat;
+                background-size: 100vw;
+                width: 100vw;
+                height: 100vmax;
+                position: fixed;
+                bottom: -100vmax;
               }
               .highlight-overlay {
                 mix-blend-mode: overlay;
@@ -361,7 +378,9 @@
                 aspect-ratio: 1 / 1;
                 border-radius: 50%;
                 position: relative;
-                transition: all 0.3s ease-out;
+                transition-duration: 0.3s;
+                transition-timing: ease-out;
+                transition-property: animation, mask, border-radius, opacity;
                 pointer-events: auto;
                 animation: hueloop 5s ease-in-out infinite alternate, bghue 3s ease-in-out infinite alternate, bgblur 4s ease-in-out infinite alternate;
                 mask-image: radial-gradient(circle, white 30%, transparent 120%);
