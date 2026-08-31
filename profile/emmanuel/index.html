@@ -28,9 +28,9 @@
     <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
 
     <script>
-      const ARTWORK_SRC_TOP = "/assets/images/sky_cutout.png";
-      const ARTWORK_SRC_MID = "/assets/images/grass_cutout.png";
-      const ARTWORK_SRC_END = "/assets/images/table_cutout.png";
+      const ARTWORK_SRC_TOP = "/assets/images/sky_cutout-optimised.png";
+      const ARTWORK_SRC_MID = "/assets/images/grass_cutout-optimised.png";
+      const ARTWORK_SRC_END = "/assets/images/table_cutout-optimised.png";
       const SKY_PARALLAX = 0.6;
       const GRASS_PARALLAX = 0.8;
       const TABLE_PARALLAX = 1.0;
@@ -41,7 +41,7 @@
           super();
           this.attachShadow({ mode: "open" });
           this._ticking = false;
-          this._scrollProgress = 0
+          this._scrollProgress = 0;
         }
 
         connectedCallback() {
@@ -185,7 +185,7 @@
                 align-items: start;
                 justify-content: center;
                 overflow: hidden;
-                background-image: url("/assets/images/full_site.png");
+                background-image: url("/assets/images/full_site-optimised.png");
                 background-position: center top;
                 background-repeat: no-repeat;
                 background-size: 160vw;
@@ -205,6 +205,22 @@
                 background-repeat: no-repeat;
                 background-size: 100vw;
                 overflow: hidden;
+              }
+              .scroll-content-parallax::after {
+                content: '';
+                opacity: 0.05;
+                transition: opacity 0.15s ease-in-out;
+                background-color: black;
+                border-radius: 1rem;
+                corner-shape: squircle;
+                position: absolute;
+                right: 0.3rem;
+                top: 0.3rem;
+                width: 1rem;
+                height: calc(100% - 0.6rem);
+              }
+              .scroll-content-parallax:hover::after {
+                opacity: 0.1;
               }
               .layer {
                 position: fixed;
