@@ -51,10 +51,11 @@
         }
 
         disconnectedCallback() {
-          this._stage.removeEventListener("scroll", this._scrollListener);
+          this._scrollWrapper.removeEventListener("touchmove", this._scrollListener);
+          this._scrollWrapper.removeEventListener("scroll", this._scrollListener);
           window.removeEventListener("resize", this._scrollListener);
           window.removeEventListener("orientationchange", this._scrollListener);
-          this._frame.querySelectorAll(".highlight-guide").forEach((elem) => {
+          this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
             elem.removeEventListener("pointerenter", this._pointerMoveListener);
             elem.removeEventListener("pointermove", this._pointerMoveListener);
             elem.removeEventListener("pointerdown", this._pointerMoveListener);
@@ -64,15 +65,16 @@
         }
 
         cacheElements() {
-          this._stage = this.shadowRoot.getElementById("stage");
-          this._frame = this.shadowRoot.getElementById("frame");
+          this._scrollWrapper = this.shadowRoot.getElementById("scroll-wrapper");
+          this._scrollContent = this.shadowRoot.getElementById("scroll-content");
+          this._scrollFrame = this.shadowRoot.getElementById("scroll-frame");
           this._skyLayer = this.shadowRoot.getElementById("layer-sky");
           this._midLayer = this.shadowRoot.getElementById("layer-mid");
           this._foreLayer = this.shadowRoot.getElementById("layer-fore");
         }
 
         setupEvents() {
-          this._frame.querySelectorAll(".highlight-guide").forEach((elem) => {
+          this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
             elem.addEventListener("pointerenter", this._pointerMoveListener);
             elem.addEventListener("pointermove", this._pointerMoveListener);
             elem.addEventListener("pointerdown", this._pointerMoveListener);
@@ -81,7 +83,7 @@
           });
           window.addEventListener("orientationchange", this._scrollListener);
           window.addEventListener("resize", this._scrollListener);
-          this._stage.addEventListener("scroll", this._scrollListener, { passive: true });
+          this._scrollWrapper.addEventListener("scroll", this._scrollListener, { passive: true });
           this.updateScroll();
         }
 
@@ -98,7 +100,7 @@
         }
 
         _scrollListener = (e) => {
-          // TODO: make scrolling response smoother
+          console.log("scroll attempt");
           if (!this._ticking) {
             requestAnimationFrame(() => {
               this.updateScroll(e);
@@ -132,11 +134,12 @@
          * @param {ScrollEvent} e
          */
         updateScroll(e) {
-          if (!this._frame) return;
-          const scrollable = this._frame.scrollHeight - window.innerHeight;
+          const scrollFrame = this._scrollContent;
+          if (!scrollFrame) return;
+          const scrollable = scrollFrame.scrollHeight - window.innerHeight;
           if (scrollable <= 0) return;
-          const scrollableContainerRect = this._frame.getBoundingClientRect();
-          const scrollProgress = -scrollableContainerRect.top / scrollable;
+          const containerUsedForScrollingDomRect = scrollFrame.getBoundingClientRect();
+          const scrollProgress = -containerUsedForScrollingDomRect.top / scrollable;
           const lastLayerRect = this._foreLayer.getBoundingClientRect();
           // used to give some extra space at the bottom for possible footer items;
           const extraBottomHeight = 0 * window.innerWidth;
@@ -145,24 +148,23 @@
           const BLUR_PX = 9;
 
           if (this._skyLayer) {
-            const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX + scrollableContainerRect.top;
+            const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
             this._skyLayer.style.transform = `translateY(${-skyScrollDy}px)`;
             const bgBlur = scrollProgress + 0.5 * BLUR_PX;
             this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
-            const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX + scrollableContainerRect.top;
+            const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
             this._midLayer.style.transform = `translateY(${-midScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
             this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
-            const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX + scrollableContainerRect.top;
+            const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
             this._foreLayer.style.transform = `translateY(${-endScrollDy}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
-          const blackStop = Math.floor(scrollProgress * maxDyPx > maxDyPxBase ? 50 : 0);
         }
 
         render() {
@@ -174,7 +176,7 @@
                 height: 100vh;
                 overflow: hidden;
               }
-              .static-container {
+              .scroll-container {
                 position: fixed;
                 top: 0;
                 width: 100vw;
@@ -182,22 +184,30 @@
                 display: flex;
                 align-items: start;
                 justify-content: center;
-                overflow-x: hidden;
-                overflow-y: auto;
+                overflow: hidden;
                 background-image: url("/assets/images/full_site.png");
                 background-position: center top;
                 background-repeat: no-repeat;
                 background-size: 160vw;
               }
-              .scrollable-container {
+              .scroll-content-static {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                overflow-x: hidden;
+                overflow-y: auto;
+              }
+              .scroll-content-parallax {
                 position: relative;
                 width: 100vw;
+                height: 200vh;
                 background-position: center top;
                 background-repeat: no-repeat;
                 background-size: 100vw;
+                overflow: hidden;
               }
               .layer {
-                position: relative;
+                position: fixed;
                 left: 0;
                 right: 0;
                 top: 0;
@@ -206,31 +216,27 @@
                 pointer-events: none;
                 user-select: none;
                 will-change: transform;
-                transition: transform 0.01s ease-in-out;
                 width: 100vw;
                 background-repeat: no-repeat;
                 background-size: 100vw;
                 background-position: center bottom;
               }
               .layer-sky {
-                top: 0;
                 height: 94vw;
                 background-image: url('${ARTWORK_SRC_TOP}');
               }
               .layer-mid {
-                top: -94vw;
                 height: 180vw;
                 background-image: url('${ARTWORK_SRC_MID}');
               }
               .layer-fore {
-                top: -274vw;
                 height: 234vw;
                 background-image: url('${ARTWORK_SRC_END}');
               }
               .highlight-overlay {
                 mix-blend-mode: overlay;
                 position: absolute;
-                transition: all 0.15s ease-in-out;
+                transition: opacity 0.15s ease-in-out;
                 opacity: 0;
                 user-select: none;
               }
@@ -412,52 +418,54 @@
                 filter: blur(0.125rem);
               }
             </style>
-            <div class="static-container" id="stage">
-              <div class="scrollable-container" id="frame">
-                <!-- SECTION 1: SKY -->
-                <div id="layer-sky" class="layer layer-sky">
-                  <img src="/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
-                  <a href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 15vw;"></a>
-                </div>
-
-                <!-- SECTION 2: MIDGROUND -->
-                <div id="layer-mid" class="layer layer-mid">
-                  <img src="/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
-                  <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
-                  <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
-                  <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
-                  <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
-                  <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
-                  <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;"></a>
-                  <a href="/labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 92vw; left: 60vw;"></a>
-                </div>
-
-                <!-- SECTION 3: FOREGROUND -->
-                <div id="layer-fore" class="layer layer-fore">
-                  <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" />
-                  <div id="disnumber-display">
-                    <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
-                    <span id="disnumber-text">1 2 3 4</span>
+            <div class="scroll-container">
+              <div class="scroll-content-static" id="scroll-wrapper">
+                <div class="scroll-content-parallax" id="scroll-content">
+                  <!-- SECTION 1: SKY -->
+                  <div id="layer-sky" class="layer layer-sky">
+                    <img src="/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
+                    <a href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 15vw;"></a>
                   </div>
-                  <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" />
-                  <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" />
-                  <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" />
-                  <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" />
-                  <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
-                  <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
-                  <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
-                  <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 162vw; left: 68vw;"><div id="crystal-blur"></div></a>
-                  <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
-                  <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
-                  <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 140vw; left: 11vw;"></a>
-                  <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 139vw; left: 35vw;"></a>
-                  <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 139vw; left: 60vw;"></a>
-                  <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 154vw; left: 28vw;"></a>
-                  <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 165vw; left: 2.7vw;"></a>
-                  <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 187vw; left: 2.7vw;"></a>
-                  <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 175vw; left: 27vw;"></a>
-                  <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 215vw; left: 27vw;"></a>
-                  <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 201vw; left: 72vw;"></a>
+
+                  <!-- SECTION 2: MIDGROUND -->
+                  <div id="layer-mid" class="layer layer-mid">
+                    <img src="/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
+                    <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
+                    <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
+                    <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
+                    <a href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
+                    <a href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
+                    <a href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;"></a>
+                    <a href="/labs" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 92vw; left: 60vw;"></a>
+                  </div>
+
+                  <!-- SECTION 3: FOREGROUND -->
+                  <div id="layer-fore" class="layer layer-fore">
+                    <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" />
+                    <div id="disnumber-display">
+                      <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
+                      <span id="disnumber-text">1 2 3 4</span>
+                    </div>
+                    <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" />
+                    <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" />
+                    <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" />
+                    <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" />
+                    <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
+                    <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
+                    <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
+                    <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 162vw; left: 68vw;"><div id="crystal-blur"></div></a>
+                    <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
+                    <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
+                    <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 140vw; left: 11vw;"></a>
+                    <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 139vw; left: 35vw;"></a>
+                    <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 139vw; left: 60vw;"></a>
+                    <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 154vw; left: 28vw;"></a>
+                    <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 165vw; left: 2.7vw;"></a>
+                    <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 187vw; left: 2.7vw;"></a>
+                    <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 175vw; left: 27vw;"></a>
+                    <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 215vw; left: 27vw;"></a>
+                    <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 201vw; left: 72vw;"></a>
+                  </div>
                 </div>
               </div>
             </div>
