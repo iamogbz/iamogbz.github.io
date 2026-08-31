@@ -32,10 +32,10 @@
     <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
 
     <script>
-      const BACKGROUND_SRC = "/assets/images/full_site-optimised.png";
-      const ARTWORK_SRC_TOP = "/assets/images/sky_cutout-optimised.png";
-      const ARTWORK_SRC_MID = "/assets/images/grass_cutout-optimised.png";
-      const ARTWORK_SRC_END = "/assets/images/table_cutout-optimised.png";
+      const BACKGROUND_SRC = "/assets/images/full_site-optimised.svg";
+      const ARTWORK_SRC_TOP = "/assets/images/sky_cutout-optimised.svg";
+      const ARTWORK_SRC_MID = "/assets/images/grass_cutout-optimised.svg";
+      const ARTWORK_SRC_END = "/assets/images/table_cutout-optimised.svg";
       const SKY_PARALLAX = 0.5;
       const GRASS_PARALLAX = 0.8;
       const TABLE_PARALLAX = 1.0;
@@ -578,7 +578,7 @@
                 align-items: center;
                 display: flex;
                 color: #715D3F;
-                filter: blur(0.0313vw);
+                filter: blur(0);
                 font-family: monospace;
                 font-weight: 900;
                 font-size: 1vw;
@@ -601,7 +601,7 @@
                 display: block;
                 position: absolute;
                 box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0.125px);
+                filter: blur(0);
                 width: 1.5vw;
                 aspect-ratio: 1/1;
                 border-radius: 50%;
@@ -656,7 +656,7 @@
                 display: block;
                 position: absolute;
                 box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0.25px);
+                filter: blur(0);
                 width: 2.4vw;
                 aspect-ratio: 7/6;
                 border-radius: 50%;
