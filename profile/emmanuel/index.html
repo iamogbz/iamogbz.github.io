@@ -349,6 +349,48 @@
                 width: 21vw;
                 filter: blur(0.25rem);
               }
+              #hotspot-story::before, #hotspot-story::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.75px);
+                width: 1.5vw;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                background-color: #8C5C20;
+                border: solid 1px #2a1704;
+                background-repeat: no-repeat;
+                background-position: top right, bottom left;
+                background-size: 40% 40%, 80% 80%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 50%, #6C4616 50%, #6C4616 100%);
+                transition: background-position 0.1s ease-in-out;
+                animation: robot-eye-saccade 3s 1s infinite alternate ease-in-out;
+                animation-duration: random(2s, 5s);
+                animation-delay: random(1s, 3s);
+              }
+              @keyframes robot-eye-saccade {
+                0% {
+                  background-position: top right, bottom left;
+                }
+                50% {
+                  background-position: top right, bottom center;
+                }
+                75% {
+                  background-position: top right, bottom right;
+                }
+                100% {
+                  background-position: top right, bottom center;
+                }
+              }
+              #hotspot-story::before {
+                top: 6.5vw;
+                left: 7.3vw;
+              }
+              #hotspot-story::after {
+                top: 6.97vw;
+                left: 11.2vw;
+              }
               #chess-highlight {
                 top: 154vw;
                 left: 30.4vw;
