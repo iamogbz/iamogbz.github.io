@@ -152,76 +152,89 @@
             elem.addEventListener("pointerleave", this._pointerLeaveListener);
             elem.addEventListener("pointercancel", this._pointerLeaveListener);
           });
-          this._scrollWrapper.addEventListener("touchmove", this._scrollListener, { passive: true });
+          window.addEventListener("orientationchange", this._scrollListener);
+          window.addEventListener("resize", this._scrollListener);
           this._scrollWrapper.addEventListener("scroll", this._scrollListener, { passive: true });
-          window.addEventListener("resize", this._scrollListener, { passive: true });
-          window.addEventListener("orientationchange", this._scrollListener, { passive: true });
+          this.updateScroll();
         }
 
         setupTimers() {
-          const disnumberEl = this.shadowRoot.getElementById("disnumber-text");
-          const updateDisnumber = () => {
-            if (disnumberEl) {
-              disnumberEl.textContent = new Date().toTimeString().split(" ")[0].replace(/:/g, " ");
-            }
-          };
-          updateDisnumber();
-          setInterval(updateDisnumber, 1000);
+          const disnumberElement = this.shadowRoot.getElementById("disnumber-text");
+          this.disnumberIntervalId = setInterval(() => {
+            if (!disnumberElement) return window.clearInterval(this.disnumberIntervalId);
+            const timeDigitsRandomised = Array.from(new Set(new Date().toTimeString().substring(0, 8).replace(/\:/g, "") + "0123456789"))
+              .slice(0, 4)
+              .sort(() => Math.random() - 0.5)
+              .join(" ");
+            disnumberElement.innerText = timeDigitsRandomised;
+          }, 600);
         }
-
-        _pointerMoveListener = (e) => {
-          const target = e.currentTarget;
-          const targetId = target?.dataset?.targetId;
-          if (targetId) {
-            const highlight = this.shadowRoot.getElementById(targetId);
-            if (highlight) {
-              highlight.classList.add("active");
-            }
-          }
-        };
-
-        _pointerLeaveListener = (e) => {
-          const target = e.currentTarget;
-          const targetId = target?.dataset?.targetId;
-          if (targetId) {
-            const highlight = this.shadowRoot.getElementById(targetId);
-            if (highlight) {
-              highlight.classList.remove("active");
-            }
-          }
-        };
 
         _scrollListener = (e) => {
           if (!this._ticking) {
-            window.requestAnimationFrame(() => {
-              this.updateParallax();
+            requestAnimationFrame(() => {
+              this.updateScroll(e);
               this._ticking = false;
             });
             this._ticking = true;
           }
         };
 
-        updateParallax() {
-          const scrollTop = this._scrollWrapper.scrollTop;
-          const scrollHeight = this._scrollContent.scrollHeight;
-          const clientHeight = this._scrollWrapper.clientHeight;
-          const maxScroll = Math.max(scrollHeight - clientHeight, 1);
-          this._scrollProgress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerMoveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (!targetElem) return;
+          targetElem.style.opacity = 1;
+        };
 
-          const baseOffset = -this._scrollProgress * 250;
-          this._skyLayer.style.transform = `translateY(${baseOffset * SKY_PARALLAX}vw)`;
-          this._midLayer.style.transform = `translateY(${baseOffset * GRASS_PARALLAX}vw)`;
-          this._foreLayer.style.transform = `translateY(${baseOffset * TABLE_PARALLAX}vw)`;
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerLeaveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (!targetElem) return;
+          targetElem.style.opacity = 0;
+        };
 
-          const bgSizeW = 160;
-          const bgSizeH = bgSizeW / PARALLAX_WH_ASPECT_RATIO;
-          const viewportW = window.innerWidth;
-          const viewportH = window.innerHeight;
-          const currentBgW = (bgSizeW / 100) * viewportW;
-          const currentBgH = (bgSizeH / 100) * viewportW;
-          const maxBgTravel = Math.max(currentBgH - viewportH, 0);
-          const bgTranslateY = -this._scrollProgress * maxBgTravel;
-          this.style.backgroundPositionY = `${bgTranslateY}px`;
+        /**
+         * @param {ScrollEvent} e
+         */
+        updateScroll(e) {
+          const scrollFrame = this._scrollContent;
+          if (!scrollFrame) return;
+          const scrollable = scrollFrame.scrollHeight - window.innerHeight;
+          if (scrollable <= 0) return;
+          const containerUsedForScrollingDomRect = scrollFrame.getBoundingClientRect();
+          const scrollProgress = -containerUsedForScrollingDomRect.top / scrollable;
+          const lastLayerRect = this._foreLayer.getBoundingClientRect();
+          // used to give some extra space at the bottom for possible footer items;
+          const extraBottomHeight = 0 * window.innerWidth;
+          const maxDyPxBase = Math.max(0, lastLayerRect.height - window.innerHeight);
+          const maxDyPx = maxDyPxBase + extraBottomHeight;
+          const BLUR_PX = 9;
+
+          if (this._skyLayer) {
+            const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
+            this._skyLayer.style.transform = `translateY(${Math.min(0, -skyScrollDy)}px)`;
+            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
+            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
+          if (this._midLayer) {
+            const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
+            this._midLayer.style.transform = `translateY(${Math.min(0, -midScrollDy)}px)`;
+            const bgBlur = Math.max(0, scrollProgress - SKY_PARALLAX) * BLUR_PX;
+            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
+          if (this._foreLayer) {
+            const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
+            this._foreLayer.style.transform = `translateY(${Math.min(0, -endScrollDy)}px)`;
+            const bgBlur = Math.max(0, scrollProgress - GRASS_PARALLAX) * BLUR_PX;
+            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
         }
 
         render() {
@@ -354,159 +367,314 @@
                 top: 0;
                 overflow-x: hidden;
                 overflow-y: hidden;
-                will-change: transform;
                 pointer-events: none;
+                user-select: none;
+                will-change: transform;
                 width: 100vw;
-                height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: flex-start;
-              }
-              .layer-sky, .layer-mid, .layer-fore {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 350vw;
-                background-position: center top;
                 background-repeat: no-repeat;
-                background-size: 160vw;
+                background-size: 100vw;
+                background-position: center bottom;
+              }
+              .layer * {
+                user-select: none;
               }
               .layer-sky {
+                height: 94vw;
                 background-image: url('${ARTWORK_SRC_TOP}');
-                z-index: 1;
               }
               .layer-mid {
+                height: 180vw;
                 background-image: url('${ARTWORK_SRC_MID}');
-                z-index: 2;
               }
               .layer-fore {
+                height: 234vw;
                 background-image: url('${ARTWORK_SRC_END}');
-                z-index: 3;
+                overflow: visible;
+              }
+              .layer-fore::after {
+                content: '';
+                display: flex;
+                background-color: black;
+                background-position: center bottom;
+                background-repeat: no-repeat;
+                background-size: 100vw;
+                width: 100vw;
+                height: 100vmax;
+                position: fixed;
+                bottom: -100vmax;
               }
               .highlight-overlay {
+                mix-blend-mode: overlay;
                 position: absolute;
+                transition: opacity 0.15s ease-in-out;
                 opacity: 0;
-                transition: opacity 0.2s ease-in-out;
-                pointer-events: none;
-              }
-              .highlight-overlay.active {
-                opacity: 1;
+                user-select: none;
               }
               .highlight-guide {
                 position: absolute;
                 pointer-events: auto;
                 cursor: pointer;
-                z-index: 10;
+                user-select: none;
               }
               #tower-highlight {
-                top: 36vw;
-                left: 17.5vw;
                 width: 7vw;
+                top: 49vw;
+                left: 19vw;
+                filter: blur(0.25rem);
               }
               #mail-highlight {
-                top: 86vw;
+                width: 14vw;
+                top: 85.3vw;
                 left: 19vw;
-                width: 13.5vw;
-              }
-              #phone-highlight {
-                top: 102.5vw;
-                left: 10vw;
-                width: 12vw;
+                filter: blur(0.125rem);
               }
               #paint-highlight {
+                width: 32vw;
                 top: 84vw;
-                left: 35.8vw;
-                width: 22.5vw;
+                left: 31.4vw;
+                filter: blur(0.5rem);
+              }
+              #phone-highlight {
+                top: 102.3vw;
+                left: 8.4vw;
+                width: 17vw;
               }
               #shrouded-highlight {
-                top: 94.5vw;
-                left: 63.8vw;
-                width: 32vw;
+                top: 94vw;
+                left: 62vw;
+                width: 40vw;
+                filter: blur(0.5rem);
               }
               #disnumber-highlight {
-                top: 142.5vw;
-                left: 13.3vw;
-                width: 17.6vw;
+                top: 140vw;
+                left: 10.6vw;
+                width: 23vw;
+                filter: blur(0.25rem);
               }
               #disnumber-display {
-                position: absolute;
-                top: 142.5vw;
-                left: 13.3vw;
-                width: 17.6vw;
-                height: 17.6vw;
-                display: flex;
+                display: inline-flex;
+                position: relative;
+                top: 142.7vw;
+                left: 18vw;
                 align-items: center;
                 justify-content: center;
-                pointer-events: none;
               }
               #disnumber-cover {
-                position: absolute;
-                width: 100%;
+                width: 8.6vw;
                 opacity: 1;
+                mix-blend-mode: multiply;
+                position: relative;
               }
               #disnumber-text {
-                position: absolute;
-                top: 6.8vw;
-                left: 3.5vw;
+                align-items: center;
+                display: flex;
+                color: #715D3F;
+                filter: blur(0.025rem);
                 font-family: monospace;
-                font-size: 1.2vw;
-                font-weight: bold;
-                color: #55ff55;
-                letter-spacing: 0.2vw;
-                text-shadow: 0 0 5px #55ff55;
-                z-index: 2;
-                transform: rotate(-12deg);
+                font-weight: 900;
+                font-size: 1vw;
+                height: 2.7vw;
+                width: 6vw;
+                justify-content: center;
+                position: absolute;
+                scale: 0.9 1.5;
+                transform: skew(181deg, 353deg);
+                user-select: none;
               }
               #story-highlight {
-                top: 140.5vw;
-                left: 36.8vw;
-                width: 18.5vw;
+                top: 138vw;
+                left: 35.2vw;
+                width: 21vw;
+                filter: blur(0.25rem);
+              }
+              #hotspot-story::before, #hotspot-story::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.75px);
+                width: 1.5vw;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                background-color: #8C5C20;
+                border: solid 1px #2a1704;
+                background-repeat: no-repeat;
+                background-position: top right, bottom left;
+                background-size: 40% 40%, 80% 80%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 50%, #6C4616 50%, #6C4616 100%);
+                transition: background-position 0.1s ease-in-out;
+                animation: robot-eye-saccade 3s 1s infinite alternate ease-in-out;
+                animation-duration: random(2s, 5s);
+                animation-delay: random(1s, 3s);
+              }
+              @keyframes robot-eye-saccade {
+                0% {
+                  background-position: top right, bottom left;
+                }
+                50% {
+                  background-position: top right, bottom center;
+                }
+                75% {
+                  background-position: top right, bottom right;
+                }
+                100% {
+                  background-position: top right, bottom center;
+                }
+              }
+              #hotspot-story::before {
+                top: 6.5vw;
+                left: 7.3vw;
+              }
+              #hotspot-story::after {
+                top: 6.97vw;
+                left: 11.2vw;
               }
               #chess-highlight {
-                top: 154.5vw;
-                left: 30.5vw;
-                width: 24.5vw;
+                top: 154vw;
+                left: 30.4vw;
+                width: 24.2vw;
+                filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
               }
               #cats-highlight {
                 top: 141.5vw;
-                left: 63.8vw;
-                width: 22.5vw;
+                left: 61.5vw;
+                width: 28vw;
+                filter: blur(0.25rem);
+              }
+              #hotspot-cats::before, #hotspot-cats::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.5px);
+                width: 2.4vw;
+                aspect-ratio: 7/6;
+                border-radius: 50%;
+                background-color: #e2b340;
+                border: solid 1px #4e2f0e;
+                background-repeat: no-repeat;
+                background-position: top right, center center;
+                background-size: 40% 40%, 30% 100%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 70%, #e2b340 70%, #e2b340 100%);
+                transition: background-position 0.1s ease-in-out, background-size 0.1s ease-in-out;
+                animation: cat-eye-saccade 15s 5s infinite alternate ease-in-out;
+                animation-timing-function: ease-in-out;
+              }
+              @keyframes cat-eye-saccade {
+                0% {
+                  background-position: top right, top 30%;
+                background-size: 40% 40%, 30% 100%;
+                }
+                5% {
+                  background-position: top right, center 60%;
+                  background-size: 30% 30%, 50% 100%;
+                }
+                50% {
+                  background-position: top right, 30% 50%;
+                  background-size: 40% 40%, 40% 90%;
+                }
+                95% {
+                  background-position: top right, center 40%;
+                  background-size: 50% 50%, 50% 100%;
+                }
+                100% {
+                  background-position: top right, top 70%;
+                  background-size: 40% 40%, 30% 100%;
+                }
+              }
+              #hotspot-cats::before {
+                top: 11.2vw;
+                left: 10.7vw;
+                transform: rotate(5deg);
+              }
+              #hotspot-cats::after {
+                top: 11.5vw;
+                left: 17.6vw;
+                transform: rotate(-5deg);
               }
               #photo-highlight {
-                top: 167vw;
-                left: 4.8vw;
-                width: 19vw;
-              }
-              #crystal-highlight {
-                top: 164vw;
-                left: 71.5vw;
-                width: 25.5vw;
-                filter: blur(0.125rem);
-              }
-              #crystal-blur {
-                position: absolute;
-                top: 164vw;
-                left: 71.5vw;
-                width: 25.5vw;
-                height: 25.5vw;
-                backdrop-filter: blur(0.125rem);
-              }
-              #tiles-highlight {
-                top: 189vw;
-                left: 4.8vw;
-                width: 18.8vw;
+                top: 163vw;
+                left: 1vw;
+                width: 26.5vw;
+                filter: blur(0.25rem);
               }
               #letters-highlight {
-                top: 177vw;
-                left: 29.5vw;
-                width: 35vw;
+                top: 153vw;
+                left: 24vw;
+                width: 54.5vw;
+                filter: blur(0.25rem);
               }
               #blog-highlight {
-                top: 216.5vw;
-                left: 29.5vw;
-                width: 35vw;
+                top: 175vw;
+                left: 25.5vw;
+                width: 47.8vw;
+                filter: blur(0.25rem);
+              }
+              #crystal-highlight {
+                top: 163vw;
+                left: 68.5vw;
+                width: 31.8vw;
+                filter: blur(0.25rem);
+              }
+              #crystal-blur {
+                top: 2.6vw;
+                left: 3.3vw;
+                display: block;
+                width: 26vw;
+                aspect-ratio: 1 / 1;
+                border-radius: 50%;
+                position: relative;
+                transition-duration: 0.3s;
+                transition-timing: ease-out;
+                transition-property: animation, mask, border-radius, opacity;
+                pointer-events: auto;
+                animation: hueloop 5s ease-in-out infinite alternate, bghue 3s ease-in-out infinite alternate, bgblur 4s ease-in-out infinite alternate;
+                mask-image: radial-gradient(circle, white 30%, transparent 120%);
+                mask-position: center;
+                mask-repeat: no-repeat;
+                mask-size: 100%;
+                opacity: 1;
+              }
+              #crystal-blur:hover {
+                opacity: 0;
+              }
+              @keyframes hueloop {
+                0% {
+                  filter: hue-rotate(0deg);
+                }
+                50% {
+                  filter: hue-rotate(180deg);
+                }
+                100% {
+                  filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bghue {
+                0% {
+                  backdrop-filter: hue-rotate(0deg);
+                }
+                50% {
+                  backdrop-filter: hue-rotate(180deg);
+                }
+                100% {
+                  backdrop-filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bgblur {
+                0% {
+                  backdrop-filter: blur(4px);
+                }
+                100% {
+                  backdrop-filter: blur(16px);
+                }
+              }
+              #tiles-highlight {
+                top: 186vw;
+                left: 0vw;
+                width: 28vw;
                 filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
               }
               #mouse-highlight {
                 top: 199.5vw;
