@@ -37,6 +37,7 @@
       const GRASS_PARALLAX = 0.8;
       const TABLE_PARALLAX = 1.0;
       const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
+      const WELCOME_MESSAGE = "Welcome to my world";
 
       class ParallaxArtExplorer extends HTMLElement {
         constructor() {
@@ -44,6 +45,11 @@
           this.attachShadow({ mode: "open" });
           this._ticking = false;
           this._scrollProgress = 0;
+          this._pointerX = window.innerWidth / 2;
+          this._pointerY = window.innerHeight / 2;
+          this._dotX = window.innerWidth / 2;
+          this._dotY = window.innerHeight / 2;
+          this._cursorAnimId = null;
         }
 
         connectedCallback() {
@@ -52,9 +58,14 @@
           this.setupEvents();
           this.setupTimers();
           this.awaitAssetsLoaded();
+          this.initCursorBubble();
         }
 
         disconnectedCallback() {
+          if (this._cursorAnimId) {
+            cancelAnimationFrame(this._cursorAnimId);
+          }
+          window.removeEventListener("pointermove", this._globalPointerMoveListener);
           this._scrollWrapper.removeEventListener("touchmove", this._scrollListener);
           this._scrollWrapper.removeEventListener("scroll", this._scrollListener);
           window.removeEventListener("resize", this._scrollListener);
@@ -70,6 +81,7 @@
 
         cacheElements() {
           this._loadingOverlay = this.shadowRoot.getElementById("loading-overlay");
+          this._cursorBubble = this.shadowRoot.getElementById("cursor-bubble");
           this._scrollWrapper = this.shadowRoot.getElementById("scroll-wrapper");
           this._scrollContent = this.shadowRoot.getElementById("scroll-content");
           this._scrollFrame = this.shadowRoot.getElementById("scroll-frame");
@@ -98,7 +110,41 @@
           }
         }
 
+        initCursorBubble() {
+          const bubble = this._cursorBubble;
+          if (!bubble) return;
+
+          // Smooth lerp loop for dot cursor following
+          const animate = () => {
+            const ease = bubble.classList.contains("dot") ? 0.2 : 0.08;
+            this._dotX += (this._pointerX - this._dotX) * ease;
+            this._dotY += (this._pointerY - this._dotY) * ease;
+
+            bubble.style.transform = `translate3d(${this._dotX}px, ${this._dotY}px, 0) translate(-50%, -50%)`;
+            this._cursorAnimId = requestAnimationFrame(animate);
+          };
+          this._cursorAnimId = requestAnimationFrame(animate);
+
+          // Reveal bubble once loaded, then transform to tiny dot after a short duration
+          setTimeout(() => {
+            bubble.classList.add("visible");
+          }, 300);
+
+          setTimeout(() => {
+            bubble.classList.add("transforming");
+            setTimeout(() => {
+              bubble.classList.add("dot");
+            }, 300);
+          }, 2800);
+        }
+
+        _globalPointerMoveListener = (e) => {
+          this._pointerX = e.clientX;
+          this._pointerY = e.clientY;
+        };
+
         setupEvents() {
+          window.addEventListener("pointermove", this._globalPointerMoveListener, { passive: true });
           this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
             elem.addEventListener("pointerenter", this._pointerMoveListener);
             elem.addEventListener("pointermove", this._pointerMoveListener);
@@ -203,6 +249,57 @@
                 opacity: 0;
                 visibility: hidden;
                 pointer-events: none;
+              }
+              .cursor-bubble {
+                position: fixed;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                z-index: 999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 0.6rem 1.2rem;
+                border-radius: 9999px;
+                background-color: rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                color: #ffffff;
+                font-size: 0.9rem;
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                white-space: nowrap;
+                opacity: 0;
+                transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(0.9);
+                transition: opacity 0.4s ease-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.4s ease-out, height 0.4s ease-out, padding 0.4s ease-out, background-color 0.4s ease-out, border-color 0.4s ease-out;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+              }
+              .cursor-bubble.visible {
+                opacity: 1;
+                transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(1);
+              }
+              .cursor-bubble.transforming span {
+                opacity: 0;
+                transform: scale(0.6);
+                transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+              }
+              .cursor-bubble.dot {
+                padding: 0;
+                width: 8px;
+                height: 8px;
+                min-width: 8px;
+                min-height: 8px;
+                border-radius: 50%;
+                background-color: #ffffff;
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+                transition: opacity 0.3s ease-out, width 0.3s ease-out, height 0.3s ease-out, background-color 0.3s ease-out;
+              }
+              .cursor-bubble.dot span {
+                display: none;
               }
               .scroll-container {
                 position: fixed;
@@ -420,6 +517,9 @@
             </style>
             <div id="loading-overlay" class="loading-overlay">
               <og-logo width="160px"></og-logo>
+            </div>
+            <div id="cursor-bubble" class="cursor-bubble">
+              <span>${WELCOME_MESSAGE}</span>
             </div>
             <div class="scroll-container">
               <div class="scroll-content-static" id="scroll-wrapper">
