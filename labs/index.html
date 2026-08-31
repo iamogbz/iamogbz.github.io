@@ -3,67 +3,851 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ongoing Projects and Experiments</title>
-    <meta name="description" content="Ogbizi Creation Labs" />
-    <meta name="theme-color" content="#000" />
+    <title>Ogbizi Creation Labs - Experiments & Prototypes</title>
+    <meta
+      name="description"
+      content="A CRT monitor bank window into active prototypes, software experiments, and open-source explorations by Emmanuel Ogbizi."
+    />
+    <meta name="theme-color" content="#0a0a0c" />
     <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --color-bg: #070709;
+        --color-surface: rgba(18, 18, 24, 0.75);
+        --color-accent: #00ffaa;
+        --color-accent-dim: rgba(0, 255, 170, 0.15);
+        --color-amber: #ffb703;
+        --color-cyan: #05d9e8;
+        --color-magenta: #ff2a6d;
+        --color-text-bright: #f0fdf4;
+        --color-text-muted: #8892b0;
+        --crt-scanline-color: rgba(0, 0, 0, 0.45);
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
       html,
       body {
         margin: 0;
         padding: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: #000;
+        min-height: 100vh;
+        background-color: var(--color-bg);
+        background-image: radial-gradient(circle at 50% 10%, rgba(16, 30, 24, 0.45), transparent 70%),
+          url("/assets/images/background.jpg");
         background-position: center top;
         background-repeat: no-repeat;
         background-size: cover;
-        color: #fff;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
+        background-attachment: fixed;
+        color: var(--color-text-bright);
+        font-family: var(--font-sans);
         overflow-x: hidden;
-        overflow-y: hidden;
-        overscroll-behavior: none;
       }
 
-      body {
-        background-image: url("/assets/images/background.jpg");
+      /* CRT Global Flicker and Glow */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.8) 100%);
+        z-index: 99;
       }
 
-      #wrapper {
-        background-color: color-mix(in srgb, #000 80%, transparent);
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        background: rgba(8, 8, 12, 0.82);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0.85rem 1.5rem;
+      }
+
+      .header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .brand-group {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+      }
+
+      .brand-title {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        width: 100vw;
-        height: 100vh;
-        cursor: pointer;
       }
 
-      #view-btn {
+      .brand-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        text-decoration: none;
-        color: white;
-        background-color: FFFFFF00;
-        corner-shape: superellipse(2);
-        border: solid #ffffff00 0.2rem;
-        border-radius: 1rem;
-        padding: 1rem 2rem;
-        text-align: center;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        color: var(--color-text-bright);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
-      #view-btn:hover {
-        border-radius: 4rem;
-        background-color: #ffffff11;
-        border-color: #ffffffff;
+      .brand-badge {
+        font-family: var(--font-mono);
+        font-size: 0.65rem;
+        font-weight: 700;
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+        background: rgba(0, 255, 170, 0.15);
+        color: var(--color-accent);
+        border: 1px solid rgba(0, 255, 170, 0.4);
+        letter-spacing: 0.05em;
+      }
+
+      .brand-subtitle {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        font-family: var(--font-mono);
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .nav-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.85rem;
+        color: var(--color-text-bright);
+        text-decoration: none;
+        padding: 0.55rem 1.1rem;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      .nav-link:hover {
+        background: rgba(0, 255, 170, 0.18);
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+        transform: translateY(-1px);
+        box-shadow: 0 0 16px rgba(0, 255, 170, 0.25);
+      }
+
+      .status-pill {
+        display: none;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--color-accent);
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        background: rgba(0, 255, 170, 0.08);
+        border: 1px solid rgba(0, 255, 170, 0.25);
+      }
+
+      @media (min-width: 768px) {
+        .status-pill {
+          display: inline-flex;
+        }
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--color-accent);
+        box-shadow: 0 0 8px var(--color-accent);
+        animation: pulse-dot 2s infinite ease-in-out;
+      }
+
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.8);
+        }
+      }
+
+      /* Main Content Layout */
+      main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 5rem;
+      }
+
+      .hero-terminal {
+        margin-bottom: 2.5rem;
+        background: rgba(14, 15, 20, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 14px;
+        padding: 1.5rem 1.75rem;
+        backdrop-filter: blur(12px);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-terminal::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, var(--color-accent), var(--color-cyan), var(--color-magenta));
+      }
+
+      .terminal-prompt {
+        font-family: var(--font-mono);
+        font-size: 0.95rem;
+        color: var(--color-accent);
+        margin-bottom: 0.4rem;
+      }
+
+      .terminal-desc {
+        color: var(--color-text-muted);
+        font-size: 0.95rem;
+        line-height: 1.6;
+        margin: 0;
+      }
+
+      /* CRT Grid Bank */
+      .crt-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.75rem;
+      }
+
+      @media (min-width: 640px) {
+        .crt-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .crt-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      /* CRT Unit Monitor Shell */
+      .crt-unit {
+        position: relative;
+        background: linear-gradient(145deg, #1b1c22 0%, #111216 100%);
+        border: 2px solid #2d2e38;
+        border-radius: 18px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+        transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        overflow: hidden;
+      }
+
+      .crt-unit:hover {
+        transform: translateY(-4px);
+        border-color: rgba(0, 255, 170, 0.6);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.8), 0 0 24px rgba(0, 255, 170, 0.2);
+      }
+
+      .crt-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #7d859a;
+        letter-spacing: 0.08em;
+      }
+
+      .crt-ch-id {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .crt-led {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #ff3b30;
+        box-shadow: 0 0 6px #ff3b30;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .crt-unit:hover .crt-led {
+        background-color: var(--color-accent);
+        box-shadow: 0 0 8px var(--color-accent);
+      }
+
+      .crt-tag {
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.15rem 0.45rem;
+        border-radius: 4px;
+      }
+
+      /* CRT Screen Bezel & Tube */
+      .crt-screen-bezel {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        background: #020203;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 2px solid #0a0b0e;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.95);
+      }
+
+      .crt-screen-inner {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #050608;
+      }
+
+      /* Scanlines & Phosphor Lines */
+      .crt-scanlines {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          to bottom,
+          rgba(255, 255, 255, 0) 50%,
+          rgba(0, 0, 0, 0.5) 51%
+        );
+        background-size: 100% 4px;
+        z-index: 5;
+        opacity: 0.75;
+      }
+
+      /* Glass Screen Glare */
+      .crt-screen-glare {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.08) 0%,
+          rgba(255, 255, 255, 0.01) 40%,
+          transparent 41%
+        );
+        z-index: 6;
+      }
+
+      /* Noise Canvas and Procedural Animated Art */
+      .crt-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .crt-hud-text {
+        position: absolute;
+        bottom: 0.6rem;
+        left: 0.75rem;
+        font-family: var(--font-mono);
+        font-size: 0.7rem;
+        color: rgba(0, 255, 170, 0.85);
+        z-index: 4;
+        text-shadow: 0 0 6px rgba(0, 255, 170, 0.7);
+        letter-spacing: 0.05em;
+      }
+
+      /* CRT Monitor Chassis Controls */
+      .crt-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.25rem 0.25rem 0;
+      }
+
+      .crt-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--color-text-bright);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        margin: 0;
+      }
+
+      .crt-unit:hover .crt-title {
+        color: var(--color-accent);
+      }
+
+      .crt-arrow {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+        transition: transform 0.25s ease, color 0.25s ease;
+      }
+
+      .crt-unit:hover .crt-arrow {
+        color: var(--color-accent);
+        transform: translate(2px, -2px);
+      }
+
+      .crt-desc {
+        font-size: 0.8rem;
+        color: var(--color-text-muted);
+        line-height: 1.45;
+        margin: 0;
+      }
+
+      .crt-footer-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0.4rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        font-family: var(--font-mono);
+        font-size: 0.68rem;
+        color: #636b7f;
+      }
+
+      .crt-url-preview {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 75%;
+      }
+
+      .crt-status-state {
+        color: var(--color-accent);
       }
     </style>
     <script src="/components/Logo.js"></script>
   </head>
-  <body tabindex="-1">
-    <div id="wrapper">
-      <og-logo width="192px"></og-logo>
-      <a id="view-btn" href="#">VIEW EXPERIMENTS</a>
-    </div>
+
+  <body>
+    <header>
+      <div class="header-container">
+        <div class="brand-group">
+          <og-logo width="48px"></og-logo>
+          <div class="brand-title">
+            <span class="brand-name">
+              OGBIZI CREATION LABS
+              <span class="brand-badge">LIVE CRT FEED</span>
+            </span>
+            <span class="brand-subtitle">Window into software experiments & prototypes</span>
+          </div>
+        </div>
+        <div class="nav-actions">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>FEED ONLINE (25 NODES)</span>
+          </div>
+          <a class="nav-link" href="https://ogbizi.com/">
+            <span>&larr;</span>
+            <span>BACK TO HOME</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="hero-terminal">
+        <div class="terminal-prompt">$ sys.experiments.status --all</div>
+        <p class="terminal-desc">
+          Welcome to the experimental lab monitor bank. Each display terminal represents an active interactive prototype,
+          algorithmic sandbox, testing harness, or utility created by Emmanuel Ogbizi. Click on any monitor window to launch the experiment.
+        </p>
+      </div>
+
+      <div class="crt-grid" id="experiments-grid"></div>
+    </main>
+
+    <script>
+      const EXPERIMENTS = [
+        {
+          title: "Home",
+          url: "https://ogbizi.com/",
+          category: "PORTAL",
+          desc: "Root nexus and main entrance to the House of Ogbizi world.",
+          theme: "green",
+          pattern: "radar"
+        },
+        {
+          title: "AnimaTerm",
+          url: "https://ogbizi.com/animaterm/",
+          category: "CLI / ANIMATION",
+          desc: "Terminal animation framework for CLI apps with smooth frame rendering.",
+          theme: "cyan",
+          pattern: "sine"
+        },
+        {
+          title: "Card Gems",
+          url: "https://ogbizi.com/card-gems/",
+          category: "UI / EXPERIMENT",
+          desc: "Interactive playing card shader simulations and tactile gem physics.",
+          theme: "magenta",
+          pattern: "matrix"
+        },
+        {
+          title: "Chrome Alt Tabs",
+          url: "https://ogbizi.com/chrome-alt-tabs/",
+          category: "BROWSER EXTENSION",
+          desc: "Quick tab-switching keyboard shortcuts and switcher overlay for Chrome.",
+          theme: "amber",
+          pattern: "bars"
+        },
+        {
+          title: "Demo Shifting Sea",
+          url: "https://ogbizi.com/demo-shifting-sea/",
+          category: "SIMULATION / WEBGL",
+          desc: "Dynamic fluid physics simulator and wave displacement canvas.",
+          theme: "cyan",
+          pattern: "waves"
+        },
+        {
+          title: "Disnumber",
+          url: "https://ogbizi.com/disnumber/",
+          category: "GAME / LOGIC",
+          desc: "Fast-paced digital number manipulation and mathematical deduction game.",
+          theme: "amber",
+          pattern: "numbers"
+        },
+        {
+          title: "Evil Forest",
+          url: "https://ogbizi.com/evil-forest/",
+          category: "GAME / ROGUELIKE",
+          desc: "Dark procedural fantasy adventure exploring an unpredictable shifting forest.",
+          theme: "magenta",
+          pattern: "tree"
+        },
+        {
+          title: "Jest Mock Module",
+          url: "https://ogbizi.com/jest-mock-module/",
+          category: "DEV TOOLS",
+          desc: "Seamless module mocking and isolation helpers for Jest test suites.",
+          theme: "green",
+          pattern: "mesh"
+        },
+        {
+          title: "Jest Mock Props",
+          url: "https://ogbizi.com/jest-mock-props/",
+          category: "DEV TOOLS",
+          desc: "Dynamic property spy and prop assertion utilities for component testing.",
+          theme: "cyan",
+          pattern: "radar"
+        },
+        {
+          title: "Jest React Snapshot",
+          url: "https://ogbizi.com/jest-react-snapshot/",
+          category: "DEV TOOLS",
+          desc: "Fast snapshot comparison and visual tree diff runner for React tests.",
+          theme: "green",
+          pattern: "bars"
+        },
+        {
+          title: "macOS Adobe XD QuickLook",
+          url: "https://ogbizi.com/macos-quick-look-plugin-adobe-xd/",
+          category: "MACOS PLUGIN",
+          desc: "Native macOS Finder Quick Look preview generator for Adobe XD designs.",
+          theme: "magenta",
+          pattern: "sine"
+        },
+        {
+          title: "Notetris",
+          url: "https://ogbizi.com/notetris/",
+          category: "APP / EXPERIMENT",
+          desc: "Tetris puzzle mechanics combined with quick markdown note compilation.",
+          theme: "cyan",
+          pattern: "matrix"
+        },
+        {
+          title: "NVShim",
+          url: "https://ogbizi.com/nvshim/",
+          category: "SYSTEM UTILITY",
+          desc: "Lightweight, zero-overhead Node Version Manager shim runner.",
+          theme: "green",
+          pattern: "sine"
+        },
+        {
+          title: "Oh My WCS",
+          url: "https://ogbizi.com/oh-my-wcs/",
+          category: "WEB COMPONENTS",
+          desc: "Zero-dependency reusable native web components collection suite.",
+          theme: "amber",
+          pattern: "waves"
+        },
+        {
+          title: "Oh My Scripts",
+          url: "https://ogbizi.com/oh-my-scripts/",
+          category: "CLI / WORKFLOW",
+          desc: "Curated collection of developer automation and productivity shell routines.",
+          theme: "cyan",
+          pattern: "numbers"
+        },
+        {
+          title: "Portmanteaux",
+          url: "https://ogbizi.com/portmanteaux/",
+          category: "NLP / GENERATOR",
+          desc: "Linguistic word synthesis and intelligent portmanteau combiner.",
+          theme: "magenta",
+          pattern: "tree"
+        },
+        {
+          title: "PyEx",
+          url: "https://ogbizi.com/pyex/",
+          category: "PYTHON / CORE",
+          desc: "Functional programming extensions and expressive utilities for Python.",
+          theme: "green",
+          pattern: "mesh"
+        },
+        {
+          title: "Python Git Hooks",
+          url: "https://ogbizi.com/python-githooks/",
+          category: "AUTOMATION",
+          desc: "Configurable Git commit verification and workflow hooks runner in Python.",
+          theme: "amber",
+          pattern: "radar"
+        },
+        {
+          title: "React Ducks",
+          url: "https://ogbizi.com/react-ducks/",
+          category: "REACT / STATE",
+          desc: "Ergonomic Redux Ducks architecture implementation for modern React.",
+          theme: "cyan",
+          pattern: "sine"
+        },
+        {
+          title: "React Global Local State",
+          url: "https://ogbizi.com/react-global-local-state/",
+          category: "REACT / STATE",
+          desc: "Scoped state boundaries and unified global/local state management.",
+          theme: "magenta",
+          pattern: "matrix"
+        },
+        {
+          title: "React Mirror",
+          url: "https://ogbizi.com/react-mirror/",
+          category: "REACT / DOM",
+          desc: "Synchronized dual-pane DOM and state reflection engine.",
+          theme: "green",
+          pattern: "waves"
+        },
+        {
+          title: "React Router Chart",
+          url: "https://ogbizi.com/react-router-chart/",
+          category: "REACT / DATA VIZ",
+          desc: "Visual route tree inspector and hierarchical application diagrammer.",
+          theme: "amber",
+          pattern: "bars"
+        },
+        {
+          title: "React State URL Fragment",
+          url: "https://ogbizi.com/react-state-url-fragment/",
+          category: "REACT / ROUTING",
+          desc: "Bi-directional component state synchronization via browser URL hash fragments.",
+          theme: "cyan",
+          pattern: "numbers"
+        },
+        {
+          title: "Unit Converter",
+          url: "https://ogbizi.com/unit-converter/",
+          category: "TOOL / PRECISION",
+          desc: "High-precision physical, scientific, and computing unit conversion suite.",
+          theme: "green",
+          pattern: "mesh"
+        },
+        {
+          title: "Webpack Compiler Plugin",
+          url: "https://ogbizi.com/webpack-compiler-plugin/",
+          category: "BUILD TOOL",
+          desc: "Custom Webpack compiler hook interceptors for asset optimization.",
+          theme: "magenta",
+          pattern: "radar"
+        }
+      ];
+
+      const grid = document.getElementById("experiments-grid");
+
+      // Generate CRT Units
+      EXPERIMENTS.forEach((exp, idx) => {
+        const unit = document.createElement("a");
+        unit.className = "crt-unit";
+        unit.href = exp.url;
+        unit.target = "_blank";
+        unit.rel = "noopener noreferrer";
+
+        const chId = String(idx + 1).padStart(2, "0");
+
+        unit.innerHTML = `
+          <div class="crt-top-bar">
+            <span class="crt-ch-id">
+              <span class="crt-led"></span>
+              <span>CH-${chId}</span>
+            </span>
+            <span class="crt-tag">${exp.category}</span>
+          </div>
+
+          <div class="crt-screen-bezel">
+            <div class="crt-screen-inner">
+              <canvas class="crt-canvas" data-pattern="${exp.pattern}" data-theme="${exp.theme}" width="320" height="200"></canvas>
+              <div class="crt-hud-text">&gt; ${exp.title.toUpperCase()}</div>
+              <div class="crt-scanlines"></div>
+              <div class="crt-screen-glare"></div>
+            </div>
+          </div>
+
+          <div class="crt-info">
+            <h3 class="crt-title">
+              <span>${exp.title}</span>
+              <span class="crt-arrow">&nearr;</span>
+            </h3>
+            <p class="crt-desc">${exp.desc}</p>
+          </div>
+
+          <div class="crt-footer-strip">
+            <span class="crt-url-preview">${exp.url.replace(/^https?:\/\//, "")}</span>
+            <span class="crt-status-state">ONLINE</span>
+          </div>
+        `;
+
+        grid.appendChild(unit);
+      });
+
+      // CRT Animated Visual Canvas Engine
+      const canvases = document.querySelectorAll(".crt-canvas");
+      const THEMES = {
+        green: "#00ffaa",
+        cyan: "#05d9e8",
+        magenta: "#ff2a6d",
+        amber: "#ffb703"
+      };
+
+      const runningCanvases = [];
+
+      canvases.forEach((canvas) => {
+        const ctx = canvas.getContext("2d");
+        const pattern = canvas.dataset.pattern || "sine";
+        const color = THEMES[canvas.dataset.theme] || "#00ffaa";
+        runningCanvases.push({ canvas, ctx, pattern, color, step: Math.random() * 100 });
+      });
+
+      let animId = null;
+      let lastTime = 0;
+
+      function renderCRT(timestamp) {
+        if (!lastTime) lastTime = timestamp;
+        const delta = timestamp - lastTime;
+
+        if (delta > 40) {
+          // ~25fps retro CRT refresh
+          lastTime = timestamp;
+
+          runningCanvases.forEach((item) => {
+            const { canvas, ctx, pattern, color } = item;
+            const w = canvas.width;
+            const h = canvas.height;
+            item.step += 0.08;
+
+            ctx.fillStyle = "rgba(4, 6, 8, 0.4)";
+            ctx.fillRect(0, 0, w, h);
+
+            ctx.strokeStyle = color;
+            ctx.fillStyle = color;
+            ctx.lineWidth = 1.5;
+
+            if (pattern === "radar") {
+              const cx = w / 2;
+              const cy = h / 2;
+              const radius = 60;
+              ctx.beginPath();
+              ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+              ctx.arc(cx, cy, radius * 0.5, 0, Math.PI * 2);
+              ctx.stroke();
+
+              const angle = item.step;
+              ctx.beginPath();
+              ctx.moveTo(cx, cy);
+              ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+              ctx.stroke();
+            } else if (pattern === "sine") {
+              ctx.beginPath();
+              for (let x = 0; x < w; x += 4) {
+                const y = h / 2 + Math.sin(x * 0.04 + item.step * 2) * 35 + Math.sin(x * 0.08 - item.step) * 12;
+                if (x === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+              }
+              ctx.stroke();
+            } else if (pattern === "waves") {
+              for (let layer = 0; layer < 3; layer++) {
+                ctx.beginPath();
+                for (let x = 0; x < w; x += 6) {
+                  const y = h * 0.4 + layer * 25 + Math.sin(x * 0.03 + item.step + layer) * 16;
+                  if (x === 0) ctx.moveTo(x, y);
+                  else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+              }
+            } else if (pattern === "bars") {
+              const count = 16;
+              const bw = (w - 40) / count;
+              for (let i = 0; i < count; i++) {
+                const bh = Math.abs(Math.sin(item.step + i * 0.5)) * (h * 0.6) + 10;
+                ctx.fillRect(20 + i * bw, h - 20 - bh, bw - 4, bh);
+              }
+            } else if (pattern === "matrix" || pattern === "numbers") {
+              ctx.font = "12px monospace";
+              for (let col = 0; col < 8; col++) {
+                const char = Math.floor(Math.random() * 16).toString(16);
+                const cy = ((item.step * 40 + col * 30) % h) + 10;
+                ctx.fillText(char, 30 + col * 35, cy);
+              }
+            } else {
+              // Mesh / grid pattern
+              ctx.beginPath();
+              const spacing = 28;
+              const shift = (item.step * 10) % spacing;
+              for (let x = shift; x < w; x += spacing) {
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+              }
+              for (let y = shift; y < h; y += spacing) {
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+              }
+              ctx.globalAlpha = 0.35;
+              ctx.stroke();
+              ctx.globalAlpha = 1.0;
+            }
+          });
+        }
+
+        animId = requestAnimationFrame(renderCRT);
+      }
+
+      animId = requestAnimationFrame(renderCRT);
+    </script>
   </body>
 </html>

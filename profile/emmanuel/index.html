@@ -64,6 +64,11 @@
         disconnectedCallback() {
           if (this._cursorAnimId) {
             cancelAnimationFrame(this._cursorAnimId);
+            this._cursorAnimId = null;
+          }
+          if (this.disnumberIntervalId) {
+            clearInterval(this.disnumberIntervalId);
+            this.disnumberIntervalId = null;
           }
           window.removeEventListener("pointermove", this._globalPointerMoveListener);
           this._scrollWrapper.removeEventListener("touchmove", this._scrollListener);
@@ -111,35 +116,57 @@
           }
         }
 
-        initCursorBubble() {
+        startCursorAnimation() {
+          if (this._cursorAnimId) return;
           const bubble = this._cursorBubble;
           if (!bubble) return;
 
-          // Smooth lerp loop for dot cursor following
           const animate = () => {
             const isDot = bubble.classList.contains("dot") && !bubble.classList.contains("has-title");
             const ease = isDot ? 0.92 : 0.2;
-            this._dotX += (this._pointerX - this._dotX) * ease;
-            this._dotY += (this._pointerY - this._dotY) * ease;
+            const dx = this._pointerX - this._dotX;
+            const dy = this._pointerY - this._dotY;
+
+            if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+              this._dotX = this._pointerX;
+              this._dotY = this._pointerY;
+              bubble.style.transform = `translate3d(${this._dotX}px, ${this._dotY}px, 0) translate(-50%, -50%)`;
+              this._cursorAnimId = null;
+              return;
+            }
+
+            this._dotX += dx * ease;
+            this._dotY += dy * ease;
 
             bubble.style.transform = `translate3d(${this._dotX}px, ${this._dotY}px, 0) translate(-50%, -50%)`;
             this._cursorAnimId = requestAnimationFrame(animate);
           };
+
           this._cursorAnimId = requestAnimationFrame(animate);
+        }
+
+        initCursorBubble() {
+          const bubble = this._cursorBubble;
+          if (!bubble) return;
+
+          this.startCursorAnimation();
 
           // Reveal bubble once loaded, then transform to tiny dot after a short duration
           setTimeout(() => {
             bubble.classList.add("visible");
+            this.startCursorAnimation();
           }, 300);
 
           setTimeout(() => {
             bubble.classList.add("dot");
+            this.startCursorAnimation();
           }, 3000);
         }
 
         _globalPointerMoveListener = (e) => {
           this._pointerX = e.clientX;
           this._pointerY = e.clientY;
+          this.startCursorAnimation();
         };
 
         setupEvents() {
@@ -184,14 +211,20 @@
          */
         _pointerMoveListener = (e) => {
           /** @type {HTMLDivElement} */
-          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          const targetId = e.currentTarget?.dataset?.targetId || e.target?.dataset?.targetId;
+          const targetElem = targetId ? this.shadowRoot.getElementById(targetId) : null;
           if (targetElem) targetElem.style.opacity = 1;
 
-          const link = e.target.closest("a");
+          const link = e.currentTarget?.closest("a") || e.target.closest("a");
           const title = link?.getAttribute("title") || link?.title;
           if (title && this._cursorBubble && this._cursorBubbleText) {
-            this._cursorBubbleText.innerText = title;
-            this._cursorBubble.classList.add("has-title");
+            if (this._cursorBubbleText.innerText !== title) {
+              this._cursorBubbleText.innerText = title;
+            }
+            if (!this._cursorBubble.classList.contains("has-title")) {
+              this._cursorBubble.classList.add("has-title");
+              this.startCursorAnimation();
+            }
           }
         };
 
@@ -200,11 +233,13 @@
          */
         _pointerLeaveListener = (e) => {
           /** @type {HTMLDivElement} */
-          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          const targetId = e.currentTarget?.dataset?.targetId || e.target?.dataset?.targetId;
+          const targetElem = targetId ? this.shadowRoot.getElementById(targetId) : null;
           if (targetElem) targetElem.style.opacity = 0;
 
-          if (this._cursorBubble) {
+          if (this._cursorBubble && this._cursorBubble.classList.contains("has-title")) {
             this._cursorBubble.classList.remove("has-title");
+            this.startCursorAnimation();
           }
         };
 
@@ -219,29 +254,19 @@
           const containerUsedForScrollingDomRect = scrollFrame.getBoundingClientRect();
           const scrollProgress = -containerUsedForScrollingDomRect.top / scrollable;
           const lastLayerRect = this._foreLayer.getBoundingClientRect();
-          // used to give some extra space at the bottom for possible footer items;
-          const extraBottomHeight = 0 * window.innerWidth;
-          const maxDyPxBase = Math.max(0, lastLayerRect.height - window.innerHeight);
-          const maxDyPx = maxDyPxBase + extraBottomHeight;
-          const BLUR_PX = 9;
+          const maxDyPx = Math.max(0, lastLayerRect.height - window.innerHeight);
 
           if (this._skyLayer) {
             const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
-            this._skyLayer.style.transform = `translateY(${Math.min(0, -skyScrollDy)}px)`;
-            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
-            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+            this._skyLayer.style.transform = `translate3d(0, ${Math.min(0, -skyScrollDy)}px, 0)`;
           }
           if (this._midLayer) {
             const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
-            this._midLayer.style.transform = `translateY(${Math.min(0, -midScrollDy)}px)`;
-            const bgBlur = Math.max(0, scrollProgress - SKY_PARALLAX) * BLUR_PX;
-            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+            this._midLayer.style.transform = `translate3d(0, ${Math.min(0, -midScrollDy)}px, 0)`;
           }
           if (this._foreLayer) {
             const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
-            this._foreLayer.style.transform = `translateY(${Math.min(0, -endScrollDy)}px)`;
-            const bgBlur = Math.max(0, scrollProgress - GRASS_PARALLAX) * BLUR_PX;
-            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+            this._foreLayer.style.transform = `translate3d(0, ${Math.min(0, -endScrollDy)}px, 0)`;
           }
         }
 
@@ -296,6 +321,7 @@
                 width: auto;
                 max-width: 90vw;
                 height: auto;
+                will-change: transform;
                 transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(0.9);
                 transition: corner-shape 0.3s ease-in-out, scale 0.3s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
@@ -479,6 +505,7 @@
                 filter: drop-shadow(0 0.15vw 0.3vw rgba(0, 0, 0, 0.25));
                 animation: paint-splatter-anim 4s infinite cubic-bezier(0.22, 1, 0.36, 1);
                 transform-origin: center center;
+                will-change: transform, opacity;
               }
               .paint-blob.b1 { background: #ff2a6d; width: 1.8vw; height: 1.6vw; top: 22%; left: 35%; border-radius: 68% 32% 54% 46% / 42% 65% 35% 58%; --dx: -2.5vw; --dy: -2.0vw; animation-delay: 0s; animation-duration: 3.8s; }
               .paint-blob.b2 { background: #05d9e8; width: 2.2vw; height: 2.3vw; top: 18%; left: 58%; border-radius: 41% 59% 45% 55% / 59% 38% 62% 41%; --dx: 2.2vw; --dy: -2.8vw; animation-delay: 0.8s; animation-duration: 4.2s; }
@@ -492,23 +519,23 @@
               .paint-blob.b10 { background: #9d4edd; width: 2.0vw; height: 1.8vw; top: 60%; left: 80%; border-radius: 52% 48% 63% 37% / 37% 59% 41% 63%; --dx: 3.5vw; --dy: 1.2vw; animation-delay: 0.9s; animation-duration: 4.6s; }
               @keyframes paint-splatter-anim {
                 0% {
-                  transform: translate(0, 0) scale(0.1) rotate(0deg);
+                  transform: translate3d(0, 0, 0) scale(0.1) rotate(0deg);
                   opacity: 0;
                 }
                 15% {
-                  transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1.15) rotate(15deg);
+                  transform: translate3d(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4), 0) scale(1.15) rotate(15deg);
                   opacity: 0.95;
                 }
                 35% {
-                  transform: translate(var(--dx), var(--dy)) scale(1) rotate(-8deg);
+                  transform: translate3d(var(--dx), var(--dy), 0) scale(1) rotate(-8deg);
                   opacity: 0.9;
                 }
                 75% {
-                  transform: translate(calc(var(--dx) * 1.3), calc(var(--dy) * 1.3 + 0.6vw)) scale(0.9) rotate(20deg);
+                  transform: translate3d(calc(var(--dx) * 1.3), calc(var(--dy) * 1.3 + 0.6vw), 0) scale(0.9) rotate(20deg);
                   opacity: 0.85;
                 }
                 100% {
-                  transform: translate(calc(var(--dx) * 1.6), calc(var(--dy) * 1.6 + 1.5vw)) scale(0.2) rotate(40deg);
+                  transform: translate3d(calc(var(--dx) * 1.6), calc(var(--dy) * 1.6 + 1.5vw), 0) scale(0.2) rotate(40deg);
                   opacity: 0;
                 }
               }
@@ -703,16 +730,17 @@
                 aspect-ratio: 1 / 1;
                 border-radius: 50%;
                 position: relative;
-                transition-duration: 0.3s;
-                transition-timing: ease-out;
-                transition-property: animation, mask, border-radius, opacity;
+                transition: opacity 0.3s ease-out;
                 pointer-events: auto;
-                animation: hueloop 5s ease-in-out infinite alternate, bghue 3s ease-in-out infinite alternate, bgblur 4s ease-in-out infinite alternate;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                animation: hueloop 8s linear infinite;
                 mask-image: radial-gradient(circle, white 30%, transparent 120%);
                 mask-position: center;
                 mask-repeat: no-repeat;
                 mask-size: 100%;
                 opacity: 1;
+                will-change: filter;
               }
               #crystal-blur:hover {
                 opacity: 0;
@@ -726,25 +754,6 @@
                 }
                 100% {
                   filter: hue-rotate(360deg);
-                }
-              }
-              @keyframes bghue {
-                0% {
-                  backdrop-filter: hue-rotate(0deg);
-                }
-                50% {
-                  backdrop-filter: hue-rotate(180deg);
-                }
-                100% {
-                  backdrop-filter: hue-rotate(360deg);
-                }
-              }
-              @keyframes bgblur {
-                0% {
-                  backdrop-filter: blur(4px);
-                }
-                100% {
-                  backdrop-filter: blur(16px);
                 }
               }
               #tiles-highlight {
@@ -782,7 +791,7 @@
                     <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
                     <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
                     <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
-                    <a title="Send an email" href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
+                    <a title="Send some mail" href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
                     <a title="Leave a message" href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
                     <a title="PAINT by COLOURS" href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;">
                       <div id="paint-splatters">
