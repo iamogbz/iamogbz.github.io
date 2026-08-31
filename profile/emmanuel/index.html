@@ -481,20 +481,20 @@
                 width: 7vw;
                 top: 49vw;
                 left: 19vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #mail-highlight {
                 width: 14vw;
                 aspect-ratio: 1/1.6;
                 top: 85.5vw;
                 left: 19vw;
-                filter: blur(0.125rem);
+                filter: blur(0.162vw);
               }
               #paint-highlight {
                 width: 32vw;
                 top: 84vw;
                 left: 31.4vw;
-                filter: blur(0.5rem);
+                filter: blur(0.625vw);
               }
               #paint-splatters {
                 position: absolute;
@@ -552,13 +552,13 @@
                 top: 94vw;
                 left: 62vw;
                 width: 40vw;
-                filter: blur(0.5rem);
+                filter: blur(0.625vw);
               }
               #disnumber-highlight {
                 top: 140vw;
                 left: 10.6vw;
                 width: 23vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #disnumber-display {
                 display: inline-flex;
@@ -578,7 +578,7 @@
                 align-items: center;
                 display: flex;
                 color: #715D3F;
-                filter: blur(0.025rem);
+                filter: blur(0.0313vw);
                 font-family: monospace;
                 font-weight: 900;
                 font-size: 1vw;
@@ -594,14 +594,14 @@
                 top: 138vw;
                 left: 35.2vw;
                 width: 21vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #hotspot-story::before, #hotspot-story::after {
                 content: '';
                 display: block;
                 position: absolute;
                 box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0.75px);
+                filter: blur(0.125px);
                 width: 1.5vw;
                 aspect-ratio: 1/1;
                 border-radius: 50%;
@@ -610,7 +610,7 @@
                 background-repeat: no-repeat;
                 background-position: top right, bottom left;
                 background-size: 40% 40%, 80% 80%;
-                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 50%, #6C4616 50%, #6C4616 100%);
+                background-image: radial-gradient(circle, white 50%, transparent 100%), radial-gradient(circle, #000 50%, #6C4616 50%, transparent 80%);
                 transition: background-position 0.1s ease-in-out;
                 animation: robot-eye-saccade 3s 1s infinite alternate ease-in-out;
                 animation-duration: random(2s, 5s);
@@ -642,21 +642,21 @@
                 top: 154vw;
                 left: 30.4vw;
                 width: 24.2vw;
-                filter: blur(0.125rem);
+                filter: blur(0.162vw);
                 mix-blend-mode: soft-light;
               }
               #cats-highlight {
                 top: 141.5vw;
                 left: 61.5vw;
                 width: 28vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #hotspot-cats::before, #hotspot-cats::after {
                 content: '';
                 display: block;
                 position: absolute;
                 box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
-                filter: blur(0.5px);
+                filter: blur(0.25px);
                 width: 2.4vw;
                 aspect-ratio: 7/6;
                 border-radius: 50%;
@@ -665,7 +665,7 @@
                 background-repeat: no-repeat;
                 background-position: top right, center center;
                 background-size: 40% 40%, 30% 100%;
-                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 70%, #e2b340 70%, #e2b340 100%);
+                background-image: radial-gradient(circle, white 50%, transparent 100%), radial-gradient(circle, #000 70%, #e2b340 70%, transparent 100%);
                 transition: background-position 0.1s ease-in-out, background-size 0.1s ease-in-out;
                 animation: cat-eye-saccade 15s 5s infinite alternate ease-in-out;
                 animation-timing-function: ease-in-out;
@@ -706,25 +706,25 @@
                 top: 163vw;
                 left: 1vw;
                 width: 26.5vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #letters-highlight {
                 top: 153vw;
                 left: 24vw;
                 width: 54.5vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #blog-highlight {
                 top: 175vw;
                 left: 25.5vw;
                 width: 47.8vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #crystal-highlight {
                 top: 163vw;
                 left: 68.5vw;
                 width: 31.8vw;
-                filter: blur(0.25rem);
+                filter: blur(0.313vw);
               }
               #crystal-blur {
                 top: 2.6vw;
@@ -764,14 +764,14 @@
                 top: 186vw;
                 left: 0vw;
                 width: 28vw;
-                filter: blur(0.125rem);
+                filter: blur(0.162vw);
                 mix-blend-mode: soft-light;
               }
               #mouse-highlight {
                 top: 199.5vw;
                 left: 70.8vw;
                 width: 28vw;
-                filter: blur(0.125rem);
+                filter: blur(0.162vw);
               }
             </style>
             <div id="loading-overlay" class="loading-overlay">
