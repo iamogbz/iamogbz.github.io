@@ -100,7 +100,6 @@
         }
 
         _scrollListener = (e) => {
-          console.log("scroll attempt");
           if (!this._ticking) {
             requestAnimationFrame(() => {
               this.updateScroll(e);
@@ -149,19 +148,19 @@
 
           if (this._skyLayer) {
             const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
-            this._skyLayer.style.transform = `translateY(${-skyScrollDy}px)`;
+            this._skyLayer.style.transform = `translateY(${Math.min(0, -skyScrollDy)}px)`;
             const bgBlur = scrollProgress + 0.5 * BLUR_PX;
             this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
             const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
-            this._midLayer.style.transform = `translateY(${-midScrollDy}px)`;
+            this._midLayer.style.transform = `translateY(${Math.min(0, -midScrollDy)}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.2) * BLUR_PX;
             this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
             const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
-            this._foreLayer.style.transform = `translateY(${-endScrollDy}px)`;
+            this._foreLayer.style.transform = `translateY(${Math.min(0, -endScrollDy)}px)`;
             const bgBlur = Math.max(0, scrollProgress - 0.4) * BLUR_PX;
             this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
@@ -200,7 +199,7 @@
               .scroll-content-parallax {
                 position: relative;
                 width: 100vw;
-                height: 200vh;
+                height: 500vw;
                 background-position: center top;
                 background-repeat: no-repeat;
                 background-size: 100vw;
