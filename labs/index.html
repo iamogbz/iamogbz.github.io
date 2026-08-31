@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ogbizi Creation Labs - Experiments & Prototypes</title>
+    <title>Creation Labs | Experiments & Prototypes</title>
     <meta
       name="description"
-      content="A CRT monitor bank window into active prototypes, software experiments, and open-source explorations by Emmanuel Ogbizi."
+      content="A window into active prototypes, software experiments, and open-source explorations by Emmanuel Ogbizi."
     />
     <meta name="theme-color" content="#0a0a0c" />
     <style>
@@ -87,6 +87,7 @@
       .brand-title {
         display: flex;
         flex-direction: column;
+        gap: 0.5rem;
       }
 
       .brand-name {
@@ -454,33 +455,31 @@
           <og-logo width="48px"></og-logo>
           <div class="brand-title">
             <span class="brand-name">
-              OGBIZI CREATION LABS
-              <span class="brand-badge">LIVE CRT FEED</span>
+              CREATION LABS
             </span>
-            <span class="brand-subtitle">Window into software experiments & prototypes</span>
+            <span class="brand-subtitle">Ongoing experiments & prototypes</span>
           </div>
         </div>
         <div class="nav-actions">
-          <div class="status-pill">
+          <!--div class="status-pill">
             <span class="status-dot"></span>
-            <span>FEED ONLINE (25 NODES)</span>
-          </div>
-          <a class="nav-link" href="https://ogbizi.com/">
+            <span>FEED ONLINE</span>
+          </div-->
+          <a class="nav-link" href="/profile/emmanuel/">
             <span>&larr;</span>
-            <span>BACK TO HOME</span>
+            <span>BACK TO MY WORLD</span>
           </a>
         </div>
       </div>
     </header>
 
     <main>
-      <div class="hero-terminal">
+      <!--div class="hero-terminal">
         <div class="terminal-prompt">$ sys.experiments.status --all</div>
         <p class="terminal-desc">
-          Welcome to the experimental lab monitor bank. Each display terminal represents an active interactive prototype,
-          algorithmic sandbox, testing harness, or utility created by Emmanuel Ogbizi. Click on any monitor window to launch the experiment.
+          Welcome to the creation labs. Each display terminal represents an active interactive prototype. Click on any monitor window to launch the experiment.
         </p>
-      </div>
+      </div-->
 
       <div class="crt-grid" id="experiments-grid"></div>
     </main>
@@ -488,15 +487,7 @@
     <script>
       const EXPERIMENTS = [
         {
-          title: "Home",
-          url: "https://ogbizi.com/",
-          category: "PORTAL",
-          desc: "Root nexus and main entrance to the House of Ogbizi world.",
-          theme: "green",
-          pattern: "radar"
-        },
-        {
-          title: "AnimaTerm",
+          title: "Animaterm",
           url: "https://ogbizi.com/animaterm/",
           category: "CLI / ANIMATION",
           desc: "Terminal animation framework for CLI apps with smooth frame rendering.",
@@ -520,10 +511,10 @@
           pattern: "bars"
         },
         {
-          title: "Demo Shifting Sea",
+          title: "Shifting Sea",
           url: "https://ogbizi.com/demo-shifting-sea/",
           category: "SIMULATION / WEBGL",
-          desc: "Dynamic fluid physics simulator and wave displacement canvas.",
+          desc: "Dynamic fluid physics simulator and wave displacement canvas interactive art.",
           theme: "cyan",
           pattern: "waves"
         },
@@ -531,7 +522,7 @@
           title: "Disnumber",
           url: "https://ogbizi.com/disnumber/",
           category: "GAME / LOGIC",
-          desc: "Fast-paced digital number manipulation and mathematical deduction game.",
+          desc: "Tactical digital number elimination and mathematical deduction game.",
           theme: "amber",
           pattern: "numbers"
         },
@@ -546,7 +537,7 @@
         {
           title: "Jest Mock Module",
           url: "https://ogbizi.com/jest-mock-module/",
-          category: "DEV TOOLS",
+          category: "DEV TOOLS / TESTING",
           desc: "Seamless module mocking and isolation helpers for Jest test suites.",
           theme: "green",
           pattern: "mesh"
@@ -554,7 +545,7 @@
         {
           title: "Jest Mock Props",
           url: "https://ogbizi.com/jest-mock-props/",
-          category: "DEV TOOLS",
+          category: "DEV TOOLS / TESTING",
           desc: "Dynamic property spy and prop assertion utilities for component testing.",
           theme: "cyan",
           pattern: "radar"
@@ -562,7 +553,7 @@
         {
           title: "Jest React Snapshot",
           url: "https://ogbizi.com/jest-react-snapshot/",
-          category: "DEV TOOLS",
+          category: "DEV TOOLS / TESTING",
           desc: "Fast snapshot comparison and visual tree diff runner for React tests.",
           theme: "green",
           pattern: "bars"
@@ -579,14 +570,14 @@
           title: "Notetris",
           url: "https://ogbizi.com/notetris/",
           category: "APP / EXPERIMENT",
-          desc: "Tetris puzzle mechanics combined with quick markdown note compilation.",
+          desc: "This is not tetris. Oh it looks like tetris? Well it is not... it even says so in the title.",
           theme: "cyan",
           pattern: "matrix"
         },
         {
           title: "NVShim",
           url: "https://ogbizi.com/nvshim/",
-          category: "SYSTEM UTILITY",
+          category: "SYSTEM UTILITY / WORKFLOW",
           desc: "Lightweight, zero-overhead Node Version Manager shim runner.",
           theme: "green",
           pattern: "sine"
@@ -602,8 +593,8 @@
         {
           title: "Oh My Scripts",
           url: "https://ogbizi.com/oh-my-scripts/",
-          category: "CLI / WORKFLOW",
-          desc: "Curated collection of developer automation and productivity shell routines.",
+          category: "BROWSER / USERSCRIPTS",
+          desc: "Curated collection of developer automation and productivity browser userscripts.",
           theme: "cyan",
           pattern: "numbers"
         },
@@ -655,14 +646,15 @@
           theme: "green",
           pattern: "waves"
         },
-        {
-          title: "React Router Chart",
-          url: "https://ogbizi.com/react-router-chart/",
-          category: "REACT / DATA VIZ",
-          desc: "Visual route tree inspector and hierarchical application diagrammer.",
-          theme: "amber",
-          pattern: "bars"
-        },
+        // DISCONTINUED
+        // {
+        //   title: "React Router Chart",
+        //   url: "https://ogbizi.com/react-router-chart/",
+        //   category: "REACT / DATA VIZ",
+        //   desc: "Visual route tree inspector and hierarchical application diagrammer.",
+        //   theme: "amber",
+        //   pattern: "bars"
+        // },
         {
           title: "React State URL Fragment",
           url: "https://ogbizi.com/react-state-url-fragment/",
@@ -686,7 +678,15 @@
           desc: "Custom Webpack compiler hook interceptors for asset optimization.",
           theme: "magenta",
           pattern: "radar"
-        }
+        },
+        {
+          title: "Home",
+          url: "https://ogbizi.com/",
+          category: "PORTAL",
+          desc: "Ready to go back home? You can find your way through this portal.",
+          theme: "green",
+          pattern: "radar"
+        },
       ];
 
       const grid = document.getElementById("experiments-grid");
@@ -728,8 +728,7 @@
           </div>
 
           <div class="crt-footer-strip">
-            <span class="crt-url-preview">${exp.url.replace(/^https?:\/\//, "")}</span>
-            <span class="crt-status-state">ONLINE</span>
+            <span class="crt-url-preview">${exp.url.replace(/^https?:\/\//, "").trim()}</span>
           </div>
         `;
 
