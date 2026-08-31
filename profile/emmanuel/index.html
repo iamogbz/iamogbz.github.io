@@ -82,6 +82,7 @@
         cacheElements() {
           this._loadingOverlay = this.shadowRoot.getElementById("loading-overlay");
           this._cursorBubble = this.shadowRoot.getElementById("cursor-bubble");
+          this._cursorBubbleText = this._cursorBubble ? this._cursorBubble.querySelector("span") : null;
           this._scrollWrapper = this.shadowRoot.getElementById("scroll-wrapper");
           this._scrollContent = this.shadowRoot.getElementById("scroll-content");
           this._scrollFrame = this.shadowRoot.getElementById("scroll-frame");
@@ -116,7 +117,8 @@
 
           // Smooth lerp loop for dot cursor following
           const animate = () => {
-            const ease = bubble.classList.contains("dot") ? 0.92 : 0.08;
+            const isDot = bubble.classList.contains("dot") && !bubble.classList.contains("has-title");
+            const ease = isDot ? 0.92 : 0.2;
             this._dotX += (this._pointerX - this._dotX) * ease;
             this._dotY += (this._pointerY - this._dotY) * ease;
 
@@ -183,8 +185,14 @@
         _pointerMoveListener = (e) => {
           /** @type {HTMLDivElement} */
           const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
-          if (!targetElem) return;
-          targetElem.style.opacity = 1;
+          if (targetElem) targetElem.style.opacity = 1;
+
+          const link = e.target.closest("a");
+          const title = link?.getAttribute("title") || link?.title;
+          if (title && this._cursorBubble && this._cursorBubbleText) {
+            this._cursorBubbleText.innerText = title;
+            this._cursorBubble.classList.add("has-title");
+          }
         };
 
         /**
@@ -193,8 +201,11 @@
         _pointerLeaveListener = (e) => {
           /** @type {HTMLDivElement} */
           const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
-          if (!targetElem) return;
-          targetElem.style.opacity = 0;
+          if (targetElem) targetElem.style.opacity = 0;
+
+          if (this._cursorBubble) {
+            this._cursorBubble.classList.remove("has-title");
+          }
         };
 
         /**
@@ -282,20 +293,22 @@
                 letter-spacing: 0.05em;
                 white-space: nowrap;
                 opacity: 0;
-                width: 160px;
-                height: 16px;
+                width: auto;
+                max-width: 90vw;
+                height: auto;
                 transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(0.9);
-                transition: corner-shape 0.3s ease-in-out, scale 0.3s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.4s ease-in-out;
+                transition: corner-shape 0.3s ease-in-out, scale 0.3s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
                 box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
               }
               .cursor-bubble span {
+                display: inline-block;
                 transition: corner-shape 0.3s ease-in-out, scale 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.4s ease-in-out;
               }
               .cursor-bubble.visible {
                 opacity: 1;
                 transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(1);
               }
-              .cursor-bubble.dot {
+              .cursor-bubble.dot:not(.has-title) {
                 padding: 0;
                 width: 8px;
                 height: 8px;
@@ -308,9 +321,29 @@
                 backdrop-filter: none;
                 -webkit-backdrop-filter: none;
               }
-              .cursor-bubble.dot span {
+              .cursor-bubble.dot:not(.has-title) span {
                 opacity: 0;
                 scale: 0;
+                display: none;
+              }
+              .cursor-bubble.has-title {
+                padding: 0.8rem 1.4rem;
+                width: auto;
+                min-width: unset;
+                height: auto;
+                min-height: unset;
+                border-radius: 9999px;
+                corner-shape: squircle;
+                background-color: rgba(255, 255, 255, 0.16);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+              }
+              .cursor-bubble.has-title span {
+                opacity: 1;
+                scale: 1;
+                display: inline-block;
               }
               .scroll-container {
                 cursor: none;

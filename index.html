@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Domo Ogbizi</title>
-    <meta name="description" content="House of Ogbizi." />
+    <title>Emmanuel Ogbizi Ugbe</title>
+    <meta name="description" content="My stuff." />
     <meta name="theme-color" content="#000" />
     <style>
       html,
@@ -14,57 +14,828 @@
         width: 100vw;
         height: 100vh;
         background-color: #000;
-        background-position: center top;
-        background-repeat: no-repeat;
-        background-size: cover;
         color: #fff;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          Roboto, sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         overflow-x: hidden;
         overflow-y: hidden;
         overscroll-behavior: none;
       }
-
-      body {
-        background-image: url("/assets/images/background.jpg");
-      }
-
-      #wrapper {
-        background-color: color-mix(in srgb, #000 80%, transparent);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100vw;
-        height: 100vh;
-        cursor: pointer;
-      }
-
-      #enter-btn {
-        text-transform: uppercase;
-        text-decoration: none;
-        color: white;
-        background-color: FFFFFF00;
-        corner-shape: superellipse(2);
-        border: solid #ffffff00 0.2rem;
-        border-radius: 1rem;
-        padding: 1rem 2rem;
-        text-align: center;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-
-      #enter-btn:hover {
-        border-radius: 4rem;
-        background-color: #ffffff11;
-        border-color: #ffffffff;
-      }
     </style>
+    <script src="https://cdn.jsdelivr.net/gh/iamogbz/oh-my-wcs@main/components/github-md-view.js"></script>
     <script src="/components/Logo.js"></script>
   </head>
+
   <body tabindex="-1">
-    <div id="wrapper">
-      <og-logo width="192px"></og-logo>
-      <a id="enter-btn" href="/profile/emmanuel">VIEW PAGE</a>
-    </div>
+    <parallax-art-explorer id="art-explorer"></parallax-art-explorer>
+
+    <script>
+      const BACKGROUND_SRC = "/assets/images/full_site-optimised.png";
+      const ARTWORK_SRC_TOP = "/assets/images/sky_cutout-optimised.png";
+      const ARTWORK_SRC_MID = "/assets/images/grass_cutout-optimised.png";
+      const ARTWORK_SRC_END = "/assets/images/table_cutout-optimised.png";
+      const SKY_PARALLAX = 0.5;
+      const GRASS_PARALLAX = 0.8;
+      const TABLE_PARALLAX = 1.0;
+      const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
+      const WELCOME_MESSAGE = "Welcome to my world";
+
+      class ParallaxArtExplorer extends HTMLElement {
+        constructor() {
+          super();
+          this.attachShadow({ mode: "open" });
+          this._ticking = false;
+          this._scrollProgress = 0;
+          this._pointerX = window.innerWidth / 2;
+          this._pointerY = window.innerHeight / 2;
+          this._dotX = window.innerWidth / 2;
+          this._dotY = window.innerHeight / 2;
+          this._cursorAnimId = null;
+        }
+
+        connectedCallback() {
+          this.render();
+          this.cacheElements();
+          this.setupEvents();
+          this.setupTimers();
+          this.awaitAssetsLoaded();
+          this.initCursorBubble();
+        }
+
+        disconnectedCallback() {
+          if (this._cursorAnimId) {
+            cancelAnimationFrame(this._cursorAnimId);
+          }
+          window.removeEventListener("pointermove", this._globalPointerMoveListener);
+          this._scrollWrapper.removeEventListener("touchmove", this._scrollListener);
+          this._scrollWrapper.removeEventListener("scroll", this._scrollListener);
+          window.removeEventListener("resize", this._scrollListener);
+          window.removeEventListener("orientationchange", this._scrollListener);
+          this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
+            elem.removeEventListener("pointerenter", this._pointerMoveListener);
+            elem.removeEventListener("pointermove", this._pointerMoveListener);
+            elem.removeEventListener("pointerdown", this._pointerMoveListener);
+            elem.removeEventListener("pointerleave", this._pointerLeaveListener);
+            elem.removeEventListener("pointercancel", this._pointerLeaveListener);
+          });
+        }
+
+        cacheElements() {
+          this._loadingOverlay = this.shadowRoot.getElementById("loading-overlay");
+          this._cursorBubble = this.shadowRoot.getElementById("cursor-bubble");
+          this._cursorBubbleText = this._cursorBubble ? this._cursorBubble.querySelector("span") : null;
+          this._scrollWrapper = this.shadowRoot.getElementById("scroll-wrapper");
+          this._scrollContent = this.shadowRoot.getElementById("scroll-content");
+          this._scrollFrame = this.shadowRoot.getElementById("scroll-frame");
+          this._skyLayer = this.shadowRoot.getElementById("layer-sky");
+          this._midLayer = this.shadowRoot.getElementById("layer-mid");
+          this._foreLayer = this.shadowRoot.getElementById("layer-fore");
+        }
+
+        async awaitAssetsLoaded() {
+          const bgSources = [BACKGROUND_SRC, ARTWORK_SRC_TOP, ARTWORK_SRC_MID, ARTWORK_SRC_END];
+          const imgSources = Array.from(this.shadowRoot.querySelectorAll("img")).map((img) => img.src);
+          const allSources = Array.from(new Set([...bgSources, ...imgSources]));
+
+          const promises = allSources.map(
+            (src) =>
+              new Promise((resolve) => {
+                const img = new Image();
+                img.onload = img.onerror = resolve;
+                img.src = src;
+              })
+          );
+
+          await Promise.all(promises);
+          if (this._loadingOverlay) {
+            this._loadingOverlay.classList.add("loaded");
+          }
+        }
+
+        initCursorBubble() {
+          const bubble = this._cursorBubble;
+          if (!bubble) return;
+
+          // Smooth lerp loop for dot cursor following
+          const animate = () => {
+            const isDot = bubble.classList.contains("dot") && !bubble.classList.contains("has-title");
+            const ease = isDot ? 0.92 : 0.2;
+            this._dotX += (this._pointerX - this._dotX) * ease;
+            this._dotY += (this._pointerY - this._dotY) * ease;
+
+            bubble.style.transform = `translate3d(${this._dotX}px, ${this._dotY}px, 0) translate(-50%, -50%)`;
+            this._cursorAnimId = requestAnimationFrame(animate);
+          };
+          this._cursorAnimId = requestAnimationFrame(animate);
+
+          // Reveal bubble once loaded, then transform to tiny dot after a short duration
+          setTimeout(() => {
+            bubble.classList.add("visible");
+          }, 300);
+
+          setTimeout(() => {
+            bubble.classList.add("dot");
+          }, 3000);
+        }
+
+        _globalPointerMoveListener = (e) => {
+          this._pointerX = e.clientX;
+          this._pointerY = e.clientY;
+        };
+
+        setupEvents() {
+          window.addEventListener("pointermove", this._globalPointerMoveListener, { passive: true });
+          this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
+            elem.addEventListener("pointerenter", this._pointerMoveListener);
+            elem.addEventListener("pointermove", this._pointerMoveListener);
+            elem.addEventListener("pointerdown", this._pointerMoveListener);
+            elem.addEventListener("pointerleave", this._pointerLeaveListener);
+            elem.addEventListener("pointercancel", this._pointerLeaveListener);
+          });
+          window.addEventListener("orientationchange", this._scrollListener);
+          window.addEventListener("resize", this._scrollListener);
+          this._scrollWrapper.addEventListener("scroll", this._scrollListener, { passive: true });
+          this.updateScroll();
+        }
+
+        setupTimers() {
+          const disnumberElement = this.shadowRoot.getElementById("disnumber-text");
+          this.disnumberIntervalId = setInterval(() => {
+            if (!disnumberElement) return window.clearInterval(this.disnumberIntervalId);
+            const timeDigitsRandomised = Array.from(new Set(new Date().toTimeString().substring(0, 8).replace(/\:/g, "") + "0123456789"))
+              .slice(0, 4)
+              .sort(() => Math.random() - 0.5)
+              .join(" ");
+            disnumberElement.innerText = timeDigitsRandomised;
+          }, 600);
+        }
+
+        _scrollListener = (e) => {
+          if (!this._ticking) {
+            requestAnimationFrame(() => {
+              this.updateScroll(e);
+              this._ticking = false;
+            });
+            this._ticking = true;
+          }
+        };
+
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerMoveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (targetElem) targetElem.style.opacity = 1;
+
+          const link = e.target.closest("a");
+          const title = link?.getAttribute("title") || link?.title;
+          if (title && this._cursorBubble && this._cursorBubbleText) {
+            this._cursorBubbleText.innerText = title;
+            this._cursorBubble.classList.add("has-title");
+          }
+        };
+
+        /**
+         * @param {PointerEvent} e
+         */
+        _pointerLeaveListener = (e) => {
+          /** @type {HTMLDivElement} */
+          const targetElem = this.shadowRoot.getElementById(e.target.dataset.targetId);
+          if (targetElem) targetElem.style.opacity = 0;
+
+          if (this._cursorBubble) {
+            this._cursorBubble.classList.remove("has-title");
+          }
+        };
+
+        /**
+         * @param {ScrollEvent} e
+         */
+        updateScroll(e) {
+          const scrollFrame = this._scrollContent;
+          if (!scrollFrame) return;
+          const scrollable = scrollFrame.scrollHeight - window.innerHeight;
+          if (scrollable <= 0) return;
+          const containerUsedForScrollingDomRect = scrollFrame.getBoundingClientRect();
+          const scrollProgress = -containerUsedForScrollingDomRect.top / scrollable;
+          const lastLayerRect = this._foreLayer.getBoundingClientRect();
+          // used to give some extra space at the bottom for possible footer items;
+          const extraBottomHeight = 0 * window.innerWidth;
+          const maxDyPxBase = Math.max(0, lastLayerRect.height - window.innerHeight);
+          const maxDyPx = maxDyPxBase + extraBottomHeight;
+          const BLUR_PX = 9;
+
+          if (this._skyLayer) {
+            const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
+            this._skyLayer.style.transform = `translateY(${Math.min(0, -skyScrollDy)}px)`;
+            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
+            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
+          if (this._midLayer) {
+            const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
+            this._midLayer.style.transform = `translateY(${Math.min(0, -midScrollDy)}px)`;
+            const bgBlur = Math.max(0, scrollProgress - SKY_PARALLAX) * BLUR_PX;
+            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
+          if (this._foreLayer) {
+            const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
+            this._foreLayer.style.transform = `translateY(${Math.min(0, -endScrollDy)}px)`;
+            const bgBlur = Math.max(0, scrollProgress - GRASS_PARALLAX) * BLUR_PX;
+            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
+          }
+        }
+
+        render() {
+          this.shadowRoot.innerHTML = `
+            <style>
+              :host {
+                display: block;
+                width: 100vw;
+                height: 100vh;
+                overflow: hidden;
+              }
+              .loading-overlay {
+                position: fixed;
+                inset: 0;
+                width: 100vw;
+                height: 100vh;
+                background-color: #000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+              }
+              .loading-overlay.loaded {
+                opacity: 0;
+                visibility: hidden;
+                pointer-events: none;
+              }
+              .cursor-bubble {
+                position: fixed;
+                top: 0;
+                left: 0;
+                pointer-events: none;
+                z-index: 999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 1rem 1.2rem;
+                border-radius: 9999px;
+                corner-shape: squircle;
+                background-color: rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                color: #ffffff;
+                font-size: 0.9rem;
+                font-weight: 500;
+                letter-spacing: 0.05em;
+                white-space: nowrap;
+                opacity: 0;
+                width: auto;
+                max-width: 90vw;
+                height: auto;
+                transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(0.9);
+                transition: corner-shape 0.3s ease-in-out, scale 0.3s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.3s ease-in-out, background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+              }
+              .cursor-bubble span {
+                display: inline-block;
+                transition: corner-shape 0.3s ease-in-out, scale 0.4s ease-in-out, opacity 0.4s ease-in-out, transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), width 0.2s ease-in-out, height 0.4s ease-in-out, padding 0.4s ease-in-out, background-color 0.4s ease-in-out, border-color 0.4s ease-in-out;
+              }
+              .cursor-bubble.visible {
+                opacity: 1;
+                transform: translate3d(50vw, 50vh, 0) translate(-50%, -50%) scale(1);
+              }
+              .cursor-bubble.dot:not(.has-title) {
+                padding: 0;
+                width: 8px;
+                height: 8px;
+                min-width: 8px;
+                min-height: 8px;
+                border-radius: 50%;
+                background-color: #ffffff;
+                border: 1px solid rgba(255, 255, 255, 0.8);
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.4);
+                backdrop-filter: none;
+                -webkit-backdrop-filter: none;
+              }
+              .cursor-bubble.dot:not(.has-title) span {
+                opacity: 0;
+                scale: 0;
+                display: none;
+              }
+              .cursor-bubble.has-title {
+                padding: 0.8rem 1.4rem;
+                width: auto;
+                min-width: unset;
+                height: auto;
+                min-height: unset;
+                border-radius: 9999px;
+                corner-shape: squircle;
+                background-color: rgba(255, 255, 255, 0.16);
+                border: 1px solid rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+              }
+              .cursor-bubble.has-title span {
+                opacity: 1;
+                scale: 1;
+                display: inline-block;
+              }
+              .scroll-container {
+                cursor: none;
+                position: fixed;
+                top: 0;
+                width: 100vw;
+                height: 100vh;
+                display: flex;
+                align-items: start;
+                justify-content: center;
+                overflow: hidden;
+                background-image: url('${BACKGROUND_SRC}');
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-size: 160vw;
+              }
+              .scroll-content-static {
+                width: 100vw;
+                height: 100vh;
+                position: fixed;
+                overflow-x: hidden;
+                overflow-y: auto;
+              }
+              .scroll-content-parallax {
+                position: relative;
+                width: 100vw;
+                height: 500vw;
+                background-position: center top;
+                background-repeat: no-repeat;
+                background-size: 100vw;
+                overflow: hidden;
+              }
+              .scroll-content-parallax::after {
+                content: '';
+                opacity: 0.05;
+                transition: opacity 0.15s ease-in-out;
+                background-color: black;
+                border-radius: 1rem;
+                corner-shape: squircle;
+                position: absolute;
+                right: 0.3rem;
+                top: 0.3rem;
+                width: 1rem;
+                height: calc(100% - 0.6rem);
+              }
+              .scroll-content-parallax:hover::after {
+                opacity: 0.1;
+              }
+              .layer {
+                position: fixed;
+                left: 0;
+                right: 0;
+                top: 0;
+                overflow-x: hidden;
+                overflow-y: hidden;
+                pointer-events: none;
+                user-select: none;
+                will-change: transform;
+                width: 100vw;
+                background-repeat: no-repeat;
+                background-size: 100vw;
+                background-position: center bottom;
+              }
+              .layer * {
+                user-select: none;
+              }
+              .layer-sky {
+                height: 94vw;
+                background-image: url('${ARTWORK_SRC_TOP}');
+              }
+              .layer-mid {
+                height: 180vw;
+                background-image: url('${ARTWORK_SRC_MID}');
+              }
+              .layer-fore {
+                height: 234vw;
+                background-image: url('${ARTWORK_SRC_END}');
+                overflow: visible;
+              }
+              .layer-fore::after {
+                content: '';
+                display: flex;
+                background-color: black;
+                background-position: center bottom;
+                background-repeat: no-repeat;
+                background-size: 100vw;
+                width: 100vw;
+                height: 100vmax;
+                position: fixed;
+                bottom: -100vmax;
+              }
+              .highlight-overlay {
+                mix-blend-mode: overlay;
+                position: absolute;
+                transition: opacity 0.15s ease-in-out;
+                opacity: 0;
+                user-select: none;
+              }
+              .highlight-guide {
+                position: absolute;
+                pointer-events: auto;
+                cursor: pointer;
+                user-select: none;
+              }
+              #tower-highlight {
+                width: 7vw;
+                top: 49vw;
+                left: 19vw;
+                filter: blur(0.25rem);
+              }
+              #mail-highlight {
+                width: 14vw;
+                top: 85.3vw;
+                left: 19vw;
+                filter: blur(0.125rem);
+              }
+              #paint-highlight {
+                width: 32vw;
+                top: 84vw;
+                left: 31.4vw;
+                filter: blur(0.5rem);
+              }
+              #paint-splatters {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+                overflow: visible;
+              }
+              .paint-blob {
+                position: absolute;
+                pointer-events: none;
+                opacity: 0;
+                filter: drop-shadow(0 0.15vw 0.3vw rgba(0, 0, 0, 0.25));
+                animation: paint-splatter-anim 4s infinite cubic-bezier(0.22, 1, 0.36, 1);
+                transform-origin: center center;
+              }
+              .paint-blob.b1 { background: #ff2a6d; width: 1.8vw; height: 1.6vw; top: 22%; left: 35%; border-radius: 68% 32% 54% 46% / 42% 65% 35% 58%; --dx: -2.5vw; --dy: -2.0vw; animation-delay: 0s; animation-duration: 3.8s; }
+              .paint-blob.b2 { background: #05d9e8; width: 2.2vw; height: 2.3vw; top: 18%; left: 58%; border-radius: 41% 59% 45% 55% / 59% 38% 62% 41%; --dx: 2.2vw; --dy: -2.8vw; animation-delay: 0.8s; animation-duration: 4.2s; }
+              .paint-blob.b3 { background: #ffb703; width: 1.4vw; height: 1.3vw; top: 38%; left: 75%; border-radius: 73% 27% 62% 38% / 34% 69% 31% 66%; --dx: 3.2vw; --dy: -0.8vw; animation-delay: 1.5s; animation-duration: 3.6s; }
+              .paint-blob.b4 { background: #7209b7; width: 2.5vw; height: 2.1vw; top: 52%; left: 22%; border-radius: 55% 45% 32% 68% / 61% 43% 57% 39%; --dx: -3.0vw; --dy: 1.5vw; animation-delay: 0.4s; animation-duration: 4.5s; }
+              .paint-blob.b5 { background: #00f5d4; width: 1.3vw; height: 1.5vw; top: 66%; left: 42%; border-radius: 39% 61% 70% 30% / 48% 52% 48% 52%; --dx: -0.8vw; --dy: 3.2vw; animation-delay: 2.0s; animation-duration: 3.4s; }
+              .paint-blob.b6 { background: #ff5400; width: 1.9vw; height: 1.7vw; top: 48%; left: 68%; border-radius: 64% 36% 47% 53% / 38% 65% 35% 62%; --dx: 2.6vw; --dy: 1.8vw; animation-delay: 1.1s; animation-duration: 4.0s; }
+              .paint-blob.b7 { background: #f72585; width: 1.1vw; height: 1.0vw; top: 12%; left: 42%; border-radius: 50% 50% 60% 40% / 40% 60% 40% 60%; --dx: 0.5vw; --dy: -3.5vw; animation-delay: 2.4s; animation-duration: 3.5s; }
+              .paint-blob.b8 { background: #4cc9f0; width: 1.6vw; height: 1.9vw; top: 70%; left: 65%; border-radius: 45% 55% 35% 65% / 55% 45% 65% 35%; --dx: 1.8vw; --dy: 2.8vw; animation-delay: 1.7s; animation-duration: 4.3s; }
+              .paint-blob.b9 { background: #38b000; width: 1.3vw; height: 1.2vw; top: 32%; left: 16%; border-radius: 60% 40% 55% 45% / 45% 55% 45% 55%; --dx: -3.2vw; --dy: -1.2vw; animation-delay: 2.7s; animation-duration: 3.9s; }
+              .paint-blob.b10 { background: #9d4edd; width: 2.0vw; height: 1.8vw; top: 60%; left: 80%; border-radius: 52% 48% 63% 37% / 37% 59% 41% 63%; --dx: 3.5vw; --dy: 1.2vw; animation-delay: 0.9s; animation-duration: 4.6s; }
+              @keyframes paint-splatter-anim {
+                0% {
+                  transform: translate(0, 0) scale(0.1) rotate(0deg);
+                  opacity: 0;
+                }
+                15% {
+                  transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) scale(1.15) rotate(15deg);
+                  opacity: 0.95;
+                }
+                35% {
+                  transform: translate(var(--dx), var(--dy)) scale(1) rotate(-8deg);
+                  opacity: 0.9;
+                }
+                75% {
+                  transform: translate(calc(var(--dx) * 1.3), calc(var(--dy) * 1.3 + 0.6vw)) scale(0.9) rotate(20deg);
+                  opacity: 0.85;
+                }
+                100% {
+                  transform: translate(calc(var(--dx) * 1.6), calc(var(--dy) * 1.6 + 1.5vw)) scale(0.2) rotate(40deg);
+                  opacity: 0;
+                }
+              }
+              #phone-highlight {
+                top: 102.3vw;
+                left: 8.4vw;
+                width: 17vw;
+              }
+              #shrouded-highlight {
+                top: 94vw;
+                left: 62vw;
+                width: 40vw;
+                filter: blur(0.5rem);
+              }
+              #disnumber-highlight {
+                top: 140vw;
+                left: 10.6vw;
+                width: 23vw;
+                filter: blur(0.25rem);
+              }
+              #disnumber-display {
+                display: inline-flex;
+                position: relative;
+                top: 142.7vw;
+                left: 18vw;
+                align-items: center;
+                justify-content: center;
+              }
+              #disnumber-cover {
+                width: 8.6vw;
+                opacity: 1;
+                mix-blend-mode: multiply;
+                position: relative;
+              }
+              #disnumber-text {
+                align-items: center;
+                display: flex;
+                color: #715D3F;
+                filter: blur(0.025rem);
+                font-family: monospace;
+                font-weight: 900;
+                font-size: 1vw;
+                height: 2.7vw;
+                width: 6vw;
+                justify-content: center;
+                position: absolute;
+                scale: 0.9 1.5;
+                transform: skew(181deg, 353deg);
+                user-select: none;
+              }
+              #story-highlight {
+                top: 138vw;
+                left: 35.2vw;
+                width: 21vw;
+                filter: blur(0.25rem);
+              }
+              #hotspot-story::before, #hotspot-story::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #2a1704 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.75px);
+                width: 1.5vw;
+                aspect-ratio: 1/1;
+                border-radius: 50%;
+                background-color: #8C5C20;
+                border: solid 1px #2a1704;
+                background-repeat: no-repeat;
+                background-position: top right, bottom left;
+                background-size: 40% 40%, 80% 80%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 50%, #6C4616 50%, #6C4616 100%);
+                transition: background-position 0.1s ease-in-out;
+                animation: robot-eye-saccade 3s 1s infinite alternate ease-in-out;
+                animation-duration: random(2s, 5s);
+                animation-delay: random(1s, 3s);
+              }
+              @keyframes robot-eye-saccade {
+                0% {
+                  background-position: top right, bottom left;
+                }
+                50% {
+                  background-position: top right, bottom center;
+                }
+                75% {
+                  background-position: top right, bottom right;
+                }
+                100% {
+                  background-position: top right, bottom center;
+                }
+              }
+              #hotspot-story::before {
+                top: 6.5vw;
+                left: 7.3vw;
+              }
+              #hotspot-story::after {
+                top: 6.97vw;
+                left: 11.2vw;
+              }
+              #chess-highlight {
+                top: 154vw;
+                left: 30.4vw;
+                width: 24.2vw;
+                filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
+              }
+              #cats-highlight {
+                top: 141.5vw;
+                left: 61.5vw;
+                width: 28vw;
+                filter: blur(0.25rem);
+              }
+              #hotspot-cats::before, #hotspot-cats::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.5px);
+                width: 2.4vw;
+                aspect-ratio: 7/6;
+                border-radius: 50%;
+                background-color: #e2b340;
+                border: solid 1px #4e2f0e;
+                background-repeat: no-repeat;
+                background-position: top right, center center;
+                background-size: 40% 40%, 30% 100%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 70%, #e2b340 70%, #e2b340 100%);
+                transition: background-position 0.1s ease-in-out, background-size 0.1s ease-in-out;
+                animation: cat-eye-saccade 15s 5s infinite alternate ease-in-out;
+                animation-timing-function: ease-in-out;
+              }
+              @keyframes cat-eye-saccade {
+                0% {
+                  background-position: top right, top 30%;
+                background-size: 40% 40%, 30% 100%;
+                }
+                5% {
+                  background-position: top right, center 60%;
+                  background-size: 30% 30%, 50% 100%;
+                }
+                50% {
+                  background-position: top right, 30% 50%;
+                  background-size: 40% 40%, 40% 90%;
+                }
+                95% {
+                  background-position: top right, center 40%;
+                  background-size: 50% 50%, 50% 100%;
+                }
+                100% {
+                  background-position: top right, top 70%;
+                  background-size: 40% 40%, 30% 100%;
+                }
+              }
+              #hotspot-cats::before {
+                top: 11.2vw;
+                left: 10.7vw;
+                transform: rotate(5deg);
+              }
+              #hotspot-cats::after {
+                top: 11.5vw;
+                left: 17.6vw;
+                transform: rotate(-5deg);
+              }
+              #photo-highlight {
+                top: 163vw;
+                left: 1vw;
+                width: 26.5vw;
+                filter: blur(0.25rem);
+              }
+              #letters-highlight {
+                top: 153vw;
+                left: 24vw;
+                width: 54.5vw;
+                filter: blur(0.25rem);
+              }
+              #blog-highlight {
+                top: 175vw;
+                left: 25.5vw;
+                width: 47.8vw;
+                filter: blur(0.25rem);
+              }
+              #crystal-highlight {
+                top: 163vw;
+                left: 68.5vw;
+                width: 31.8vw;
+                filter: blur(0.25rem);
+              }
+              #crystal-blur {
+                top: 2.6vw;
+                left: 3.3vw;
+                display: block;
+                width: 26vw;
+                aspect-ratio: 1 / 1;
+                border-radius: 50%;
+                position: relative;
+                transition-duration: 0.3s;
+                transition-timing: ease-out;
+                transition-property: animation, mask, border-radius, opacity;
+                pointer-events: auto;
+                animation: hueloop 5s ease-in-out infinite alternate, bghue 3s ease-in-out infinite alternate, bgblur 4s ease-in-out infinite alternate;
+                mask-image: radial-gradient(circle, white 30%, transparent 120%);
+                mask-position: center;
+                mask-repeat: no-repeat;
+                mask-size: 100%;
+                opacity: 1;
+              }
+              #crystal-blur:hover {
+                opacity: 0;
+              }
+              @keyframes hueloop {
+                0% {
+                  filter: hue-rotate(0deg);
+                }
+                50% {
+                  filter: hue-rotate(180deg);
+                }
+                100% {
+                  filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bghue {
+                0% {
+                  backdrop-filter: hue-rotate(0deg);
+                }
+                50% {
+                  backdrop-filter: hue-rotate(180deg);
+                }
+                100% {
+                  backdrop-filter: hue-rotate(360deg);
+                }
+              }
+              @keyframes bgblur {
+                0% {
+                  backdrop-filter: blur(4px);
+                }
+                100% {
+                  backdrop-filter: blur(16px);
+                }
+              }
+              #tiles-highlight {
+                top: 186vw;
+                left: 0vw;
+                width: 28vw;
+                filter: blur(0.125rem);
+                mix-blend-mode: soft-light;
+              }
+              #mouse-highlight {
+                top: 199.5vw;
+                left: 70.8vw;
+                width: 28vw;
+                filter: blur(0.125rem);
+              }
+            </style>
+            <div id="loading-overlay" class="loading-overlay">
+              <og-logo width="160px"></og-logo>
+            </div>
+            <div id="cursor-bubble" class="cursor-bubble">
+              <span>${WELCOME_MESSAGE}</span>
+            </div>
+            <div class="scroll-container">
+              <div class="scroll-content-static" id="scroll-wrapper">
+                <div class="scroll-content-parallax" id="scroll-content">
+                  <!-- SECTION 1: SKY -->
+                  <div id="layer-sky" class="layer layer-sky">
+                    <img src="/assets/images/tower-highlight.png" class="highlight-overlay" id="tower-highlight" />
+                    <a title="Front St W Toronto" href="https://www.google.com/maps/place/CN+Tower+301+Front+St+W+Toronto" target="_blank" id="hotspot-tower" class="highlight-guide" data-target-id="tower-highlight" style="width: 14vw; height: 42vw; top: 40vw; left: 15vw;"></a>
+                  </div>
+
+                  <!-- SECTION 2: MIDGROUND -->
+                  <div id="layer-mid" class="layer layer-mid">
+                    <img src="/assets/images/mail-highlight.png" class="highlight-overlay" id="mail-highlight" />
+                    <img src="/assets/images/phone-highlight.png" class="highlight-overlay" id="phone-highlight" />
+                    <img src="/assets/images/paint-highlight.png" class="highlight-overlay" id="paint-highlight" />
+                    <img src="/assets/images/shrouded-highlight.png" class="highlight-overlay" id="shrouded-highlight" />
+                    <a title="Send an email" href="mailto:eogbizi@gmail.com" target="_blank" id="hotspot-mail" class="highlight-guide" data-target-id="mail-highlight" style="width: 16vw; height: 23vw; top: 85vw; left: 18vw;"></a>
+                    <a title="Leave a message" href="tel:+12897005815" target="_blank" id="hotspot-phone" class="highlight-guide" data-target-id="phone-highlight" style="width: 14vw; height: 14vw; top: 103vw; left: 9vw;"></a>
+                    <a title="PAINT by COLOURS" href="https://paint.ogbizi.com" target="_blank" id="hotspot-paint" class="highlight-guide" data-target-id="paint-highlight" style="width: 30vw; height: 34vw; top: 82vw; left: 32vw;">
+                      <div id="paint-splatters">
+                        <div class="paint-blob b1"></div>
+                        <div class="paint-blob b2"></div>
+                        <div class="paint-blob b3"></div>
+                        <div class="paint-blob b4"></div>
+                        <div class="paint-blob b5"></div>
+                        <div class="paint-blob b6"></div>
+                        <div class="paint-blob b7"></div>
+                        <div class="paint-blob b8"></div>
+                        <div class="paint-blob b9"></div>
+                        <div class="paint-blob b10"></div>
+                      </div>
+                    </a>
+                    <a title="Ongoing Experiments" href="/labs" target="_blank" id="hotspot-shrouded" class="highlight-guide" data-target-id="shrouded-highlight" style="width: 40vw; height: 40vw; top: 92vw; left: 60vw;"></a>
+                  </div>
+
+                  <!-- SECTION 3: FOREGROUND -->
+                  <div id="layer-fore" class="layer layer-fore">
+                    <img src="/assets/images/disnumber-highlight.png" class="highlight-overlay" id="disnumber-highlight" />
+                    <div id="disnumber-display">
+                      <img src="/assets/images/disnumber-cover.png" class="highlight-overlay" id="disnumber-cover" />
+                      <span id="disnumber-text">1 2 3 4</span>
+                    </div>
+                    <img src="/assets/images/story-highlight.png" class="highlight-overlay" id="story-highlight" />
+                    <img src="/assets/images/chess-highlight.png" class="highlight-overlay" id="chess-highlight" />
+                    <img src="/assets/images/cats-highlight.png" class="highlight-overlay" id="cats-highlight" />
+                    <img src="/assets/images/photo-highlight.png" class="highlight-overlay" id="photo-highlight" />
+                    <img src="/assets/images/letters-highlight.png" class="highlight-overlay" id="letters-highlight" />
+                    <img src="/assets/images/blog-highlight.png" class="highlight-overlay" id="blog-highlight" />
+                    <img src="/assets/images/crystal-highlight.png" class="highlight-overlay" id="crystal-highlight" />
+                    <a title="Play Word Sync Guessing Game" href="https://wordsync.ogbizi.com" target="_blank" id="hotspot-crystal" class="highlight-guide" data-target-id="crystal-highlight" style="width: 32vw; height: 38vw; top: 162vw; left: 68vw;"><div id="crystal-blur"></div></a>
+                    <img src="/assets/images/tiles-highlight.png" class="highlight-overlay" id="tiles-highlight" />
+                    <img src="/assets/images/mouse-highlight.png" class="highlight-overlay" id="mouse-highlight" />
+                    <a title="Play Disnumber Game" href="https://disnumber.com" target="_blank" id="hotspot-disnumber" class="highlight-guide" data-target-id="disnumber-highlight" style="width: 22vw; height: 25vw; top: 140vw; left: 11vw;"></a>
+                    <a title="Read ongoing writing experiment" href="https://sars.nouvel.ink" target="_blank" id="hotspot-story" class="highlight-guide" data-target-id="story-highlight" style="width: 22vw; height: 22vw; top: 139vw; left: 35vw;"></a>
+                    <a title="Chrome Alt Tabs Shortcuts" href="https://chromewebstore.google.com/detail/alt-tab-shortcuts/ebdcpdepkbefmgfdkdplcmhfkddagfon" target="_blank" id="hotspot-cats" class="highlight-guide" data-target-id="cats-highlight" style="width: 30vw; height: 20vw; top: 139vw; left: 60vw;"></a>
+                    <a title="Play Chaos Chess Game" href="https://chaos-chess.ogbizi.com/" target="_blank" id="hotspot-chess" class="highlight-guide" data-target-id="chess-highlight" style="width: 30vw; height: 20vw; top: 154vw; left: 28vw;"></a>
+                    <a title="Instagram" href="https://instagram.com/iamogbz" target="_blank" id="hotspot-photo" class="highlight-guide" data-target-id="photo-highlight" style="width: 23vw; height: 22vw; top: 165vw; left: 2.7vw;"></a>
+                    <a title="Play Tile X Words Game" href="https://scrabblex.ogbizi.com" target="_blank" id="hotspot-tiles" class="highlight-guide" data-target-id="tiles-highlight" style="width: 23vw; height: 40vw; top: 187vw; left: 2.7vw;"></a>
+                    <a title="Read letters from the abyss" href="https://letters-from-the-abyss.com" target="_blank" id="hotspot-letters" class="highlight-guide" data-target-id="letters-highlight" style="width: 40vw; height: 40vw; top: 175vw; left: 27vw;"></a>
+                    <a title="Read technical and general blog posts" href="https://medium.com/@iamogbz/magic-mirror-in-my-dom-1fe6b9a4bec4" target="_blank" id="hotspot-blog" class="highlight-guide" data-target-id="blog-highlight" style="width: 40vw; height: 10vw; top: 215vw; left: 27vw;"></a>
+                    <a title="Fancy Webpage Cursor" href="https://medium.com/@iamogbz/fancy-cursor-6cdb95cf9ee6" target="_blank" id="hotspot-mouse" class="highlight-guide" data-target-id="mouse-highlight" style="width: 26vw; height: 23vw; top: 201vw; left: 72vw;"></a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      customElements.define("parallax-art-explorer", ParallaxArtExplorer);
+    </script>
   </body>
 </html>
