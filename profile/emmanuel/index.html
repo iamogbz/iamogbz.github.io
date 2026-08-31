@@ -404,6 +404,57 @@
                 width: 28vw;
                 filter: blur(0.25rem);
               }
+              #hotspot-cats::before, #hotspot-cats::after {
+                content: '';
+                display: block;
+                position: absolute;
+                box-shadow: inset #4e2f0e 0 0.125vw 0.05vw 0.04vw;
+                filter: blur(0.5px);
+                width: 2.4vw;
+                aspect-ratio: 7/6;
+                border-radius: 50%;
+                background-color: #e2b340;
+                border: solid 1px #4e2f0e;
+                background-repeat: no-repeat;
+                background-position: top right, center center;
+                background-size: 40% 40%, 30% 100%;
+                background-image: radial-gradient(circle, white 0%, white 100%), radial-gradient(circle, #000 70%, #e2b340 70%, #e2b340 100%);
+                transition: background-position 0.1s ease-in-out, background-size 0.1s ease-in-out;
+                animation: cat-eye-saccade 15s 5s infinite alternate ease-in-out;
+                animation-timing-function: ease-in-out;
+              }
+              @keyframes cat-eye-saccade {
+                0% {
+                  background-position: top right, top 30%;
+                background-size: 40% 40%, 30% 100%;
+                }
+                5% {
+                  background-position: top right, center 60%;
+                  background-size: 30% 30%, 50% 100%;
+                }
+                50% {
+                  background-position: top right, 30% 50%;
+                  background-size: 40% 40%, 40% 90%;
+                }
+                95% {
+                  background-position: top right, center 40%;
+                  background-size: 50% 50%, 50% 100%;
+                }
+                100% {
+                  background-position: top right, top 70%;
+                  background-size: 40% 40%, 30% 100%;
+                }
+              }
+              #hotspot-cats::before {
+                top: 11.2vw;
+                left: 10.7vw;
+                transform: rotate(5deg);
+              }
+              #hotspot-cats::after {
+                top: 11.5vw;
+                left: 17.6vw;
+                transform: rotate(-5deg);
+              }
               #photo-highlight {
                 top: 163vw;
                 left: 1vw;
