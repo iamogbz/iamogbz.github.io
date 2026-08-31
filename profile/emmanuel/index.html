@@ -83,8 +83,8 @@
           window.removeEventListener("keydown", this._keydownListener);
           this._scrollWrapper.removeEventListener("touchmove", this._scrollListener);
           this._scrollWrapper.removeEventListener("scroll", this._scrollListener);
-          window.removeEventListener("resize", this._scrollListener);
-          window.removeEventListener("orientationchange", this._scrollListener);
+          window.removeEventListener("resize", this._onResize);
+          window.removeEventListener("orientationchange", this._onResize);
           this._scrollContent.querySelectorAll(".highlight-guide").forEach((elem) => {
             elem.removeEventListener("pointerenter", this._pointerEnterListener);
             elem.removeEventListener("pointerleave", this._pointerLeaveListener);
@@ -124,6 +124,7 @@
           if (this._loadingOverlay) {
             this._loadingOverlay.classList.add("loaded");
           }
+          this._onResize();
         }
 
         startCursorAnimation() {
@@ -236,18 +237,6 @@
           this._pointerX = e.clientX;
           this._pointerY = e.clientY;
           this.startCursorAnimation();
-
-          const target = this.shadowRoot.elementFromPoint ? this.shadowRoot.elementFromPoint(e.clientX, e.clientY) : null;
-          const link = target?.closest ? target.closest("a.highlight-guide") : null;
-          if (link) {
-            if (this._hoveredElement !== link) {
-              this._hoveredElement = link;
-              this.setActiveHotspot(link, "mouse");
-            }
-          } else if (this._hoveredElement) {
-            this._hoveredElement = null;
-            this.setActiveHotspot(null, "mouse");
-          }
         };
 
         _pointerEnterListener = (e) => {
@@ -329,10 +318,10 @@
             elem.addEventListener("focus", this._focusListener);
             elem.addEventListener("blur", this._blurListener);
           });
-          window.addEventListener("orientationchange", this._scrollListener);
-          window.addEventListener("resize", this._scrollListener);
+          window.addEventListener("orientationchange", this._onResize, { passive: true });
+          window.addEventListener("resize", this._onResize, { passive: true });
           this._scrollWrapper.addEventListener("scroll", this._scrollListener, { passive: true });
-          this.updateScroll();
+          this._onResize();
         }
 
         setupTimers() {
@@ -347,10 +336,17 @@
           }, 600);
         }
 
-        _scrollListener = (e) => {
+        _onResize = () => {
+          if (!this._scrollContent || !this._foreLayer) return;
+          this._scrollable = Math.max(1, this._scrollContent.scrollHeight - window.innerHeight);
+          this._maxDyPx = Math.max(0, this._foreLayer.offsetHeight - window.innerHeight);
+          this.updateScroll();
+        };
+
+        _scrollListener = () => {
           if (!this._ticking) {
             requestAnimationFrame(() => {
-              this.updateScroll(e);
+              this.updateScroll();
               this._ticking = false;
             });
             this._ticking = true;
@@ -359,7 +355,10 @@
 
         scrollToElement(elem) {
           if (!this._scrollWrapper || !this._scrollContent) return;
-          const scrollable = this._scrollContent.scrollHeight - window.innerHeight;
+          if (this._scrollable == null || this._maxDyPx == null) {
+            this._onResize();
+          }
+          const scrollable = this._scrollable;
           if (scrollable <= 0) return;
 
           const layer = elem.closest(".layer");
@@ -370,9 +369,7 @@
             parallaxFactor = GRASS_PARALLAX;
           }
 
-          const lastLayerRect = this._foreLayer ? this._foreLayer.getBoundingClientRect() : null;
-          const maxDyPx = lastLayerRect ? Math.max(0, lastLayerRect.height - window.innerHeight) : 0;
-
+          const maxDyPx = this._maxDyPx;
           if (maxDyPx > 0 && parallaxFactor > 0) {
             const elemTop = elem.offsetTop;
             const targetLayerScrollDy = elemTop - window.innerHeight * 0.35;
@@ -386,18 +383,15 @@
           }
         }
 
-        /**
-         * @param {ScrollEvent} e
-         */
-        updateScroll(e) {
-          const scrollFrame = this._scrollContent;
-          if (!scrollFrame) return;
-          const scrollable = scrollFrame.scrollHeight - window.innerHeight;
+        updateScroll() {
+          if (!this._scrollWrapper) return;
+          if (this._scrollable == null || this._maxDyPx == null) {
+            this._onResize();
+          }
+          const scrollable = this._scrollable;
           if (scrollable <= 0) return;
-          const containerUsedForScrollingDomRect = scrollFrame.getBoundingClientRect();
-          const scrollProgress = -containerUsedForScrollingDomRect.top / scrollable;
-          const lastLayerRect = this._foreLayer.getBoundingClientRect();
-          const maxDyPx = Math.max(0, lastLayerRect.height - window.innerHeight);
+          const scrollProgress = Math.max(0, Math.min(1, this._scrollWrapper.scrollTop / scrollable));
+          const maxDyPx = this._maxDyPx;
 
           if (this._skyLayer) {
             const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
@@ -620,6 +614,9 @@
                 transition: opacity 0.15s ease-in-out;
                 opacity: 0;
                 user-select: none;
+                pointer-events: none;
+                will-change: opacity;
+                transform: translateZ(0);
               }
               .highlight-guide {
                 position: absolute;
