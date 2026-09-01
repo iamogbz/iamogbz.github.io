@@ -37,10 +37,8 @@ class GamesFooter extends HTMLElement {
       "justify-items: center",
       "align-content: center",
       "text-align: center",
-      "color: #000000AA",
-      "font-size: 1rem",
     ].join(";");
-    const linkStyles = `width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: #000`;
+    const linkStyles = `width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; color: currentColor`;
 
     const currentYear = new Date().getFullYear();
 
