@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Emmanuel Ogbizi Ugbe</title>
-    <meta
-      name="description"
-      content="A window into my life as a developer, designer and artist"
-    />
+    <meta name="description" content="A window into my life as a developer, designer and artist" />
     <meta name="theme-color" content="#000" />
     <style>
       html,
@@ -39,6 +36,7 @@
       const SKY_PARALLAX = 0.5;
       const GRASS_PARALLAX = 0.8;
       const TABLE_PARALLAX = 1.0;
+      const BLUR_PX = 16.0;
       const PARALLAX_WH_ASPECT_RATIO = 432 / 768;
       const WELCOME_MESSAGE = "Welcome to my world";
 
@@ -218,9 +216,7 @@
         }
 
         _globalPointerMoveListener = (e) => {
-          const moved =
-            Math.abs(e.clientX - this._lastClientX) >= 2 ||
-            Math.abs(e.clientY - this._lastClientY) >= 2;
+          const moved = Math.abs(e.clientX - this._lastClientX) >= 2 || Math.abs(e.clientY - this._lastClientY) >= 2;
 
           this._lastClientX = e.clientX;
           this._lastClientY = e.clientY;
@@ -378,7 +374,7 @@
 
             this._scrollWrapper.scrollTo({
               top: targetScroll,
-              behavior: "smooth"
+              behavior: "smooth",
             });
           }
         }
@@ -396,14 +392,20 @@
           if (this._skyLayer) {
             const skyScrollDy = scrollProgress * maxDyPx * SKY_PARALLAX;
             this._skyLayer.style.transform = `translate3d(0, ${Math.min(0, -skyScrollDy)}px, 0)`;
+            const bgBlur = scrollProgress + 0.5 * BLUR_PX;
+            this._skyLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._midLayer) {
             const midScrollDy = scrollProgress * maxDyPx * GRASS_PARALLAX;
             this._midLayer.style.transform = `translate3d(0, ${Math.min(0, -midScrollDy)}px, 0)`;
+            const bgBlur = Math.max(0, scrollProgress - SKY_PARALLAX) * BLUR_PX;
+            this._midLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
           if (this._foreLayer) {
             const endScrollDy = scrollProgress * maxDyPx * TABLE_PARALLAX;
             this._foreLayer.style.transform = `translate3d(0, ${Math.min(0, -endScrollDy)}px, 0)`;
+            const bgBlur = Math.max(0, scrollProgress - GRASS_PARALLAX) * BLUR_PX;
+            this._foreLayer.style.backdropFilter = `blur(${bgBlur}px)`;
           }
 
           if (this._inputMode === "keyboard" && this._focusedElement) {
